@@ -10,50 +10,49 @@ library(tidyverse)
 library(readr)
 library(ggplot2)
 library(skimr)
-library(terra)
+library(terra) # spatial data package
+library(leaflet)
 
-# Specify the path to file
 
-ebird_file_path_harddrive <- "D:/Bowman_birds/ebird_download/ebd_CA-YT_unv_smp_relMay-2024/ebd_CA-YT_unv_smp_relMay-2024.txt"
-ebird_file_path <- "C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_ecology_honours/data/raw/ebd_CA-YT_unv_smp_relMay-2024/ebd_CA-YT_unv_smp_relMay-2024.txt"
+# specify file paths for ebird data
+#ebird_file_path_harddrive <- "D:/Bowman_birds/ebird_download/ebd_CA-YT_unv_smp_relMay-2024/ebd_CA-YT_unv_smp_relMay-2024.txt" # path to harddrive data 
+ebird_file_path <- "C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_bowman_honours/data/raw/ebd_CA-YT_unv_smp_relMay-2024/ebd_CA-YT_unv_smp_relMay-2024.txt" 
 
+# read data from ebird
 ebird_full_data <- read.table(ebird_file_path, header = TRUE, sep = "\t", quote = "", fill = TRUE, stringsAsFactors = FALSE)
 
+# specify columns of interest
 columns_to_keep <- c("OBSERVATION.DATE", "COMMON.NAME", "SCIENTIFIC.NAME", "OBSERVATION.COUNT", "COUNTY", "LOCALITY", "LOCALITY.ID", "YEAR", "LATITUDE", "LONGITUDE", "OBSERVER.ID", "GROUP.IDENTIFIER", "REVIEWED", "TRIP.COMMENTS", "SPECIES.COMMENTS", "SAMPLING.EVENT.IDENTIFIER", "TAXONOMIC.ORDER", "TAXON.CONCEPT.ID", "CATEGORY", "PROTOCOL.TYPE", "DURATION.MINUTES", "NUMBER.OBSERVERS", "GLOBAL.UNIQUE.IDENTIFIER")
 
+# process ebird data
+  # select only northern observations, convert date and isolate year, select columns of interest, and make all lowercase
 ebird_north_data <- ebird_full_data %>%
   filter(LATITUDE > 69) %>%
   mutate(OBSERVATION.DATE = as.Date(OBSERVATION.DATE, format = "%Y-%m-%d")) %>%
   mutate(YEAR = as.integer(format(OBSERVATION.DATE, "%Y"))) %>%
   select(all_of(columns_to_keep)) %>%
-  mutate(REGION = str_extract(LOCALITY, "^[^-]+"))
+  rename_all(tolower)
 
-
-skim(ebird_north_data)
-
-unique(ebird_north_data$LOCALITY)
-
-# Importing Qikqtaruk Shapefile
+# importing qikqtaruk outline shapefile
 qhi_outline <- vect("C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_ecology_honours/data/shape/qhi_bird_polygons_July1/qhi_region.shp")
 
-plot(qhi_outline, "Shape_Area")
-head(qhi_outline)
+# converting the coordinate system to mathc the ebird data 
+qhi_outline <- project(qhi_outline, "+proj=longlat +datum=WGS84", partial = FALSE)
 
-# Converting ebird_data to shapefiles
-ebird_coordinate_system <- "+proj=longlat +datum=WGS84" # NOTE: this is a dummy variable, I have not confirmed this is the coordinate system that ebird data uses, but it seems likely
+# converting ebird_data to shapefiles
+ebird_coordinate_system <- "+proj=longlat +datum=WGS84" #specifying coordinate system
+  # NOTE: this is a dummy variable, I have not confirmed this is the coordinate system that ebird data uses, but it seems likely
   # "longlat" is just saying that the data are georefrenced based on longitude and latitude
-ebird_vect <- vect(ebird_north_data, geom = c("LONGITUDE", "LATITUDE"), crs = ebird_coordinate_system)
+ebird_vect <- vect(ebird_north_data, geom = c("longitude", "latitude"), crs = ebird_coordinate_system)
 
-#############
-# # selecting for observations within latitude and longitude bounds of region
-# # rough square boundaries for QHI
-# se_lat <- 69.493583
-# se_lng <- -138.792971
-# nw_lat <- 69.676441
-# nw_lng <- -139.335002
-# 
-# # filtering to include only observations within the box
-# qhi_ebird <- ebird_import %>%
-#   filter(lat >= se_lat & lat <= nw_lat & lng >= nw_lng & lng <= se_lng)
+# trying to find only ebird observations that intersect with the qhi outline
+qhi_ebird_vect <- intersect(ebird_vect, qhi_outline)
+
+# turning ebird qhi spatvector back into a dataframe
+qhi_ebird <- as.data.frame(qhi_ebird_vect)
 
 
+# quick map of points
+bg <- get_tiles(ext(qhi_ebird_vect))
+plotRGB(bg)
+points(qhi_ebird_vect, col="blue")
