@@ -20,8 +20,9 @@
 # RStudio files
 .Rproj.user/
 .Rproj.user
-TeamShrubHub.Rproj
+teamshrub_bowman_honours.Rproj
 .Rproj
+.Rproj~
 
 # produced vignettes
 vignettes/*.html
