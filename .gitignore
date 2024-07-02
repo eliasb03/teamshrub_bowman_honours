@@ -76,6 +76,5 @@ Rplots.pdf
 packrat/lib*/
 
 # Ignore Large Ebird Downloads
-# data/raw/ebd_CA-YT_unv_smp_relMay-2024/
 data/raw/ebd_CA-YT_unv_smp_relMay-2024/*
 data/raw/ebird_yukon_30days_test2.json
