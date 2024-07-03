@@ -1,9 +1,12 @@
-#################
-# 02_climateNA_v0
-#
-# Very early and unformatted testing of the climate NA package
-# Also just getting used to R again
+#------------------------------
+# teamshrub_bowman_honours
+# 0X_climateNA_v0
+# By: Elias Bowman 
+# 2024-07-03
+# Description: This script will implement the use of the ClimateNA package and tool to import relevant grid based climate data at the local level. Depending on use I will either have hyperspecific points to each data source or I will have kind of a generalized regional temp.
 # 
+# At the moment this is very early and preliminary 
+#####
 # Mission is to use and implement climate NA to download time sereis climate data from Qikiqtaruk
 # clean and make this data workable
 # then organize the data and order years from warmest to coldest june temperatures
@@ -16,9 +19,12 @@
 # How do you determine "monthly temps"
 # - either use monthly data from climate na
 # - instead consider calculating the data from daily or hourly data
-#################
+#------------------------------
+
 # importing packages
 library(tidyverse)
 library(dplyr)
 
-# Climate NA
+# Climate NA ####
+
+
