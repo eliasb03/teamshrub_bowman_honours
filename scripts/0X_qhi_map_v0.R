@@ -65,17 +65,33 @@ qhi_region <- vect(qhi_region_matrix, "polygons") #spatVector
 crs(qhi_region) <- coordinate_system # resetting coordinate system
 qhi_region_ext <- ext(qhi_region) #spatExtent
   
+qhi_coords <- matrix(c(
+  -139.101711148163, 69.504011032690,  
+  -139.330770272735, 69.546801863821,  
+  -139.280239252751, 69.628420776634,  
+  -139.013957769567, 69.659566892761,  
+  -138.799257953520, 69.573901614936,
+  -139.101711148163, 69.504011032690
+), ncol = 2, byrow = TRUE)
+
+# Create the crop_area SpatVector
+qhi_crop_area <- vect(qhi_coords, type = "polygons")
+
+
+
 plot(qhi_region)
 plot(qhi_region_ext)
 
+test <- mask(yukon_map, qhi_region)
+plot(test)
 qikiqtaruk_coast <- intersect(yukon_map, qhi_region)
 
-qikiqtaruk_coast <- crop(yukon_map, qhi_region_ext)
+qikiqtaruk_coast <- crop(yukon_map, qhi_region) # consider mask = TRUE??
 plot(qikiqtaruk_coast)
 
 par(mfrow=c(1, 2))
 
-
+window(yukon_map, qhi_region_ext)
 
 # 
 # 
@@ -100,7 +116,22 @@ par(mfrow=c(1, 2))
 # 
 
 
+coords <- matrix(c(
+  -120, 35,  # First point
+  -119, 35,  # Second point
+  -119, 34,  # Third point
+  -120, 34,  # Fourth point
+  -120, 35   # Fifth point to close the polygon
+), ncol = 2, byrow = TRUE)
 
+# Create the crop_area SpatVector
+crop_area <- vect(coords, type = "polygons")
+
+
+r <- rast(xmin=0, xmax=10, ymin=0, ymax=10, nrows=25, ncols=25)
+values(r) <- 1:ncell(r)
+e <- ext(-5, 5, -5, 5)
+rc <- crop(r, e)
 
 
 # library(rnaturalearth)
