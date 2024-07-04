@@ -51,8 +51,8 @@ north_coast <- yukon %>%
   st_difference(qhi_bounds)
 
 ggplot() +
-  geom_sf(data = qhi_coast, size = 1.5, color = "black") +
-  geom_sf(data = north_coast, size = 1.5, color = "red")
+  geom_sf(data = qhi_coast, color = "black") +
+  geom_sf(data = north_coast, color = "red")
 
 
 # ##################################

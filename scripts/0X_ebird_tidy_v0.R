@@ -43,6 +43,13 @@ qhi_outline <- vect("C:/Users/elias/OneDrive/Documents/University/Honours/teamsh
 # converting the coordinate system to mathc the ebird data 
 qhi_outline <- project(qhi_outline, "+proj=longlat +datum=WGS84", partial = FALSE)
 
+# ################## This does not currently work, need rejigging, but shouldnt be too too hard
+# qhi_buffer <- st_difference(st_buffer(qhi_coast, 25000), north_coast)
+# 
+# ggplot() +
+#   geom_sf(data = qhi_buffer, color = "black")  +
+#   geom_sf(data = north_coast, color = "red")
+
 # converting ebird_data to shapefiles
 ebird_coordinate_system <- "+proj=longlat +datum=WGS84" #specifying coordinate system
   # NOTE: this is a dummy variable, I have not confirmed this is the coordinate system that ebird data uses, but it seems likely
