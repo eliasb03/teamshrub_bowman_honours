@@ -5,7 +5,7 @@
 # 2024-07-03
 # Description: This script will do the initial processing and tidying of the ebird dataset. This script witll import the ebird dataset of the Yukon, a large file received from the ebird database, and it will clean and tidy the data to include only relevant variables for my analysis and limit the observations to those that surround QHI.
 # 
-Roughly script count: #2
+# Roughly script count: #2
 # 
 #------------------------------
 
