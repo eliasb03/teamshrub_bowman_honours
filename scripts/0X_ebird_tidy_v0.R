@@ -5,7 +5,7 @@
 # 2024-07-03
 # Description: This script will do the initial processing and tidying of the ebird dataset. This script witll import the ebird dataset of the Yukon, a large file received from the ebird database, and it will clean and tidy the data to include only relevant variables for my analysis and limit the observations to those that surround QHI.
 # 
-# Roughly script count: #2
+Roughly script count: #2
 # 
 #------------------------------
 
@@ -38,7 +38,7 @@ ebird_north_data <- ebird_full_data %>%
   rename_all(tolower)
 
 # importing qikqtaruk outline shapefile
-qhi_outline <- vect("C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_ecology_honours/data/shape/qhi_bird_polygons_July1/qhi_region.shp")
+qhi_outline <- vect("C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_bowman_honours/data/shape/qhi_bird_polygons_July1/qhi_region.shp")
 
 # converting the coordinate system to mathc the ebird data 
 qhi_outline <- project(qhi_outline, "+proj=longlat +datum=WGS84", partial = FALSE)

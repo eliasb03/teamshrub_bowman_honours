@@ -11,11 +11,12 @@
 
 # importing packages
 library(terra)
-library(rnaturalearth)
-library(rnaturalearthdata)
-
-# importing coastline from R Natural Earth
-global_coastline <- ne_coastline(scale = 10, returnclass = c("sv"))
+library(sp)
+library(sf)
+# importing yukon map vector outline
+  # source yukon gov geodatabase
+yukon_map <- vect("data/shape/yukon_and_adjoining_land_mass/Yukon_and_Adjoining_Land_Mass.shp")
+yukon_map <- project(yukon_map, "+proj=longlat +datum=WGS84")
 
 # coordinate outline for areas of interest
 # North Slope area
@@ -23,7 +24,8 @@ y_max <- 71.08436
 y_min <- 67.889931
 x_max <- -132.965956
 x_min <- -144.615307
-north_slope <- ext(x_min, x_max, y_min, y_max)
+north_slope <- c(x_min, x_max, y_min, y_max)
+
 # Qikiqtaruk area
 qhi_region_coords <-
   data.frame(
@@ -44,20 +46,42 @@ qhi_region_coords <-
       69.504011032690
     )
   )
-qhi_region <- vect(qhi_region_coords, geom=c("lon", "lat"), keepgeom=FALSE)
 
-summary(qhi_region)
+# Converting dataframe into a matrix
+qhi_region_matrix <- as.matrix(qhi_region_coords[, c("lon", "lat")])
+# Converting 
+qhi_region <- vect(qhi_region_matrix, "polygons")
+qhi_region_ext <- ext(qhi_region)
 plot(qhi_region)
-############# Curretnly the above is not working right, trying to make a polygon surroundign the island, but i can't seem to make a spatVector polygon for some reason.
 
+north_slope_coast <- crop(yukon_map, north_slope)
 
+qikiqtaruk_coast <- crop(global_coastline, qhi_region_ext)
+qhi_region_ext
+north_slope
+global_coastline
+qhi_region
+qikiqtaruk_coast
+plot(qikiqtaruk_coast)
+summary(qhi_region)
 
-
-north_slope_coast <- crop(global_coastline, north_slope)
-qikiqtaruk_coast <- crop(global_coastline, qhi_region)
-
+summary(north_slope_coast)
+summary(north_slope)
 
 par(mfrow=c(1, 3))
+
 plot(global_coastline, main = "Global Coastlines")
 plot(north_slope_coast, main = "North Slope Coastline")
 plot(qikiqtaruk_coast, main = "Qikiqtaruk Slope Coastline")
+
+
+
+
+
+
+
+# library(rnaturalearth)
+# library(rnaturalearthdata)
+
+# # importing coastline from R Natural Earth
+# global_coastline <- ne_coastline(scale = 10, returnclass = c("sv"))
