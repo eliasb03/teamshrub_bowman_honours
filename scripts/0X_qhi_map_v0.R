@@ -19,14 +19,13 @@ library(dplyr)
 # setting script variables
 buffer_size = 25000 # how wide the qhi buffer region is
 coordinate_system <- "+proj=longlat +datum=WGS84 +no_defs" # setting project coordinate system
+shape_file <- "data/shape/yukon_borders_surveyed/Yukon_Borders_-_Surveyed.shp"
 
-# importing yukon outline data
+# importing and creating script data
+# yukon outline data
 # Source: https://hub.arcgis.com/datasets/2a65ccced3a2421783eeddae32b7d58b_2/explore?location=63.730317%2C-131.505522%2C4.52
-yukon <- st_read("data/shape/yukon_borders_surveyed/Yukon_Borders_-_Surveyed.shp")
-
-# setting project coordinate system
-yukon <- st_transform(yukon, coordinate_system)
-
+yukon <- st_read(shape_file) %>%
+  st_transform(crs = coordinate_system) # setting project coordinate system
 
 # setting qhi polygon bounds
 qhi_coords <- list(matrix(c(
@@ -39,53 +38,59 @@ qhi_coords <- list(matrix(c(
 ), ncol = 2, byrow = TRUE))
 
 # creating polygon of qhi bounds
-qhi_bounds <- st_polygon(qhi_coords)
-qhi_bounds <- st_geometry(qhi_bounds)
-
-# setting coordinate system
-qhi_bounds <- st_set_crs(qhi_bounds, coordinate_system)
-
-# calculating intersection of yukon coast and qhi
-qhi_coast <- st_intersection(yukon, qhi_bounds) 
+qhi_bounds <- qhi_coords %>%
+  st_polygon() %>%
+  st_geometry() %>%
+  st_set_crs(coordinate_system) # setting coordinate system# setting coordinate system
   
+qhi_coast <- st_intersection(yukon, qhi_bounds) %>% # calculating intersection, this returns the qhi map instead of the pentagon
+  st_union() %>%
+  st_polygonize() %>%
+  st_transform(crs = coordinate_system)
 
 # creating cropped area of just the yukon north slope
 north_coast <- yukon %>%
-  st_crop(xmin = -143, ymin = 68.5, xmax = -133, ymax = 70.5) %>%
-  st_difference(qhi_bounds) %>%
+  st_crop(xmin = -143, ymin = 68.5, xmax = -133, ymax = 70.5) %>% # cropping to relevant areas
+  st_difference(qhi_bounds) %>% # removing the area 
   st_geometry() %>%
   st_sf() %>%
+  st_transform(coordinate_system) %>% # transfomring the coordinate system
+  st_union() # creating a continous line out of the north coast
+
+# create qi buffer region, and split by the north coast line
+qhi_buffer <- qhi_coast %>%
+  st_buffer(buffer_size) %>%
+  lwgeom::st_split(north_coast) %>%
   st_transform(coordinate_system)
+
+# selecting the area of interest
+qhi_region <- qhi_buffer[[1]][[1]] %>%
+  st_sfc() %>%
+  st_sf(geometry = .) %>% # converting the geometry/file type
+  st_set_crs(coordinate_system) # converting to right coordinate system
+
+# displaying the layers made in this script
+ggplot() +
+  geom_sf(data = qhi_region, color = "black", fill = "yellow") +
+  geom_sf(data = qhi_coast, color = "blue", fill = "blue") +
+  geom_sf(data = north_coast, color = "red")
+
+# 
+# ggplot() +
+#   geom_sf(data = qhi_polygon3, color = "black")
+
+####################################
+
+
+# # calculating intersection of yukon coast and qhi
+# qhi_coast <- st_intersection(yukon, qhi_bounds) 
 
 
 # creating a polygon area of the qhi outline
-qhi_polygon <- qhi_coast %>%
-  st_union() %>%
-  st_polygonize() %>%
-  st_transform(coordinate_system)
-
-# creating a continous line out of the north coast
-ncoast_line <- north_coast %>%
-  st_union() 
-
-# create qi buffer region, and split by the north coast line
-qhi_buffer <- qhi_polygon %>%
-  st_buffer(buffer_size) %>%
-  lwgeom::st_split(ncoast_line) %>%
-  st_transform(coordinate_system)
-
-qhi_region <- qhi_buffer[[1]][[1]] %>%
-  st_sfc() %>%
-  st_sf(geometry = .) %>%
-  st_set_crs(coordinate_system)
-
-ggplot() +
-  geom_sf(data = qhi_region, color = "black", fill = "yellow") +
-  geom_sf(data = qhi_polygon, color = "blue", fill = "blue") +
-  geom_sf(data = north_coast, color = "red")
-
-
-####################################
+# qhi_polygon <- qhi_coast %>%
+#   st_union() %>%
+#   st_polygonize() %>%
+#   st_transform(coordinate_system)
 
 
 # qhi_region <- qhi_buffer[[1]][[1]]
