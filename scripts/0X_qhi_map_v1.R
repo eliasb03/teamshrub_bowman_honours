@@ -74,3 +74,15 @@ ggplot() +
   geom_sf(data = qhi_region, color = "black", fill = "yellow") +
   geom_sf(data = qhi_coast, color = "blue", fill = "blue") +
   geom_sf(data = north_coast, color = "red")
+
+# Outputs:
+# qhi_region 
+#   This is the buffered region around Qikiqtaruk, with the area south of the north coast removed
+# qhi_coast
+#   This is the polygon in the shape of Qikiqtaruk
+# north_coast
+#   This is the outline of the Yukon North Coast area, a continuous line, but not a closed polygon
+
+
+# Future projects:
+# make more relevant vector and raster data that is useful in my project
