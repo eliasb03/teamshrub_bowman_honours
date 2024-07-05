@@ -14,13 +14,19 @@ library(tidyverse)
 library(terra)
 library(sp)
 library(sf)
+library(dplyr)
+
+# setting script variables
+buffer_size = 25000 # how wide the qhi buffer region is
+coordinate_system <- "+proj=longlat +datum=WGS84 +no_defs" # setting project coordinate system
 
 # importing yukon outline data
 # Source: https://hub.arcgis.com/datasets/2a65ccced3a2421783eeddae32b7d58b_2/explore?location=63.730317%2C-131.505522%2C4.52
 yukon <- st_read("data/shape/yukon_borders_surveyed/Yukon_Borders_-_Surveyed.shp")
 
 # setting project coordinate system
-coordinate_system <- "+proj=longlat +datum=WGS84 +no_defs"
+yukon <- st_transform(yukon, coordinate_system)
+
 
 # setting qhi polygon bounds
 qhi_coords <- list(matrix(c(
@@ -40,20 +46,63 @@ qhi_bounds <- st_geometry(qhi_bounds)
 qhi_bounds <- st_set_crs(qhi_bounds, coordinate_system)
 
 # calculating intersection of yukon coast and qhi
-qhi_coast <- st_intersection(yukon, qhi_bounds)
+qhi_coast <- st_intersection(yukon, qhi_bounds) 
+  
 
 # creating cropped area of just the yukon north slope
-# north_coast <- st_crop(yukon, xmin = -143, ymin = 68.5, xmax = -133, ymax = 70.5)
-# north_coast_dif <- st_difference(north_coast, qhi_bounds)
-
 north_coast <- yukon %>%
   st_crop(xmin = -143, ymin = 68.5, xmax = -133, ymax = 70.5) %>%
-  st_difference(qhi_bounds)
+  st_difference(qhi_bounds) %>%
+  st_geometry() %>%
+  st_sf() %>%
+  st_transform(coordinate_system)
+
+
+# creating a polygon area of the qhi outline
+qhi_polygon <- qhi_coast %>%
+  st_union() %>%
+  st_polygonize() %>%
+  st_transform(coordinate_system)
+
+# creating a continous line out of the north coast
+ncoast_line <- north_coast %>%
+  st_union() 
+
+# create qi buffer region, and split by the north coast line
+qhi_buffer <- qhi_polygon %>%
+  st_buffer(buffer_size) %>%
+  lwgeom::st_split(ncoast_line) %>%
+  st_transform(coordinate_system)
+
+qhi_region <- qhi_buffer[[1]][[1]] %>%
+  st_sfc() %>%
+  st_sf(geometry = .) %>%
+  st_set_crs(coordinate_system)
 
 ggplot() +
-  geom_sf(data = qhi_coast, color = "black") +
+  geom_sf(data = qhi_region, color = "black", fill = "yellow") +
+  geom_sf(data = qhi_polygon, color = "blue", fill = "blue") +
   geom_sf(data = north_coast, color = "red")
 
+
+####################################
+
+
+# qhi_region <- qhi_buffer[[1]][[1]]
+# qhi_region <- st_sfc(qhi_region)
+# qhi_region <- st_sf(geometry = qhi_region)
+# st_crs(qhi_region) <- coordinate_system
+
+
+# # creating a straight bottom line of north coast 
+# bottom_line <- st_sf(geometry = st_sfc(st_linestring(matrix(c(-141, 68.6, -136.4, 68.6), ncol = 2, byrow = TRUE)), crs = coordinate_system))
+# 
+# #ncoast_polygon <- rbind(north_coast, bottom_line)
+# ncoast_polygon <- north_coast %>% 
+#   rbind(bottom_line) %>%
+#   st_crop(xmin = -141.01, ymin = 68.599, xmax = -136.44, ymax = 70.5) %>%
+#   st_union() #%>%
+# # st_polygonize()
 
 # ##################################
 #  Below lies the Norway problem
