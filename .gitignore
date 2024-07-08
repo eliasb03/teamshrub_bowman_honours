@@ -81,3 +81,6 @@ data/raw/ebird_yukon_30days_test2.json
 
 # Ignore Large Audio Files
 data/temp/*
+
+# Ignore Spectrogram Outputs
+outputs/spectrograms/*
