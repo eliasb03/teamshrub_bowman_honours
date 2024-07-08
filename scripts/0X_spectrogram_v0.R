@@ -15,36 +15,9 @@ library(oce) # image plotting functions and nice color maps
 library(ggplot2)
 library(tidyverse)
 
-
-# setting variables
-f <- 48000 # sampling frequency
-
-# importing a audio file
-main_dir <- "C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_bowman_honours/data/temp/ARUQ_1_P_1Jul2024/Data/audio"
-audio_file_name <- "ARUQ1_20240622_170000" 
-
-audio_file <- file.path(main_dir, paste0(audio_name,".wav"))
-audio <- readWave(audio_file) # full 10 minute audio file
-start_sec = 70
-end_sec = 90
-audio_ss <- readWave(audio_file, from=start_sec, to=end_sec, units="seconds") # audio sub sample
-
-date <- as.POSIXct(strsplit(audio_name, "_")[[1]][2], format = "%Y%m%d", tz= "America/Whitehorse")
-time <- as.POSIXct(strsplit(audio_name, "_")[[1]][3], format = "%H%M%S", tz= "America/Whitehorse") + seconds(start_sec)
-date_time <- as.POSIXct(substring(audio_name, (nchar(audio_name)-14), nchar(audio_name)), format = "%Y%m%d_%H%M%S", tz= "America/Whitehorse") + seconds(start_sec)
-
-
-# number of points to use for the fast fourier transform
-nfft=1024
-
-# window size (in points)
-win=256
-
-# overlap (in points)
-ol=128
-
-# Function courtesy of: https://hansenjohnson.org/post/spectrograms-in-r/
-# function takes a wave form, nfft, window (win), overlap (ol)
+# defining functions
+  # function courtesy of: https://hansenjohnson.org/post/spectrograms-in-r/
+  # function takes a wave form, nfft, window (win), overlap (ol)
 spectro = function(data, nfft, win, ol, t0=0, plot_spec = T, normalize = F, return_data = F,...){
   # extract signal
   signal_with_offset = data@left
@@ -95,7 +68,7 @@ spectro = function(data, nfft, win, ol, t0=0, plot_spec = T, normalize = F, retu
     # plot spectrogram
     imagep(t,f, t(P), col = oce.colorsViridis, drawPalette = T,
            ylab = 'Frequency [Hz]', axes = F,...)
-
+    
     
     box(col = 'white')
     axis(2, labels = T, col = 'white')
@@ -125,18 +98,113 @@ spectro = function(data, nfft, win, ol, t0=0, plot_spec = T, normalize = F, retu
     return(spec)  
   }
 }
+create_image_directory_name <- function(input_string) {
+  # Extract the first section before the underscore
+  first_section <- str_split(input_string, "_")[[1]][1]
+  
+  # Get the current date and time
+  date_time <- format(date_time_full, "%Y%m%d_%H%M%S")
+  
+  # Combine the first section with the date and time
+  dir_name <- paste0(first_section, "_", date_time)
+  
+  return(dir_name)
+}
 
-# calling the spectrogram function
-spectro(audio_ss,
-        nfft=1024,
-        win=256,
-        ol=128,
-        t0=date_time,
-        plot_spec = T,
-        normalize = T,
-        return_data = F
-)
+create_image_name <- function(input_string) {
+  # Extract the first section before the underscore
+  first_section <- str_split(input_string, "_")[[1]][1]
+  
+  # Get the current date and time
+  date_time <- format(date_time, "%Y%m%d_%H%M%S")
+  
+  # Combine the first section with the date and time
+  image_name <- paste0(first_section, "_", date_time, "_image")
+  
+  return(image_name)
+}
 
+# setting variables
+f <- 48000 # sampling frequency
+
+# importing a audio file
+main_dir <- "C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_bowman_honours/data/temp/ARUQ_1_P_1Jul2024/Data/audio"
+audio_file_name <- "ARUQ1_20240622_170000" 
+audio_name <- audio_file_name
+########
+audio_file <- file.path(main_dir, paste0(audio_name,".wav"))
+audio <- readWave(audio_file) # full 10 minute audio file
+########
+date_time_full <-
+  as.POSIXct(substring(audio_name, (nchar(audio_name) - 14), nchar(audio_name)),
+             format = "%Y%m%d_%H%M%S",
+             tz = "America/Whitehorse")
+#######
+base_img_dir <- "C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_bowman_honours/data/temp/ARUQ_1_P_1Jul2024/Data_test/spectrograms/"
+img_folder <- create_image_directory_name(audio_file_name)
+img_dir <- paste0(base_img_dir, img_folder)
+
+if(!dir.exists(img_dir)){
+  dir.create(img_dir)
+}
+
+#######
+for(i in 0:9) {
+  start = i * 60
+  end = start + 60
+  
+  
+  
+  # start_sec = 70
+  # end_sec = 90
+  audio_ss <-
+    readWave(audio_file,
+             from = start,
+             to = end,
+             units = "seconds") # audio sub sample
+  
+  date <-
+    as.POSIXct(strsplit(audio_name, "_")[[1]][2],
+               format = "%Y%m%d",
+               tz = "America/Whitehorse")
+  time <-
+    as.POSIXct(strsplit(audio_name, "_")[[1]][3],
+               format = "%H%M%S",
+               tz = "America/Whitehorse") + seconds(start)
+  date_time <-
+    as.POSIXct(substring(audio_name, (nchar(audio_name) - 14), nchar(audio_name)),
+               format = "%Y%m%d_%H%M%S",
+               tz = "America/Whitehorse") + seconds(start)
+  
+  
+  # number of points to use for the fast fourier transform
+  n_fft = 1024
+  
+  # window size (in points)
+  win_size = 256
+  
+  # overlap (in points)
+  overlap = 128
+  
+  img_name <- paste0(img_dir, "/", create_image_name(audio_name), ".png")
+  
+  png(filename=img_name)
+  
+  # calling the spectrogram function
+  spectro(
+    audio_ss,
+    nfft = n_fft,
+    win = win_size,
+    ol = overlap,
+    t0 = date_time,
+    plot_spec = T,
+    normalize = T,
+    return_data = F
+  )
+  
+  dev.off()
+  
+}
 #play(audio_ss)
 
 
