@@ -5,7 +5,8 @@
 # Created: 2024-07-05
 # Last update: 2024-09-18
 # 
-# Description: This script imports and tidys ARU data from Qikiqtaruk - Herschel Island, confirming file integrity, trimming recordings, and logging erroneous files.
+# Description: This script imports and tidys ARU data from Qikiqtaruk - Herschel Island.
+# Creates a toginore_ARUX.csv files that lists files with the wrong file name, the wrong length, the wrong file type, the wrong timing
 #------------------------------
 
 # Importing Packages ####
