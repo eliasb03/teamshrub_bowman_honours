@@ -1,8 +1,10 @@
 #------------------------------
 # teamshrub_bowman_honours
-# 0X_birdNET_v0
+# 0X_birdNET_v1
 # By: Elias Bowman 
-# 2024-07-05
+# Created: 2024-07-05
+# Last update: 2024-09-07
+# 
 # Description: This script will install and start working with BirdNET the Cornell Lab bird ID software
 # This script will make a function, that wraps the BirdNET software and can call promts to the command line based on inputs form R 
 #------------------------------
@@ -16,7 +18,7 @@ qhi_latitude <- 69.5
 qhi_longitude <- -138.9
 
 
-bird_analyze <- function(input, output, week, sensi, conf, overlap, rtype){
+birdNET_analyze <- function(input, output, week, sensi, conf, overlap, rtype){
   birdnet_analyzer_path <- birdnet_path
   input_path <- input
   output_path <- output
@@ -43,7 +45,7 @@ bird_analyze <- function(input, output, week, sensi, conf, overlap, rtype){
 }
 
 
-bird_analyze_simple <- function(input, output){
+birdNET_analyze_simple <- function(input, output){
   birdnet_analyzer_path <- birdnet_path
   input_path <- input
   output_path <- output
@@ -70,8 +72,8 @@ bird_analyze_simple <- function(input, output){
 }
 
 ## Example Calls:
-# bird_analyze_simple(input_audio, output_file)
-# bird_analyze(input_audio, output_file, -1, 0.5, 0.5, 0, csv)
+# birdNET_analyze_simple(input_audio, output_file)
+# birdNET_analyze(input_audio, output_file, -1, 0.5, 0.5, 0, csv)
 
 ## Example Inputs:
 # input_audio <- '"C:/Users/elias/OneDrive/Documents/Audacity/test3_bird_audio_july8.wav"'

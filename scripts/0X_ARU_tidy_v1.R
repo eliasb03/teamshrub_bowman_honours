@@ -1,8 +1,10 @@
 #------------------------------
 # teamshrub_bowman_honours
-# 0X_ARU_tidy_v0
+# 0X_ARU_tidy_v1
 # By: Elias Bowman
-# 2024-07-05
+# Created: 2024-07-05
+# Last update: 2024-09-07
+# 
 # Description: This script will import and work with the massive ARU data received from the devices deployed around Qikiqtaruk - Herschel Island. I intend this script to do the initial processing and tidying of the data. This will likely involve importing each file. Confirming its not corrupted and is functional. Trimming off the start end of the clips of the recording process.
 #
 #
