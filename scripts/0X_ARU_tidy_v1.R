@@ -46,89 +46,69 @@ is_valid_wav <- function(file) { # functions confirms file is valid wave file ty
 
 # Importing Data ####
   # note: add related large files to .gitignore
-main_dir <- "D:/ARU_QHI_2024" # designating hard drive ARU data file
-dir_list <-
-  list.dirs(main_dir, recursive = FALSE) # creating a list of directories within the ARU_QHI_2024 folder
+# Importing Data ####
+main_dir <- "D:/ARU_QHI_2024" 
+dir_list <- list.dirs(main_dir, recursive = FALSE)
 
-# Iterating through All ARU Directories
+# Iterating through All ARU Directories ####
 for (dir in dir_list) {
-  #access the data directory within the folder directory
+  cat("Processing directory:", dir, "\n") # Debugging statement
+  
   data_dir <- file.path(dir, "data")
   
-  # Path for the log file that will contain names of files to ignore
-  log_file <- file.path(data_dir, paste0("toignore", str_extract(data_dir, "ARUQ[^_]+"),".csv"))
+  # Extract ARU ID for log file name
+  aru_id <- str_extract(data_dir, "ARUQ[^_]+")
+  log_file <- file.path(data_dir, paste0("toignore_", aru_id, ".csv"))
   
-  # Create the log file if it doesn't exist, and write the header
-  if (!file.exists(log_file)) {
-    write.csv(
-      data.frame(
-        File = character(),
-        Duration = numeric(),
-        Reason = character()
-      ),
-      log_file,
-      row.names = FALSE
-    )
-  }
-  
-  # Check if the file is a .wav file
-  if (!is_valid_wav(file)) {
-    write.table(data.frame(File = filename, Duration = NA, Reason = "Not a .wav file"), log_file, append = TRUE, row.names = FALSE, col.names = FALSE, sep = ",")
-    cat("File logged due to not being a .wav file:", filename, "\n")
-    next
+  # Check if the log file exists and load its contents
+  existing_logs <- NULL
+  if (file.exists(log_file)) {
+    existing_logs <- read.csv(log_file, stringsAsFactors = FALSE)
+    cat("Log file already exists with", nrow(existing_logs), "entries.\n")
+  } else {
+    # If no log file exists, initialize an empty data frame
+    existing_logs <- data.frame(File = character(), Duration = numeric(), Reason = character(), stringsAsFactors = FALSE)
   }
   
   # list all audio files (.wav) in the current directory
-  files <-
-    list.files(data_dir, pattern = "\\.wav$", full.names = TRUE)
+  files <- list.files(data_dir, pattern = "\\.wav$", full.names = TRUE)
   
   # loop through each ARU .wav file
   for (file in files) {
-    # extract the filename without the path
     filename <- basename(file)
     
-    # check if the file ends with "0000" or "3000"
-    ends_with_correct_suffix <-
-      grepl("0000.wav$", filename) || grepl("3000.wav$", filename)
-    
-    # If the filename doesn't meet the criteria, log it and skip further processing
-    if (!ends_with_correct_suffix) {
-      # log the file name with reason for logging
-      write.table(
-        data.frame(
-          File = filename,
-          Duration = NA,
-          Reason = "Incorrect filename suffix"
-        ),
-        log_file,
-        append = TRUE,
-        row.names = FALSE,
-        col.names = FALSE,
-        sep = ","
-      )
-      
-      cat("File logged due to incorrect suffix:", filename, "\n")
-      
-      # skip further processing for this file
+    # Check if the file is already logged
+    if (filename %in% existing_logs$File) {
+      cat("File already logged, skipping:", filename, "\n")
       next
     }
     
-    # implementing is_ten_minutes function
+    # Check if the file is a .wav file
+    if (!is_valid_wav(file)) {
+      cat("File is not a .wav file:", filename, "\n")
+      new_entry <- data.frame(File = filename, Duration = NA, Reason = "Not a .wav file", stringsAsFactors = FALSE)
+      existing_logs <- rbind(existing_logs, new_entry)
+      next
+    }
+    
+    # Check filename suffix
+    ends_with_correct_suffix <- grepl("0000.wav$", filename) || grepl("3000.wav$", filename)
+    if (!ends_with_correct_suffix) {
+      cat("File has incorrect suffix:", filename, "\n")
+      new_entry <- data.frame(File = filename, Duration = NA, Reason = "Incorrect filename suffix", stringsAsFactors = FALSE)
+      existing_logs <- rbind(existing_logs, new_entry)
+      next
+    }
+    
+    # Check if the file is 10 minutes
     if (!is_ten_minutes(file)) {
-      write.table(
-        data.frame(
-          File = filename,
-          Duration = NA,
-          Reason = "Incorrect duration"
-        ),
-        log_file,
-        append = TRUE,
-        row.names = FALSE,
-        col.names = FALSE,
-        sep = ","
-      )
-      cat("File logged due to incorrect length:", filename, "\n")
-      
+      cat("File has incorrect duration:", filename, "\n")
+      new_entry <- data.frame(File = filename, Duration = NA, Reason = "Incorrect duration", stringsAsFactors = FALSE)
+      existing_logs <- rbind(existing_logs, new_entry)
     }
   }
+  
+  # Write the updated log file, ensuring no duplicates
+  write.csv(existing_logs, log_file, row.names = FALSE)
+  cat("Log file updated with new entries.\n")
 }
