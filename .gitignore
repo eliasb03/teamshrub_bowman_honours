@@ -85,5 +85,8 @@ data/shape/*
 # Ignore Large Audio Files
 data/temp/*
 
+# Ignore All Files on HardDrive
+D:/*
+
 # Ignore Spectrogram Outputs
 outputs/spectrograms/*
