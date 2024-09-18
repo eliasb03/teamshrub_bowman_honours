@@ -28,7 +28,7 @@ ARU_dirs <- list.dirs(ARU_dir, recursive = FALSE) # Find list of ARU dir within 
 # Iterating through ARU directories ####
 #for(aru in ARU_dirs){ # cycle through ARU data
 # temp disable
-aru <- "D:/ARU_QHI_2024/ARUQ1_17Aug2024"
+aru <- "D:/ARU_QHI_2024/ARUQ1_17Aug2024" #temp modification just to test how long one aru takes
   aru_data <- paste0(aru, "/Data") # Specify path to data folder
   all_aru_files <- list.files(aru_data) # Find list of audio files
   toignore_csv <- all_aru_files[grepl("^toignore", all_aru_files) & grepl("\\.csv$", all_aru_files)]
