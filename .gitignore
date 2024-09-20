@@ -88,5 +88,9 @@ data/temp/*
 # Ignore All Files on HardDrive
 D:/*
 
+# Specifically ignore Breeding Bird Data
+D:/breeding_bird_survey_QHI_2024/QHI_BBS_survey_data_1990_2024.csv
+D:/breeding_bird_survey_QHI_2024/QHI_BBS_weather_data_1990_2024.csv
+
 # Ignore Spectrogram Outputs
 outputs/spectrograms/*
