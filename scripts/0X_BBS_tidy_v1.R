@@ -1,6 +1,6 @@
 #------------------------------
 # teamshrub_bowman_honours
-# 0X_BBD_tidy_v0
+# 0X_BBS_tidy_v0
 # By: Elias Bowman 
 # Created: 2024-09-19
 # 
@@ -54,11 +54,28 @@ format_column_names <- function(df) {
 }
 
 # Function to calculate sampling time and effort
-calculate_sampling_effort <- function(data) {
+calculate_sampling_metrics <- function(data) {
   data <- data %>%
-    mutate(sampling.time = as.numeric(difftime(End.time, Start.time, units = "mins")),
-           num_observers = sapply(strsplit(Observers, ","), length),
-           sampling_effort = sampling.time * num_observers)
+    mutate(
+      sampling.time = as.numeric(difftime(End.time, Start.time, units = "mins")),
+      num_observers = sapply(strsplit(Observers, ","), length),
+      sampling_effort = sampling.time * num_observers)
+  
+  # Get the min and max sampling effort values
+  min_effort <- min(data$sampling_effort, na.rm = TRUE)
+  max_effort <- max(data$sampling_effort, na.rm = TRUE)
+  
+  # Dynamically calculate the max multiplier as the ratio of max to min effort
+  if (min_effort == max_effort) {
+    data <- data %>%
+      mutate(effort_multiplier = 1)
+  } else {
+    max_multiplier <- max_effort / min_effort
+    
+    # Scale the effort multiplier to range between 1 and max_multiplier
+    data <- data %>%
+      mutate(effort_multiplier = 1 + (max_multiplier - 1) * (max_effort - sampling_effort) / (max_effort - min_effort))
+  }
   
   return(data)
 }
@@ -171,8 +188,8 @@ bbs.survey <- bbs.survey %>%
   left_join(bbs.survey.temp, by = "survey_id")  # Join with the summary
 
 # Calculate Sampling Time and Effort
-bbs.survey <- calculate_sampling_effort(bbs.survey)
-bbs.survey.transect <- calculate_sampling_effort(bbs.survey.transect)
+bbs.survey <- calculate_sampling_metrics(bbs.survey)
+bbs.survey.transect <- calculate_sampling_metrics(bbs.survey.transect)
 
 
 # Reformat Dataframe Column Names ####
@@ -192,6 +209,7 @@ bbs.survey <- bbs.survey %>%
     sampling.time,
     num.observers,
     sampling.effort,
+    effort.multiplier,
     breed,
     behaviour,
     notes,
@@ -213,3 +231,28 @@ bbs.survey <- bbs.survey %>%
 # Create long format version
 bbs.long <- bbs.survey %>%
   uncount(total) 
+
+# Selecting for the top X species
+top_num <- 12
+top_species <- bbs.long %>%
+  group_by(spec.code) %>%
+  summarise(total.observations = n()) %>%  # Count the number of observations per species
+  arrange(desc(total.observations)) %>%     # Sort by number of observations in descending order
+  slice_head(n = top_num)                        # Select the top 15 species
+
+# Filter the original dataset to only include these top 15 species
+bbs.top.spec <- bbs.long %>%
+  filter(spec.code %in% top_species$spec.code)
+
+# Summarize the data by species and year
+bbs.yearly <- bbs.top.spec %>%
+  group_by(species, year) %>%                      # Group by species and year
+  summarise(total.observations = n(),  # Count observations per species per year
+            scaled.observations = sum(as.numeric(effort.multiplier), na.rm = TRUE),
+            .groups = 'drop' ) # Drop the grouping structure after summarizing
+
+# Results of script:
+# bbs.survey
+# bbs.long
+# bbs.top.spec
+# bbs.yearly
