@@ -22,13 +22,8 @@ bbs.weather.path <- "D:/breeding_bird_survey_QHI_2024/QHI_BBS_weather_data_1990_
 bbs.survey <- read.csv(bbs.data.path)
 bbs.weather <- read.csv(bbs.weather.path)
 
-unique(bbs.survey$SPECIES)
-
-# to do:
-# - fix sampling effort (time spent sampling * num observers)
-  # Currently there are columns that have incorrect start_end time - this is relatively problematic and I need a solution
-
 # Defining Relevant Functions ####
+
 # Function to standardize time format, adding missing colons
 standardize_time <- function(time_str) {
   # Remove any spaces or extra characters
@@ -50,7 +45,7 @@ standardize_time <- function(time_str) {
   return(time_str)
 }
 
-# Define the function to reformat column names
+# Function to format column names
 format_column_names <- function(df) {
   colnames(df) <- colnames(df) %>%
     tolower() %>%     # Convert to lowercase
@@ -58,25 +53,45 @@ format_column_names <- function(df) {
   return(df)
 }
 
-# Modifying and Tidying Existing Dataframe ####
-## Creating a new formatted Date column ####
-bbs.survey$DATE_YMD <- paste(bbs.survey$DAY, bbs.survey$MONTH, bbs.survey$YEAR, sep = "-")
-# Removing trailing or leading spaces that might cause formatting errors
-bbs.survey$DATE_YMD <- trimws(bbs.survey$DATE_YMD)
-# Add leading zero for single digit days
-bbs.survey$DATE_YMD <- sub("^(\\d{1})-", "0\\1-", bbs.survey$DATE_YMD)
+# Function to calculate sampling time and effort
+calculate_sampling_effort <- function(data) {
+  data <- data %>%
+    mutate(sampling.time = as.numeric(difftime(End.time, Start.time, units = "mins")),
+           num_observers = sapply(strsplit(Observers, ","), length),
+           sampling_effort = sampling.time * num_observers)
+  
+  return(data)
+}
 
-# Convert DATE to proper date format
-  # Should be in Year-Month-Date format ex: 2024-09-19
+# Modifying and Tidying Existing Dataframe ####
+# Giving each observation an id
+bbs.survey <- bbs.survey %>%
+  mutate(observation.id = row_number())
+
+# Create a new formatted Date column ####
+bbs.survey$DATE_YMD <- paste(bbs.survey$DAY, bbs.survey$MONTH, bbs.survey$YEAR, sep = "-") %>%
+  trimws() %>%                         # Remove spaces
+  sub("^(\\d{1})-", "0\\1-", .)       # Add leading zero for single digit days
+
+# Convert DATE to proper date format (Year-Month-Day)
 bbs.survey$DATE_YMD <- dmy(bbs.survey$DATE_YMD)
 
-## Creating a new indexing column ####
+# Amalgamate notes into a single column
 bbs.survey <- bbs.survey %>%
-  mutate(transect_id = paste(DATE, PERIOD, SURVEY_NUM, TRANSECT, sep = "_"))
+  mutate(notes = case_when(
+    trimws(NOTES) != "" & trimws(X) != "" ~ paste(NOTES, X, sep = ", "),  # Both notes exist
+    trimws(NOTES) != "" ~ NOTES,                                            # Only NOTES exists
+    trimws(X) != "" ~ X,                                                    # Only X exists
+    TRUE ~ ""                                                               # Both notes are NA or empty
+  )) %>%
+  select(-NOTES, -X)  # Remove original note columns
 
-## Format, fill in, and create new Time column ####
-# Apply standarize_time function to Start.time and End.time
-# Standardize TIME columns, adding missing colons if necessary
+# Create two new indexing columns ####
+bbs.survey <- bbs.survey %>%
+  mutate(transect_id = paste(DATE, PERIOD, SURVEY_NUM, TRANSECT, sep = "_")) %>%
+  mutate(survey_id = paste(DATE, PERIOD, SURVEY_NUM, sep = "_"))
+
+# Standardize TIME columns ####
 bbs.survey$TIME <- sapply(bbs.survey$TIME, standardize_time)
 bbs.survey$Start.time <- sapply(bbs.survey$Start.time, standardize_time)
 bbs.survey$End.time <- sapply(bbs.survey$End.time, standardize_time)
@@ -86,64 +101,101 @@ bbs.survey$Start.time <- hms::parse_hm(bbs.survey$Start.time)
 bbs.survey$End.time <- hms::parse_hm(bbs.survey$End.time)
 bbs.survey$TIME <- hms::parse_hm(bbs.survey$TIME)
 
-# Fill in Start and End Times for all observations
+# Create date_time column ####
+bbs.survey <- bbs.survey %>%
+  mutate(date_time = as.POSIXct(paste(DATE_YMD, TIME), format = "%Y-%m-%d %H:%M:%S"))
+
+# Fill in Start and End Times for all observations ####
 bbs.survey <- bbs.survey %>%
   group_by(transect_id) %>%
   fill(Start.time, .direction = "downup") %>%
   fill(End.time, .direction = "downup")
 
-# Calculate time spent sampling (difference between End.time and Start.time in minutes)
-bbs.survey <- bbs.survey %>%
-  mutate(sampling.time = as.numeric(difftime(End.time, Start.time, units = "mins")))
-
-# Correct for wrong start and end times
-  # selects rows with less than 5mins of sampling time, which happen to be incorrect, and fill in the end time with the time of the last known bird observation
-  # notes that this column has had this done to it
-bbs.survey.updated <- bbs.survey %>%
-  filter(sampling.time < 5) %>%
+bbs.survey.temp <- bbs.survey %>%
+  filter((End.time - Start.time) < 5 | is.na(Start.time) | is.na(End.time)) %>%  # Select rows with less than 5 mins of sampling time or NA values
   group_by(transect_id) %>%
-  mutate(End.time = hms::as_hms(max(TIME)),
-         end.time.filled = TRUE) %>%
+  mutate(
+    # Fill Start.time with min(TIME) if NA and if there are valid TIME values
+    Start.time = ifelse(is.na(Start.time), 
+                        ifelse(any(!is.na(TIME)), hms::as_hms(min(TIME, na.rm = TRUE)), NA), 
+                        Start.time),
+    
+    # Fill End.time with max(TIME) if NA and if there are valid TIME values
+    End.time = ifelse(is.na(End.time), 
+                      ifelse(any(!is.na(TIME)), hms::as_hms(max(TIME, na.rm = TRUE)), NA), 
+                      End.time),
+    
+    # If Start.time is filled but End.time is still NA, fill End.time with Start.time if there's only one unique time
+    End.time = ifelse(is.na(End.time) & !is.na(Start.time) & n_distinct(na.omit(TIME)) == 1, 
+                      Start.time, End.time),
+    
+    # Ensure End.time is corrected if sampling time is less than 5 minutes
+    End.time = ifelse((End.time - Start.time) < 5, 
+                      ifelse(any(!is.na(TIME)), hms::as_hms(max(TIME, na.rm = TRUE)), End.time), 
+                      End.time),
+    
+    end.time.filled = TRUE
+  ) %>%
   ungroup()
 
-  # reintroduces the modified bbs.survey with the corrected endtimes
-  # redoes the sampling.time metric
+# Reintroduce modified bbs.survey with corrected end times
 bbs.survey <- bbs.survey %>%
   mutate(end.time.filled = FALSE) %>%
-  rows_update(bbs.survey.updated, by = c("transect_id", "REC_NUM")) %>%
-  mutate(sampling.time = as.numeric(difftime(End.time, Start.time, units = "mins")))
+  rows_update(bbs.survey.temp, by = c("observation.id"))
 
+# Create a transect level and survey level dataset ####
+bbs.survey.transect <- bbs.survey
+bbs.survey.temp <- bbs.survey %>%
+  group_by(survey_id) %>%
+  summarize(
+    # Get the earliest start time and latest end time for each survey.id
+    End.time = hms::as_hms(max(End.time, na.rm = TRUE)),
+    Start.time = hms::as_hms(min(Start.time, na.rm = TRUE)),
+    
+    .groups = 'drop'  # Ungroup after summarizing
+  )
 
-
-## Creating date_time column ####
+# Join the summarized dataset back to the original, dropping the old start.time and end.time
 bbs.survey <- bbs.survey %>%
-  mutate(date_time = as.POSIXct(paste(DATE_YMD, TIME), format = "%Y-%m-%d %H:%M:%S"))
+  select(-Start.time, -End.time) %>%  # Remove old start.time and end.time
+  left_join(bbs.survey.temp, by = "survey_id")  # Join with the summary
 
-## Create Sampling Effort column ####
-# Create a column for number of observers
-bbs.survey <- bbs.survey %>%
-  mutate(num_observers = sapply(strsplit(Observers, ","), length))
-
-# Calculate sampling effort (time spent sampling * number of observers)
-bbs.survey <- bbs.survey %>%
-  mutate(sampling_effort = sampling.time * num_observers)
+# Calculate Sampling Time and Effort
+bbs.survey <- calculate_sampling_effort(bbs.survey)
+bbs.survey.transect <- calculate_sampling_effort(bbs.survey.transect)
 
 
-## Reformat Dataframe ####
-# Amalgamate the notes into a single column
-# simplyifing notes columns
-bbs.survey <- bbs.survey %>%
-  mutate(notes = case_when(
-    trimws(NOTES) != "" & trimws(X) != "" ~ paste(NOTES, X, sep = ", "),  # Both notes exist
-    trimws(NOTES) != "" ~ NOTES,                                            # Only NOTES exists
-    trimws(X) != "" ~ X,                                                    # Only X exists
-    TRUE ~ ""                                                               # Both notes are NA or empty
-  )) %>%
-  select(-NOTES, -X)  # Optional: Remove the original note columns
-
-# formatting the bbs.survey columns
+# Reformat Dataframe Column Names ####
 bbs.survey <- format_column_names(bbs.survey)
+bbs.survey.transect <- format_column_names(bbs.survey.transect)
 
-
-# Creating a new dataframe, summarized to the Survey.Num level ####
-
+# Reformat column order
+bbs.survey <- bbs.survey %>%
+  select(
+    observation.id,
+    survey.id,
+    date.ymd,
+    species,
+    spec.code,
+    total,
+    time,
+    sampling.time,
+    num.observers,
+    sampling.effort,
+    breed,
+    behaviour,
+    notes,
+    observers,
+    date,
+    period,
+    year,
+    month,
+    day,
+    survey.num,
+    transect,
+    start.time,
+    end.time,
+    rec.num,
+    end.time.filled,
+    transect.id
+  )
