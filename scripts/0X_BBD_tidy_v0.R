@@ -68,6 +68,16 @@ calculate_sampling_effort <- function(data) {
 bbs.survey <- bbs.survey %>%
   mutate(observation.id = row_number())
 
+# Filling in total with 1 when NA or 0, and noting it in a new column
+bbs.survey <- bbs.survey %>%
+  mutate(
+    # Create a new boolean column indicating if total was changed
+    total_changed = ifelse(is.na(TOTAL) | TOTAL == 0, TRUE, FALSE),
+    
+    # Replace NA and 0 with 1
+    TOTAL = ifelse(is.na(TOTAL) | TOTAL == 0, 1, TOTAL)
+  )
+
 # Create a new formatted Date column ####
 bbs.survey$DATE_YMD <- paste(bbs.survey$DAY, bbs.survey$MONTH, bbs.survey$YEAR, sep = "-") %>%
   trimws() %>%                         # Remove spaces
@@ -199,3 +209,7 @@ bbs.survey <- bbs.survey %>%
     end.time.filled,
     transect.id
   )
+
+# Create long format version
+bbs.long <- bbs.survey %>%
+  uncount(total) 
