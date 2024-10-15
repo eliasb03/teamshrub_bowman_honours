@@ -28,10 +28,7 @@ import_ice_data <- function(file_path) {
     gsub("[^a-z0-9_]", "", .) %>%
     gsub("ct", "conc", .)
   
-  # I
-# View the imported data
-head(ice_data)
-mport data into the script
+  # Import data 
   data <- read.csv(file_path, skip = 10, header = FALSE, col.names = colnames)
   
   return(data)
