@@ -5,7 +5,6 @@
 # 2024-07-03
 # Description: This R script should create a rough map of Qikiqtaruk - Herschel Island (QHI). It will import relevant data and create several files. A raster or vector basemap of QHI and the north slope, a higher resolution similar map of QHI, and a vector outline of just QHI, and just the north slopes, are ideal outputs of this script
 # 
-# Roughly script count: #1
 # 
 #------------------------------
 
@@ -42,7 +41,7 @@ qhi_bounds <- qhi_coords %>%
   st_polygon() %>%
   st_geometry() %>%
   st_set_crs(coordinate_system) # setting coordinate system# setting coordinate system
-  
+
 qhi_coast <- st_intersection(yukon, qhi_bounds) %>% # calculating intersection, this returns the qhi map instead of the pentagon
   st_union() %>%
   st_polygonize() %>%
@@ -82,7 +81,3 @@ ggplot() +
 #   This is the polygon in the shape of Qikiqtaruk
 # north_coast
 #   This is the outline of the Yukon North Coast area, a continuous line, but not a closed polygon
-
-
-# Future projects:
-# make more relevant vector and raster data that is useful in my project
