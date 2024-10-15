@@ -75,22 +75,14 @@ Rplots.pdf
 
 packrat/lib*/
 
-# Ignore Large Ebird Downloads
-data/raw/ebd_CA-YT_unv_smp_relMay-2024/*
-data/raw/ebird_yukon_30days_test2.json
+# Ignore all data files
+data/*
+# It is important that we are ignoring Ebird Downloads, Shape Files, Audio Files
 
-# Ignore Large Shape Files
-data/shape/*
-
-# Ignore Large Audio Files
-data/temp/*
 
 # Ignore All Files on HardDrive
 D:/*
-
-# Specifically ignore Breeding Bird Data
-D:/breeding_bird_survey_QHI_2024/QHI_BBS_survey_data_1990_2024.csv
-D:/breeding_bird_survey_QHI_2024/QHI_BBS_weather_data_1990_2024.csv
+# It is important that we ignore all Breeding Bird Data
 **/breeding_bird_survey_QHI_2024/
 **/breeding_bird_survey_QHI_2024/QHI_BBS_survey_data_1990_2024.csv
 **/breeding_bird_survey_QHI_2024/QHI_BBS_weather_data_1990_2024.csv
