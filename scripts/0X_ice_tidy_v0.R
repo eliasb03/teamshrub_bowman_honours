@@ -69,9 +69,9 @@ import_ice_data <- function(file_path) {
 ice_data <- import_ice_data(file_path)
 
 # test plotting ######
-ggplot(ice_data, aes(x = season, y = conc)) +
+ggplot(ice_data, aes(x = season, y = conc, color = status)) +
   geom_line(color = "blue") +  # Line plot
-  geom_point(size = 1, color = "red") +  # Points on the line
+  geom_point(size = 1) +  # Points on the line
   theme_minimal() +
   labs(
     x = "Date",  # X-axis label
