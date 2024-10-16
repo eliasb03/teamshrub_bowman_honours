@@ -5,7 +5,10 @@
 # Created: 2024-07-05
 # Last update: 2024-10-16
 # 
-# Description: This script creates a function to execute python command line prompts to a locally installed BirdNET Analyzer (the Cornell Lab bird ID/classifier) software
+# Description: This script creates a function to execute python command line prompts to a locally installed BirdNET Analyzer (the Cornell Lab bird ID/classifier) software 
+# BirdNET Analyzer: https://github.com/kahst/BirdNET-Analyzer
+# https://kahst.github.io/BirdNET-Analyzer/
+# 
 #------------------------------
 
 # specifying global variables
@@ -16,11 +19,12 @@ qhi_longitude <- -138.9
 # function to carry out BirdNET analysis 
   # all variables specified and optional in function call
   # default values are assigned, but can be overwritten when calling funciton
-birdNET_analyze <- function(input, output, week = -1, sensi = 1, conf = 0.5, overlap = 1.5, rtype = "csv"){
+birdNET_analyze <- function(input, output, week = -1, sensi = 1, 
+                            conf = 0.5, overlap = 1.5, rtype = "csv"){
   birdnet_analyzer_path <- birdnet_path
   input_path <- input
   output_path <- output
-  rt <- rtype
+  rt <- rtype # output dataframe type
   wk <- week # week of data
   ol <- overlap # how many seconds each test should overlap, measurements are in 3s clips
   min_conf <- conf # minimum confidence threshold
