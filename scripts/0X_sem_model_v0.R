@@ -12,3 +12,36 @@
 # Import Packages 
 library(lavaan)
 library(semPlot)
+
+# Define Data Set
+#model_dataframe <- NAME OF DATAFRAME MADE FOR SEM MODEL
+
+# Define the Model
+# Path analysis model (no latent variables)
+path_model <- '
+  # Regressions (relationships between observed variables)
+  var2 ~ var1      # var1 predicts var2
+  var3 ~ var2      # var2 predicts var3
+  var3 ~ var1      # var1 predicts var3
+'
+
+# SEM model (includes latent variables)
+sem_model <- '
+  # Measurement model
+  latent_var1 =~ indicator1 + indicator2 + indicator3
+  latent_var2 =~ indicator4 + indicator5
+
+  # Regressions
+  latent_var2 ~ latent_var1
+  outcome_var ~ latent_var2
+
+  # Covariances (if applicable)
+  latent_var1 ~~ latent_var2
+'
+
+# Fit the model to the data
+fit <- sem(path_model, data = model_dataframe)
+
+# Summary of the model results
+summary(fit, fit.measures = TRUE, standardized = TRUE)
+
