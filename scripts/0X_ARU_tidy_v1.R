@@ -140,9 +140,11 @@ process_aru_data <- function(main_dir) {
   }
 }
 
+
+#################################
 # Running the Main Function ####
 main_dir <- "D:/ARU_QHI_2024"
 # Main directory where ARU data is stored
 
-process_aru_data(main_dir)
+#process_aru_data(main_dir)
 # Call the main function to start tidy the data
