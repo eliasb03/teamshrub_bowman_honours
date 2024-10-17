@@ -110,7 +110,7 @@ check_aru_files <- function(aru_dir) {
 process_all_aru_results <- function(main_dir) {
   aru_dirs <- list.dirs(main_dir, recursive = FALSE)
   
-  all_formatted_results <- list()  # Initialize a list to store formatted results for all ARUs
+  all_results <- list()  # Initialize a list to store formatted results for all ARUs
   
   for (aru in aru_dirs) {
     gathered_results <- run_birdnet_analysis(aru)
@@ -144,7 +144,7 @@ run_birdnet_analysis <- function(aru_id) {
   gathered_results <- gather_birdNET_results(output_dir)
   
   # Save the formatted results to a .csv file
-  write.csv(gathered_results, file.path(output_dir, "gathered_output.csv"), row.names = FALSE)
+  write.csv(gathered_results, file.path(output_dir, "gathered_results.csv"), row.names = FALSE)
   
   return(gathered_results)
 }
