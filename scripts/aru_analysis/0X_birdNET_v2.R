@@ -11,13 +11,12 @@
 # 
 #------------------------------
 
-# installing and loading relevant packages
-#install.packages('devtools')
+# Loading Packages
 library(devtools)
-#devtools::install_github('nationalparkservice/NSNSDAcoustics')
-library(NSNSDAcoustics)
-#install.packages("data.table")
 library(data.table)
+library(NSNSDAcoustics) #devtools::install_github('nationalparkservice/NSNSDAcoustics')
+library(viridis) 
+library(dplyr)
 
 # Global Variables ####
 birdnet_path <- '"C:/Program Files (x86)/BirdNET-Analyzer/BirdNET-Analyzer.exe"' # local path to BirdNET Analyzer
@@ -29,7 +28,9 @@ qhi_longitude <- -138.9
 qhi_timezone <- "America/Dawson"
 
 
-# BirdNET Analysis Command Function
+#------------------------------
+# BirdNET Analysis Command Line Function ####
+#------------------------------
  # all variables specified and optional in function call
  # default values are assigned, but can be overwritten when calling funciton
 birdNET_analyze <- function(input, output, week = -1, sensi = 1, conf = 0.5, overlap = 1.5, 
@@ -68,7 +69,9 @@ birdNET_analyze <- function(input, output, week = -1, sensi = 1, conf = 0.5, ove
   system(to_execute)
 }
 
-
+#------------------------------
+# BirdNET Format and Gather Function ####
+#------------------------------
 # Function to format and join BirdNET Results
   # function implements two NSNSDAcoustics functions together
   # function both fills results_dir with formatted files and returns a gathered dataframe
@@ -92,5 +95,27 @@ gather_birdNET_results <- function(results_dir, timezone = qhi_timezone) {
   return(gathered_results)
 }
 
+#------------------------------
+# NSNSDAcoustics Spectrogram Function ####
+#------------------------------
+# Function wrapped from NSNSDAcoustics package to plot spectorgram of bird calls
+plot_spectro <- function(audio_dir, dataframe, bird_name){
+  
+  plot.calls <- dataframe[dataframe$common_name == bird, ]
+  
+  birdnet_spectro(
+    data = plot.calls,
+    audio.directory = audio_dir,
+    title = paste0(bird, " Calls"),
+    frq.lim = c(0.5, 12),
+    new.window = TRUE,
+    spec.col = viridis::viridis(30),
+    box = FALSE,
+  )
+}
 
-
+## Example Function Call
+example_audio_dir <- "C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_bowman_honours/data/temp/birdNET_input/ARUQ2_17Aug2024/Data"
+example_dataframe <- read.csv("C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_bowman_honours/data/temp/birdNET_input/ARUQ2_17Aug2024/Output/formatted_output.csv")
+bird <- "Lapland Longspur"
+plot_spectro(example_audio_dir, example_dataframe, bird)
