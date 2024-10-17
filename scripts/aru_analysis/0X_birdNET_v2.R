@@ -134,11 +134,14 @@ plot_spectro <- function(audio_dir, dataframe, bird_name){
 #------------------------------
 # NSNSDAcoustics Barchart Function ####
 #------------------------------
-# Produce a static ggplot barchat with interactive = FALSE,
-# add focal.species with custom colors (any species in the data object
-# that are not in focal.species will be plotted in black as "Other".)
+# Wrapping NSNSDAs function so that I can customize it later
+# always using static ggplot style (interactive = FALSE)
+# optional to add focal species and colors
 birdnet_plot <- function(dat, f.species = NULL, f.colors = NULL) {
-
+  if(is.null(f.colors) && !(is.null(f.species))){
+    f.colors = viridis(length(f.species))
+  }
+  
   birdnet_barchart(
     data = dat,
     interactive = FALSE,
@@ -149,9 +152,9 @@ birdnet_plot <- function(dat, f.species = NULL, f.colors = NULL) {
 }
 
 # Example Call
-plot_data <- read.csv("C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_bowman_honours/data/temp/birdNET_input/ARUQ2_17Aug2024/Output/formatted_output.csv")
-species <- c("Snow Bunting","Lapland Longspur", "Savannah Sparrow")
-colors <- c('#00BE67', '#C77CFF', '#c51b8a')
-birdnet_plot(plot_data, f.species = species, f.colors = colors)
+# plot_data <- read.csv("C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_bowman_honours/data/temp/birdNET_input/ARUQ2_17Aug2024/Output/formatted_output.csv")
+#species <- c("Snow Bunting","Lapland Longspur", "Savannah Sparrow")
+# colors <- c('#00BE67', '#C77CFF', '#c51b8a')
+# birdnet_plot(plot_data, f.species = species, f.colors = colors)
 
 
