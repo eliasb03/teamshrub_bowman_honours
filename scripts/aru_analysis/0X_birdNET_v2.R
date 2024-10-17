@@ -131,13 +131,16 @@ plot_spectro <- function(audio_dir, dataframe, bird_name){
 #------------------------------
 # NSNSDAcoustics Barchart Function ####
 #------------------------------
-# Wrapping NSNSDAs function so that I can customize it later
+# Wrapping NSNSDAs graphing functions
+
 # always using static ggplot style (interactive = FALSE)
 # optional to add focal species and colors
-birdnet_plot <- function(dat, f.species = NULL, f.colors = NULL) {
+birdnet_bar <- function(dat, f.species = NULL, f.colors = NULL) {
   if(is.null(f.colors) && !(is.null(f.species))){
     f.colors = viridis(length(f.species))
   }
+  dat$dateTimeLocal <- as.POSIXct(dat$dateTimeLocal)
+  dat <- as.data.table(dat)
   
   birdnet_barchart(
     data = dat,
@@ -148,10 +151,23 @@ birdnet_plot <- function(dat, f.species = NULL, f.colors = NULL) {
   
 }
 
-# Example Call
-# plot_data <- read.csv("C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_bowman_honours/data/temp/birdNET_input/ARUQ2_17Aug2024/Output/formatted_output.csv")
-#species <- c("Snow Bunting","Lapland Longspur", "Savannah Sparrow")
-# colors <- c('#00BE67', '#C77CFF', '#c51b8a')
+birdnet_bar_interactive <- function(dat) {
+  dat$dateTimeLocal <- as.POSIXct(dat$dateTimeLocal)
+  dat <- as.data.table(dat)
+  
+  birdnet_barchart(
+    data = dat,
+    interactive = TRUE
+  )
+  
+}
+
+
+# Example Calls
+# plot_data <- read.csv("C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_bowman_honours/data/temp/birdNET_input/ARUQ2_17Aug2024/Output/gathered_results.csv")
+#plot_data <- read.csv("C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_bowman_honours/data/temp/birdNET_input/ARU_combined_formatted_results.csv")
+# species <- c("Snow Bunting","Lapland Longspur", "Savannah Sparrow")
+# colors <- c('#00BE67', '#C77CFF', '#c51b8a', '#c26b2a')
 # birdnet_plot(plot_data, f.species = species, f.colors = colors)
-
-
+# birdnet_plot(plot_data)
+# birdnet_plot_interactive(plot_data)
