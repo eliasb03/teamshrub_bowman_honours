@@ -7,6 +7,16 @@
 # Description: This script imports, tidies, and processes ARU data from Qikiqtaruk - Herschel Island.
 # It checks ARU audio files, logs invalid files, and processes valid ones using BirdNET analysis.
 #------------------------------
+# Importing Required Packages ####
+library(seewave)
+library(tuneR)
+library(stringr)
+library(dplyr)
+library(data.table)
+library(NSNSDAcoustics)
+
+# Importing BirdNET Script functions
+source("scripts/0X_birdNET_v2.R")
 
 # Global Variables ####
 birdnet_path <- '"C:/Program Files (x86)/BirdNET-Analyzer/BirdNET-Analyzer.exe"' # local path to BirdNET Analyzer
@@ -17,13 +27,6 @@ qhi_latitude <- 69.5
 qhi_longitude <- -138.9
 qhi_timezone <- "America/Dawson"
 
-# Importing Required Packages ####
-library(seewave)
-library(tuneR)
-library(stringr)
-library(dplyr)
-library(data.table)
-library(NSNSDAcoustics)
 
 #------------------------------
 # Minor Helper Functions ####
@@ -56,67 +59,6 @@ check_and_create_dir <- function(dir_path) {
 # Function to save combined results to a .csv file
 save_combined_results <- function(combined_results, main_dir) {
   write.csv(combined_results, file.path(main_dir, "ARU_combined_formatted_results.csv"), row.names = FALSE)
-}
-
-
-#------------------------------
-# BirdNET Functions ####
-#------------------------------
-
-# BirdNET Analysis Command Function
-birdNET_analyze <- function(input, output, week = -1, sensi = 1, conf = 0.5, overlap = 1.5, 
-                            rtype = "r", lat = qhi_latitude, lon = qhi_longitude){
-  birdnet_analyzer_path <- birdnet_path
-  input_path <- input 
-  output_path <- output
-  rt <- rtype # output dataframe result type
-  wk <- week # week of data
-  ol <- overlap # how many seconds each test should overlap, measurements are in 3s clips
-  min_conf <- conf # minimum confidence threshold
-  sensitivity <- sensi # sensitivity of detection, in range of 0.5 - 1.5
-  latitude <- lat
-  longitude <- lon
-  
-  # Ensure the output file name is correctly formatted for "r" type exports
-  output_file <- if (rtype == "r") {
-    sub("\\.csv$", ".BirdNET.results.csv", output)
-  } else {
-    output
-  }
-  
-  to_execute <-
-    paste0(birdnet_path,
-           " --i ", input_path,
-           " --o ", output_path,
-           " --lat ", latitude,
-           " --lon ", longitude,
-           " --week ", wk,
-           " --sensitivity ", sensitivity,
-           " --min_conf ", min_conf,
-           " --overlap ", ol,
-           " --rtype ", rt
-    )
-  
-  system(to_execute)
-}
-
-
-# Function to format and join BirdNET Results
-format_birdNET_results <- function(results_dir, timezone = qhi_timezone) {
-  # Reformat all raw BirdNET results
-  birdnet_format(
-    results.directory = results_dir, 
-    timezone = timezone  # Pass the timezone as an argument
-  )
-  
-  # Gather all formatted results into one data.frame
-  formatted_results <- birdnet_gather(
-    results.directory = results_dir, 
-    formatted = TRUE  # Gather the formatted results
-  )
-  
-  # Return the combined results
-  return(formatted_results)
 }
 
 #------------------------------
@@ -171,14 +113,14 @@ process_all_aru_results <- function(main_dir) {
   all_formatted_results <- list()  # Initialize a list to store formatted results for all ARUs
   
   for (aru in aru_dirs) {
-    formatted_results <- run_birdnet_analysis(aru)
-    all_formatted_results[[basename(aru)]] <- formatted_results  # Store results by ARU name
+    gathered_results <- run_birdnet_analysis(aru)
+    all_results[[basename(aru)]] <- gathered_results  # Store results by ARU name
   }
   
   # Combine all formatted results into one data frame
-  combined_results <- bind_rows(all_formatted_results, .id = "ARU_ID")
+  aru_results <- bind_rows(all_results, .id = "ARU_ID")
   
-  return(combined_results)  # Return combined results
+  return(aru_results)  # Return combined results
 }
 
 
@@ -199,12 +141,12 @@ run_birdnet_analysis <- function(aru_id) {
   }
   
   # Format and combine results for this ARU
-  formatted_results <- format_birdNET_results(output_dir)
+  gathered_results <- gather_birdNET_results(output_dir)
   
   # Save the formatted results to a .csv file
-  write.csv(formatted_results, file.path(output_dir, "formatted_output.csv"), row.names = FALSE)
+  write.csv(gathered_results, file.path(output_dir, "gathered_output.csv"), row.names = FALSE)
   
-  return(formatted_results)
+  return(gathered_results)
 }
 
 #------------------------------
@@ -224,6 +166,7 @@ run_aru_pipeline <- function(main_dir) {
   return(combined_results)
 }
 
-#################################
-# Run the pipeline
-ARU_output <- run_aru_pipeline(main_dir)
+#------------------------------
+# Main Function Call ####
+#------------------------------
+ARU_output <- run_aru_pipeline(main_dir) # Run the pipeline
