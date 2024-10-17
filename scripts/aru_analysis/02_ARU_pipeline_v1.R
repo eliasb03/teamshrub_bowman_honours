@@ -6,6 +6,7 @@
 #
 # Description: This script imports, tidies, and processes ARU data into observance records from Qikiqtaruk - Herschel Island. It checks ARU audio files, logs invalid files, and processes valid ones using BirdNET analysis functions developed in another script. It runs this processing across all directories provided in the main directory.
 #------------------------------
+
 # Importing Required Packages ####
 library(seewave)
 library(tuneR)
@@ -15,7 +16,7 @@ library(data.table)
 library(NSNSDAcoustics)
 
 # Importing BirdNET Script functions
-source("scripts/aru_analysis/0X_birdNET_v2.R")
+source("scripts/aru_analysis/01_birdNET_functions_v2.R")
 
 # Global Variables ####
 birdNET_path <- '"C:/Program Files (x86)/BirdNET-Analyzer/BirdNET-Analyzer.exe"' # local path to BirdNET Analyzer
