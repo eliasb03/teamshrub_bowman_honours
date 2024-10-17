@@ -16,7 +16,7 @@ library(data.table)
 library(NSNSDAcoustics)
 
 # Importing BirdNET Script functions
-source("scripts/0X_birdNET_v2.R")
+source("scripts/aru_analysis/0X_birdNET_v2.R")
 
 # Global Variables ####
 birdnet_path <- '"C:/Program Files (x86)/BirdNET-Analyzer/BirdNET-Analyzer.exe"' # local path to BirdNET Analyzer
