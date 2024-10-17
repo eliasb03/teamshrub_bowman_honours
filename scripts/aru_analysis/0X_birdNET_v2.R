@@ -95,6 +95,9 @@ gather_birdNET_results <- function(results_dir, timezone = qhi_timezone) {
     tz.local = qhi_timezone
   )
   
+  # Add locationID column
+  gathered_results$locationID <- "qhi"
+  
   # Function to save combined results to a .csv file
   write.csv(gathered_results, file.path(results_dir, "gathered_results.csv"), row.names = FALSE)
   
@@ -127,3 +130,28 @@ plot_spectro <- function(audio_dir, dataframe, bird_name){
 # example_dataframe <- read.csv("C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_bowman_honours/data/temp/birdNET_input/ARUQ2_17Aug2024/Output/formatted_output.csv")
 # bird <- "Lapland Longspur"
 # plot_spectro(example_audio_dir, example_dataframe, bird)
+
+#------------------------------
+# NSNSDAcoustics Barchart Function ####
+#------------------------------
+# Produce a static ggplot barchat with interactive = FALSE,
+# add focal.species with custom colors (any species in the data object
+# that are not in focal.species will be plotted in black as "Other".)
+birdnet_plot <- function(dat, f.species = NULL, f.colors = NULL) {
+
+  birdnet_barchart(
+    data = dat,
+    interactive = FALSE,
+    focal.species = f.species,
+    focal.colors = f.colors
+  )
+  
+}
+
+# Example Call
+plot_data <- read.csv("C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_bowman_honours/data/temp/birdNET_input/ARUQ2_17Aug2024/Output/formatted_output.csv")
+species <- c("Snow Bunting","Lapland Longspur", "Savannah Sparrow")
+colors <- c('#00BE67', '#C77CFF', '#c51b8a')
+birdnet_plot(plot_data, f.species = species, f.colors = colors)
+
+
