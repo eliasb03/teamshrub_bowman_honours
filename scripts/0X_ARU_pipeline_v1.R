@@ -226,4 +226,4 @@ run_aru_pipeline <- function(main_dir) {
 
 #################################
 # Run the pipeline
-#run_aru_pipeline(main_dir)
+ARU_output <- run_aru_pipeline(main_dir)
