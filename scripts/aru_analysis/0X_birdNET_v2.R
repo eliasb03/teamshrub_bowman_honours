@@ -98,6 +98,10 @@ gather_birdNET_results <- function(results_dir, timezone = qhi_timezone) {
   # Add locationID column
   gathered_results$locationID <- "qhi"
   
+  # Format dateTimeLocal column
+  gathered_results$dateTimeLocal <- as.POSIXct(gathered_results$dateTimeLocal)
+  
+  
   # Return the combined results
   return(gathered_results)
 }
@@ -129,7 +133,7 @@ plot_spectro <- function(audio_dir, dataframe, bird_name){
 # plot_spectro(example_audio_dir, example_dataframe, bird)
 
 #------------------------------
-# NSNSDAcoustics Barchart Function ####
+# NSNSDAcoustics Graphing Functions ####
 #------------------------------
 # Wrapping NSNSDAs graphing functions
 
