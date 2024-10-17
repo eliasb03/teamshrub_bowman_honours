@@ -89,17 +89,14 @@ gather_birdNET_results <- function(results_dir, timezone = qhi_timezone) {
   )
   
   # Add time columns using the qhi_timezone variable for both recorder and local time
-  formatted_results <- add_time_cols(
-    dt = formatted_results,
+  gathered_results <- add_time_cols(
+    dt = gathered_results,
     tz.recorder = qhi_timezone,
     tz.local = qhi_timezone
   )
   
   # Add locationID column
   gathered_results$locationID <- "qhi"
-  
-  # Function to save combined results to a .csv file
-  write.csv(gathered_results, file.path(results_dir, "gathered_results.csv"), row.names = FALSE)
   
   # Return the combined results
   return(gathered_results)
