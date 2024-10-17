@@ -4,8 +4,7 @@
 # Created: 2024-10-16
 # Last update: 2024-10-16
 #
-# Description: This script imports, tidies, and processes ARU data from Qikiqtaruk - Herschel Island.
-# It checks ARU audio files, logs invalid files, and processes valid ones using BirdNET analysis.
+# Description: This script imports, tidies, and processes ARU data into observance records from Qikiqtaruk - Herschel Island. It checks ARU audio files, logs invalid files, and processes valid ones using BirdNET analysis functions developed in another script. It runs this processing across all directories provided in the main directory.
 #------------------------------
 # Importing Required Packages ####
 library(seewave)
