@@ -21,7 +21,8 @@ source("scripts/aru_analysis/01_birdNET_functions_v2.R")
 # Global Variables ####
 birdNET_path <- '"C:/Program Files (x86)/BirdNET-Analyzer/BirdNET-Analyzer.exe"' # local path to BirdNET Analyzer
 # Main directory where ARU data is stored in hierarchical structure
-main_dir <- "C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_bowman_honours/data/temp/birdNET_input"
+#main_dir <- "C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_bowman_honours/data/temp/birdNET_input"
+main_dir <- "D:/ARU_QHI_2024"
 # Field site specific variables
 qhi_latitude <- 69.5
 qhi_longitude <- -138.9
