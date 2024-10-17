@@ -83,7 +83,7 @@ filter_valid_files <- function(data_dir, all_aru_files) {
 #------------------------------
 
 # Check ARU Files
-  # checks and logs invalid files into a txt file (wrong duration, wrong filename, wrong type)
+# checks and logs invalid files into a txt file (wrong duration, wrong filename, wrong type)
 check_aru_files <- function(aru_dir) {
   dir_list <- list.dirs(aru_dir, recursive = FALSE)  # List subdirectories representing ARU deployments
   
