@@ -170,8 +170,9 @@ birdNET_bar_interactive <- function(dat) {
 # Example Calls
 # plot_data <- read.csv("C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_bowman_honours/data/temp/birdNET_input/ARUQ2_17Aug2024/Output/gathered_results.csv")
 #plot_data <- read.csv("C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_bowman_honours/data/temp/birdNET_input/ARU_combined_formatted_results.csv")
+plot_data <- read.csv("D:/ARU_QHI_2024/ARUQ1_17Aug2024/Output/gathered_results.csv")
 # species <- c("Snow Bunting","Lapland Longspur", "Savannah Sparrow")
-# colors <- c('#00BE67', '#C77CFF', '#c51b8a', '#c26b2a')
-# birdNET_bar(plot_data, f.species = species, f.colors = colors)
+colors <- c('#00BE67', '#C77CFF', '#c51b8a', '#c26b2a')
+birdNET_bar(plot_data, f.species = species, f.colors = colors)
 # birdNET_bar(plot_data)
-# birdNET_bar_interactive(plot_data)
+birdNET_bar_interactive(plot_data)
