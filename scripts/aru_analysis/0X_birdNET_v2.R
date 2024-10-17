@@ -73,7 +73,7 @@ birdNET_analyze <- function(input, output, week = -1, sensi = 1, conf = 0.5, ove
 # BirdNET Format and Gather Function ####
 #------------------------------
 # Function to format and join BirdNET Results
-  # function implements two NSNSDAcoustics functions together
+  # function implements three NSNSDAcoustics functions together
   # function both fills results_dir with formatted files and returns a gathered dataframe
 gather_birdNET_results <- function(results_dir, timezone = qhi_timezone) {
   # Reformat all raw BirdNET results
@@ -88,6 +88,13 @@ gather_birdNET_results <- function(results_dir, timezone = qhi_timezone) {
     formatted = TRUE  # Gather the formatted results
   )
   
+  # Add time columns using the qhi_timezone variable for both recorder and local time
+  formatted_results <- add_time_cols(
+    dt = formatted_results,
+    tz.recorder = qhi_timezone,
+    tz.local = qhi_timezone
+  )
+  
   # Function to save combined results to a .csv file
   write.csv(gathered_results, file.path(results_dir, "gathered_results.csv"), row.names = FALSE)
   
@@ -99,6 +106,7 @@ gather_birdNET_results <- function(results_dir, timezone = qhi_timezone) {
 # NSNSDAcoustics Spectrogram Function ####
 #------------------------------
 # Function wrapped from NSNSDAcoustics package to plot spectorgram of bird calls
+  # specific parameters can be modified in function to alter output
 plot_spectro <- function(audio_dir, dataframe, bird_name){
   
   plot.calls <- dataframe[dataframe$common_name == bird, ]
@@ -115,7 +123,7 @@ plot_spectro <- function(audio_dir, dataframe, bird_name){
 }
 
 ## Example Function Call
-example_audio_dir <- "C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_bowman_honours/data/temp/birdNET_input/ARUQ2_17Aug2024/Data"
-example_dataframe <- read.csv("C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_bowman_honours/data/temp/birdNET_input/ARUQ2_17Aug2024/Output/formatted_output.csv")
-bird <- "Lapland Longspur"
-plot_spectro(example_audio_dir, example_dataframe, bird)
+# example_audio_dir <- "C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_bowman_honours/data/temp/birdNET_input/ARUQ2_17Aug2024/Data"
+# example_dataframe <- read.csv("C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_bowman_honours/data/temp/birdNET_input/ARUQ2_17Aug2024/Output/formatted_output.csv")
+# bird <- "Lapland Longspur"
+# plot_spectro(example_audio_dir, example_dataframe, bird)
