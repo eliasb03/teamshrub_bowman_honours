@@ -106,6 +106,7 @@ gather_birdNET_results <- function(results_dir, timezone = qhi_timezone) {
   return(gathered_results)
 }
 
+
 #################################################
 # FOLLOWING MOSTLY EXPERIMENTATION NOT USED IN PROJECT YET
 
@@ -175,47 +176,53 @@ birdNET_bar_interactive <- function(dat) {
 # Example Calls
 # plot_data <- read.csv("C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_bowman_honours/data/temp/birdNET_input/ARUQ2_17Aug2024/Output/gathered_results.csv")
 #plot_data <- read.csv("C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_bowman_honours/data/temp/birdNET_input/ARU_combined_formatted_results.csv")
+
+
 plot_data <- read.csv("D:/ARU_QHI_2024/ARUQ1_17Aug2024/Output/gathered_results.csv")
-# species <- c("Snow Bunting","Lapland Longspur", "Savannah Sparrow")
-colors <- c('#00BE67', '#C77CFF', '#c51b8a', '#c26b2a')
+species <- c("Snow Bunting","Lapland Longspur", "Savannah Sparrow")
+#colors <- c('#00BE67', '#C77CFF', '#c51b8a', '#c26b2a')
 birdNET_bar(plot_data, f.species = species, f.colors = colors)
-# birdNET_bar(plot_data)
 birdNET_bar_interactive(plot_data)
+
 ##############
-birdnet_heatmap(
-  data = plot_data,
-  locationID = 'qhi',
-  common.name = 'Savannah Sparrow',
-  conf.threshold = 0.2,
-  dates.sampled = plot_data$date,
-  julian.breaks = seq(from = 173, to = 186, by = 1),
-  comparable.color.breaks = FALSE
-)
-#############
-sp.list <- c("Snow Bunting", "Lapland Longspur", "Savannah Sparrow", "Semipalmated Plover")
+# birdnet_heatmap(
+#   data = plot_data,
+#   locationID = 'qhi',
+#   common.name = 'Savannah Sparrow',
+#   conf.threshold = 0.2,
+#   dates.sampled = plot_data$date,
+#   julian.breaks = seq(from = 173, to = 186, by = 1),
+#   comparable.color.breaks = FALSE
+# )
+# #############
+# sp.list <- c("Snow Bunting", "Lapland Longspur", "Savannah Sparrow", "Semipalmated Plover")
+# 
+# # Empty list to store plots
+# plots <- list()
+# 
+# # Loop through species and generate heatmaps
+# for (i in 1:length(sp.list)) {
+#   
+#   print(paste0('Working on ', sp.list[i]))
+#   
+#   # Generate the heatmap for the current species
+#   g <- birdnet_heatmap(
+#     data = plot_data,
+#     locationID = 'qhi',
+#     common.name = sp.list[i],
+#     conf.threshold = 0.2,
+#     dates.sampled = plot_data$date,
+#     julian.breaks = seq(from = 173, to = 186, by = 1),
+#     comparable.color.breaks = TRUE
+#   )
+#   
+#   # Store the plot in the list
+#   plots[[i]] <- g
+# }
+# 
+# # Display the 4 heatmaps in a grid
+# cowplot::plot_grid(plotlist = plots, ncol = 2)
 
-# Empty list to store plots
-plots <- list()
 
-# Loop through species and generate heatmaps
-for (i in 1:length(sp.list)) {
-  
-  print(paste0('Working on ', sp.list[i]))
-  
-  # Generate the heatmap for the current species
-  g <- birdnet_heatmap(
-    data = plot_data,
-    locationID = 'qhi',
-    common.name = sp.list[i],
-    conf.threshold = 0.2,
-    dates.sampled = plot_data$date,
-    julian.breaks = seq(from = 173, to = 186, by = 1),
-    comparable.color.breaks = TRUE
-  )
-  
-  # Store the plot in the list
-  plots[[i]] <- g
-}
 
-# Display the 4 heatmaps in a grid
-cowplot::plot_grid(plotlist = plots, ncol = 2)
+        
