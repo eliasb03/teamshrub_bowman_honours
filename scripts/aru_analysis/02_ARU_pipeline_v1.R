@@ -16,13 +16,14 @@ library(data.table)
 library(NSNSDAcoustics)
 
 # Importing BirdNET Script functions
-source("scripts/aru_analysis/01_birdNET_functions_v2.R")
+#source("scripts/aru_analysis/01_birdNET_functions_v2.R")
 
 # Global Variables ####
 birdNET_path <- '"C:/Program Files (x86)/BirdNET-Analyzer/BirdNET-Analyzer.exe"' # local path to BirdNET Analyzer
 # Main directory where ARU data is stored in hierarchical structure
-main_dir <- "C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_bowman_honours/data/temp/birdNET_input"
+#main_dir <- "C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_bowman_honours/data/temp/birdNET_input"
 #main_dir <- "D:/ARU_QHI_2024"
+main_dir <- "D:/ARU_code_optimization_data" # subsampled input folder for test work
 # Field site specific variables
 qhi_latitude <- 69.5
 qhi_longitude <- -138.9
@@ -114,6 +115,8 @@ validate_file <- function(file, existing_logs) {
 check_aru_files <- function(aru_dir) {
   dir_list <- list.dirs(aru_dir, recursive = FALSE) # Create list of ARUs in main_dir
   
+  cat("Starting check on", length(dir_list), "ARU .wav directories...\n")
+  
   for (dir in dir_list) {
     data_dir <- file.path(dir, "data") # Define data directory for specific ARU
     aru_id <- get_aru_id(data_dir)# Extract ARU ID
@@ -134,7 +137,8 @@ check_aru_files <- function(aru_dir) {
     
     # Write the log after processing all files
     write.csv(existing_logs, log_file, row.names = FALSE)
-    
+    cat("Finished checking ", dir, " files...\n")
+
   }
 }
 
