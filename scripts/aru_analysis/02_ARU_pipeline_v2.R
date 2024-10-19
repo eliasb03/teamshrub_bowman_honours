@@ -1,8 +1,8 @@
 # teamshrub_bowman_honours
 # 02_ARU_pipeline_v2
 # By: Elias Bowman
-# Created: 2024-10-16
-# Last update: 2024-10-16
+# Created: 2024-10-19
+# Last update: 2024-10-19
 #
 # Description: This script imports, tidies, and processes ARU data into observance records from Qikiqtaruk - Herschel Island. It checks ARU audio files, logs invalid files, and processes valid ones using BirdNET analysis functions developed in another script. It runs this processing across all directories provided in the main directory. Differs from version 1 in using a batch analysis method
 #------------------------------
