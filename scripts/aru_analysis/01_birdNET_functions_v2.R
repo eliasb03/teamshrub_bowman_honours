@@ -5,7 +5,7 @@
 # Created: 2024-07-05
 # Last update: 2024-10-16
 # 
-# Description: This script creates a function to execute python command line prompts to a locally installed BirdNET Analyzer (the Cornell Lab bird ID/classifier) software 
+# Description: This script creates a function to execute python command line prompts to a locally installed BirdNET Analyzer (the Cornell Lab bird ID/classifier) software. This script also works with the NSNSDAcoustics to wrap functions with relevant modifications to my workflow
 # BirdNET Analyzer: https://github.com/kahst/BirdNET-Analyzer
 # https://kahst.github.io/BirdNET-Analyzer/
 # 
@@ -14,12 +14,14 @@
 # Loading Packages
 library(devtools)
 library(data.table)
-library(NSNSDAcoustics) #devtools::install_github('nationalparkservice/NSNSDAcoustics')
+#devtools::install_github('nationalparkservice/NSNSDAcoustics')
+library(NSNSDAcoustics)
+library(lubridate)
 library(viridis) 
 library(dplyr)
 
 # Global Variables ####
-birdNET_path <- '"C:/Program Files (x86)/BirdNET-Analyzer/BirdNET-Analyzer.exe"' # local path to BirdNET Analyzer
+birdNET_path <- "C:/Program Files (x86)/BirdNET-Analyzer/BirdNET-Analyzer.exe" # local path to BirdNET Analyzer
 # Main directory where ARU data is stored in hierarchical structure
 main_dir <- "C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_bowman_honours/data/temp/birdNET_input"
 # Field site specific variables
@@ -33,18 +35,9 @@ qhi_timezone <- "America/Dawson"
 #------------------------------
 # all variables specified and optional in function call
 # default values are assigned, but can be overwritten when calling funciton
-birdNET_analyze <- function(input, output, week = -1, sensi = 1, conf = 0.5, overlap = 1.5, 
-                            rtype = "r", lat = qhi_latitude, lon = qhi_longitude){
-  birdnet_analyzer_path <- birdNET_path
-  input_path <- input 
-  output_path <- output
-  rt <- rtype # output dataframe result type
-  wk <- week # week of data
-  ol <- overlap # how many seconds each test should overlap, measurements are in 3s clips
-  min_conf <- conf # minimum confidence threshold
-  sensitivity <- sensi # sensitivity of detection, in range of 0.5 - 1.5
-  latitude <- lat
-  longitude <- lon
+birdNET_analyze <- function(input, output, week = -1, sensi = 1, conf = 0.1, overlap = 1.5, 
+                            rtype = "r", lat = qhi_latitude, lon = qhi_longitude, 
+                            species_list = NULL, thread_count = NULL, show_warnings = TRUE) {
   
   # Ensure the output file name is correctly formatted for "r" type exports
   output_file <- if (rtype == "r") {
@@ -53,20 +46,76 @@ birdNET_analyze <- function(input, output, week = -1, sensi = 1, conf = 0.5, ove
     output
   }
   
-  to_execute <-
-    paste0(birdnet_analyzer_path,
-           " --i ", input_path,
-           " --o ", output_path,
-           " --lat ", latitude,
-           " --lon ", longitude,
-           " --week ", wk,
-           " --sensitivity ", sensitivity,
-           " --min_conf ", min_conf,
-           " --overlap ", ol,
-           " --rtype ", rt
-    )
+  # Prepare the base command with mandatory parameters
+  to_execute <- paste0(
+    " --i ", input,
+    " --o ", output_file,
+    " --lat ", lat,
+    " --lon ", lon,
+    " --week ", week, 
+    " --sensitivity ", sensi, 
+    " --min_conf ", conf, 
+    " --overlap ", overlap, 
+    " --rtype ", rtype
+  )
   
-  system(to_execute)
+  # Conditionally add species list and thread count if provided
+  if (!is.null(species_list)) to_execute <- paste0(to_execute, " --slist ", species_list)
+  if (!is.null(thread_count)) to_execute <- paste0(to_execute, " --threads ", thread_count)
+  
+  # Display the command to be executed
+  cat("Executing command line prompt:\n", birdNET_path, to_execute, "\n")
+  
+  # Execute the command with or without warnings based on show_warnings
+  output <- system2(birdNET_path, args = to_execute, stdout = TRUE, stderr = if (show_warnings) "" else NULL)
+  
+  # Check if there was an error
+  if (!is.null(attr(output, "status")) && attr(output, "status") != 0) {
+    cat("Error occurred during execution:\n")
+    cat(output, sep = "\n")
+  } else {
+    cat("Execution completed successfully.\n")
+  }
+  
+  return(output)
+}
+
+birdNET_batch_analyze <- function(input, output, week = -1, sensi = 1, conf = 0.1, overlap = 1.5, 
+                                  rtype = "r", lat = qhi_latitude, lon = qhi_longitude, 
+                                  species_list = NULL, thread_count = NULL, show_warnings = TRUE) {
+  
+  # Prepare the base command with mandatory parameters
+  to_execute <- paste0(
+    " --i ", input,
+    " --o ", output,
+    " --lat ", lat,
+    " --lon ", lon,
+    " --week ", week, 
+    " --sensitivity ", sensi, 
+    " --min_conf ", conf, 
+    " --overlap ", overlap, 
+    " --rtype ", rtype
+  )
+  
+  # Conditionally add species list and thread count if provided
+  if (!is.null(species_list)) to_execute <- paste0(to_execute, " --slist ", species_list)
+  if (!is.null(thread_count)) to_execute <- paste0(to_execute, " --threads ", thread_count)
+  
+  # Display the command to be executed
+  cat("Executing command line prompt:\n", birdNET_path, to_execute, "\n")
+  
+  # Execute the command with or without warnings based on show_warnings
+  output <- system2(birdNET_path, args = to_execute, stdout = TRUE, stderr = if (show_warnings) "" else NULL)
+  
+  # Check if there was an error
+  if (!is.null(attr(output, "status")) && attr(output, "status") != 0) {
+    cat("Error occurred during execution:\n")
+    cat(output, sep = "\n")
+  } else {
+    cat("Execution completed successfully.\n")
+  }
+  
+  return(output)
 }
 
 #------------------------------
@@ -108,7 +157,7 @@ gather_birdNET_results <- function(results_dir, timezone = qhi_timezone) {
 
 
 #################################################
-# FOLLOWING MOSTLY EXPERIMENTATION NOT USED IN PROJECT YET
+# FOLLOWING EXPERIMENTATION - NOT USED IN PROJECT YET
 
 #------------------------------
 # NSNSDAcoustics Spectrogram Function ####
@@ -178,11 +227,11 @@ birdNET_bar_interactive <- function(dat) {
 #plot_data <- read.csv("C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_bowman_honours/data/temp/birdNET_input/ARU_combined_formatted_results.csv")
 
 
-plot_data <- read.csv("D:/ARU_QHI_2024/ARUQ1_17Aug2024/Output/gathered_results.csv")
-species <- c("Snow Bunting","Lapland Longspur", "Savannah Sparrow")
+# plot_data <- read.csv("D:/ARU_QHI_2024/ARUQ1_17Aug2024/Output/gathered_results.csv")
+#species <- c("Snow Bunting","Lapland Longspur", "Savannah Sparrow")
 #colors <- c('#00BE67', '#C77CFF', '#c51b8a', '#c26b2a')
-birdNET_bar(plot_data, f.species = species, f.colors = colors)
-birdNET_bar_interactive(plot_data)
+#birdNET_bar(plot_data, f.species = species, f.colors = colors)
+# birdNET_bar_interactive(plot_data)
 
 ##############
 # birdnet_heatmap(
