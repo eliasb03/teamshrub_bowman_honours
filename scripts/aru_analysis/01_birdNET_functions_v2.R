@@ -203,8 +203,7 @@ birdNET_bar <- function(dat, f.species = NULL, f.colors = NULL) {
     data = dat,
     interactive = FALSE,
     focal.species = f.species,
-    focal.colors = f.colors,
-    julian.breaks = seq(from = 173, to = 186, by = 1)
+    focal.colors = f.colors
   )
   
 }
@@ -215,8 +214,7 @@ birdNET_bar_interactive <- function(dat) {
   
   birdnet_barchart(
     data = dat,
-    interactive = TRUE,
-    julian.breaks = seq(from = 173, to = 186, by = 1)
+    interactive = TRUE
   )
   
 }
@@ -225,24 +223,25 @@ birdNET_bar_interactive <- function(dat) {
 # Example Calls
 # plot_data <- read.csv("C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_bowman_honours/data/temp/birdNET_input/ARUQ2_17Aug2024/Output/gathered_results.csv")
 #plot_data <- read.csv("C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_bowman_honours/data/temp/birdNET_input/ARU_combined_formatted_results.csv")
-
+plot_data <- read.csv("D:/ARU_code_optimization_data/ARUQ6_17Aug2024/Output/ARUQ6_17Aug2024.BirdNET_formatted_results.csv")
 
 # plot_data <- read.csv("D:/ARU_QHI_2024/ARUQ1_17Aug2024/Output/gathered_results.csv")
-#species <- c("Snow Bunting","Lapland Longspur", "Savannah Sparrow")
-#colors <- c('#00BE67', '#C77CFF', '#c51b8a', '#c26b2a')
-#birdNET_bar(plot_data, f.species = species, f.colors = colors)
-# birdNET_bar_interactive(plot_data)
+species <- c("Snow Bunting","Lapland Longspur", "Savannah Sparrow")
+colors <- c('#00BE67', '#C77CFF', '#c51b8a', '#c26b2a')
+birdNET_bar(plot_data, f.species = species, f.colors = colors)
+birdNET_bar_interactive(plot_data)
+
 
 ##############
-# birdnet_heatmap(
-#   data = plot_data,
-#   locationID = 'qhi',
-#   common.name = 'Savannah Sparrow',
-#   conf.threshold = 0.2,
-#   dates.sampled = plot_data$date,
-#   julian.breaks = seq(from = 173, to = 186, by = 1),
-#   comparable.color.breaks = FALSE
-# )
+birdnet_heatmap(
+  data = plot_data,
+  locationID = 'qhi',
+  common.name = 'Savannah Sparrow',
+  conf.threshold = 0.2,
+  dates.sampled = plot_data$date,
+  #julian.breaks = seq(from = 173, to = 186, by = 1),
+  comparable.color.breaks = FALSE
+)
 # #############
 # sp.list <- c("Snow Bunting", "Lapland Longspur", "Savannah Sparrow", "Semipalmated Plover")
 # 
