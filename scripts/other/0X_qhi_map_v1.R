@@ -127,6 +127,15 @@ ggplot() +
   coord_sf(xlim = c(aru_loc_bbox["xmin"], aru_loc_bbox["xmax"]), 
            ylim = c(aru_loc_bbox["ymin"], aru_loc_bbox["ymax"]))
 
+# Display qhi terrain map with only bee_proj datapoints
+ggplot() +
+  geom_sf(data = qhi_terrain, aes(fill = UnitName), color = "black") +  # UnitName for the fill aesthetic
+  geom_sf(data = aru_locations %>% filter(bee_proj), color = "black", size = 5) +
+  scale_fill_viridis_d() +  # Use a viridis palette for the fill colors
+  labs(fill = "Unit Name") +  # Add a label for the legend
+  coord_sf(xlim = c(aru_loc_bbox["xmin"], aru_loc_bbox["xmax"]), 
+           ylim = c(aru_loc_bbox["ymin"], aru_loc_bbox["ymax"]))
+
 # Create a table showing the count of observations in each unit_name
 terrain_class_counts <- aru_locations %>%
   group_by(unit_name) %>%  # Group by unit_name
