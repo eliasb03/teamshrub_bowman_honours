@@ -170,6 +170,22 @@ bbs.survey <- bbs.survey %>%
   mutate(end.time.filled = FALSE) %>%
   rows_update(bbs.survey.temp, by = c("observation.id"))
 
+# recode wonky period labels
+bbs.survey <- bbs.survey %>%
+  mutate(PERIOD = as.character(PERIOD)) %>%  # Ensure period is a character
+  mutate(PERIOD = case_when(
+    PERIOD %in% c("FALL", "LATE-1") ~ "LATE",  # Recode FALL and LATE-1 to LATE
+    TRUE ~ PERIOD  # Keep the remaining periods unchanged
+  ))
+
+# removing observances at "MID" time period
+bbs.survey <- bbs.survey %>%
+  filter(PERIOD != "MID")
+
+# removing observances at "MID" time period
+bbs.survey <- bbs.survey %>%
+  mutate(doy = yday(DATE_YMD))
+
 # Create a transect level and survey level dataset ####
 bbs.survey.transect <- bbs.survey
 bbs.survey.temp <- bbs.survey %>%
@@ -202,6 +218,7 @@ bbs.survey <- bbs.survey %>%
     observation.id,
     survey.id,
     date.ymd,
+    doy,
     species,
     spec.code,
     total,
