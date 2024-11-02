@@ -16,8 +16,8 @@ library(lubridate)
 library(ggplot2)
 
 # Importing Data
-bbs.data.path <- "D:/breeding_bird_survey_QHI_2024/QHI_BBS_survey_data_1990_2024.csv"
-bbs.weather.path <- "D:/breeding_bird_survey_QHI_2024/QHI_BBS_weather_data_1990_2024.csv"
+bbs.data.path <- "D:/BBS_QHI_2024/QHI_BBS_survey_data_1990_2024.csv"
+bbs.weather.path <- "D:/BBS_QHI_2024/QHI_BBS_weather_data_1990_2024.csv"
 
 bbs.survey <- read.csv(bbs.data.path)
 bbs.weather <- read.csv(bbs.weather.path)
@@ -268,20 +268,16 @@ bbs.yearly <- bbs.top.spec %>%
             scaled.observations = sum(as.numeric(effort.multiplier), na.rm = TRUE),
             .groups = 'drop' ) # Drop the grouping structure after summarizing
 
+# removing unecessary objects from the environment
+rm(bbs.survey.temp, top_species, bbs.survey.transect)
+rm(top_num)
+
 # Results of script:
 # bbs.survey
 # bbs.long
 # bbs.top.spec
 # bbs.yearly
 
-# select all rows in dataframe that mention nesting related words (ex. "nest")
-nest_words <- c("nest", "nests", "nesting", "egg", "eggs", "chick", "chicks", "fledge", 
-                "fledgling", "fledglings", "hatch", "hatching", "hatchling", "hatchlings", 
-                "brood", "broods", "nestling", "nestlings", "nestsite")
-columns_to_check <- c("notes", "behaviour", "breed")
-
-bbs.survey.nest <- bbs.survey %>%
-  filter(if_any(all_of(columns_to_check), ~ str_detect(tolower(.), paste(nest_words, collapse = "|"))))
 
 
   
