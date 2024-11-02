@@ -8,6 +8,13 @@
 #
 #------------------------------
 
+
+# plot the bbs.long data, x = year, y = sampling.effort
+plot(bbs.long$year, bbs.long$sampling.effort, xlab = "Year", ylab = "Sampling Effort", main = "Sampling Effort by Year")
+
+# plot the bbs.long data, x = day of year, y = sampling.effort, points are filled black
+plot(bbs.long$year, bbs.long$doy, xlab = "Year", ylab = "Day of Year", main = "Day of Year by Year", col = "red")
+
 # find list of years included in the bbs.survey dataset
 list_of_years <- bbs.survey %>%
   distinct(year) %>%
