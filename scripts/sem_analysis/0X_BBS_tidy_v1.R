@@ -273,3 +273,16 @@ bbs.yearly <- bbs.top.spec %>%
 # bbs.long
 # bbs.top.spec
 # bbs.yearly
+
+# select all rows in dataframe that mention nesting related words (ex. "nest")
+nest_words <- c("nest", "nests", "nesting", "egg", "eggs", "chick", "chicks", "fledge", 
+                "fledgling", "fledglings", "hatch", "hatching", "hatchling", "hatchlings", 
+                "brood", "broods", "nestling", "nestlings", "nestsite")
+columns_to_check <- c("notes", "behaviour", "breed")
+
+bbs.survey.nest <- bbs.survey %>%
+  filter(if_any(all_of(columns_to_check), ~ str_detect(tolower(.), paste(nest_words, collapse = "|"))))
+
+
+  
+  
