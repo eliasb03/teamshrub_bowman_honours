@@ -93,7 +93,7 @@ qhi_region <- qhi_buffer[[1]][[1]] %>%
 # Set up terrain classification mapping data
 #------------------------------
 qhi_terrain <- qhi_terrain %>%
-  st_make_valid()
+  st_make_valid()  # Make the polygons valid
 
 #------------------------------
 # Clean and prepare ARU location data
@@ -142,6 +142,13 @@ terrain_class_counts <- aru_locations %>%
   summarise(observations = n(), .groups = 'drop') 
 print(terrain_class_counts)
 
+# Closing unnecessary objects
+# file directories
+rm(terrain_classification, yukon_shape_file, aru_points)
+# temp simple variables
+rm(buffer_size)
+# temporary shape variables
+rm(yukon, qhi_buffer, qhi_coords, qhi_bounds)
 
 #------------------------------
 # Outputs:
