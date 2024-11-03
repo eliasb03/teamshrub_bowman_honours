@@ -4,7 +4,7 @@
 # Author: Elias Bowman
 # Created: 2024-07-03
 # Updated: 2024-11-02
-# Description: This script imports a large eBird dataset for Yukon,
+# Description: This script imports a large eBird dataset for the whole Yukon,
 # cleans it to retain relevant variables, and filters observations
 # near Qikiqtaruk - Herschel Island (QHI) for analysis.
 #----------------------------------------------------------------
@@ -50,12 +50,39 @@ read_ebird_data <- function(file_path) {
 # Function to filter and clean eBird data
 process_ebird_data <- function(data) {
   columns_to_keep <- c(
-    "OBSERVATION.DATE", "COMMON.NAME", "SCIENTIFIC.NAME", "OBSERVATION.COUNT",
-    "COUNTY", "LOCALITY", "LOCALITY.ID", "YEAR", "LATITUDE", "LONGITUDE", 
-    "OBSERVER.ID", "GROUP.IDENTIFIER", "REVIEWED", "TRIP.COMMENTS", 
-    "SPECIES.COMMENTS", "SAMPLING.EVENT.IDENTIFIER", "TAXONOMIC.ORDER", 
-    "TAXON.CONCEPT.ID", "CATEGORY", "PROTOCOL.TYPE", "DURATION.MINUTES", 
-    "NUMBER.OBSERVERS", "GLOBAL.UNIQUE.IDENTIFIER"
+    "OBSERVATION.DATE",
+    "COMMON.NAME",
+    "SCIENTIFIC.NAME",
+    "OBSERVATION.COUNT",
+    "COUNTY",
+    "LOCALITY",
+    "BREEDING.CODE",
+    "BREEDING.CATEGORY",
+    "BEHAVIOR.CODE",
+    "AGE.SEX",
+    "YEAR",
+    "LATITUDE",
+    "LONGITUDE",
+    "TRIP.COMMENTS",
+    "OBSERVER.ID",
+    "SPECIES.COMMENTS",
+    "GROUP.IDENTIFIER",
+    "LOCALITY.ID",
+    "REVIEWED",
+    "APPROVED",
+    "DURATION.MINUTES",
+    "NUMBER.OBSERVERS",
+    "SAMPLING.EVENT.IDENTIFIER",
+    "TAXONOMIC.ORDER",
+    "TAXON.CONCEPT.ID",
+    "PROTOCOL.TYPE",
+    "CATEGORY",
+    "GLOBAL.UNIQUE.IDENTIFIER",
+    "IBA.CODE",
+    "BCR.CODE",
+    "USFWS.CODE",
+    "EFFORT.DISTANCE.KM",
+    "EFFORT.AREA.HA"
   )
   
   data %>%
