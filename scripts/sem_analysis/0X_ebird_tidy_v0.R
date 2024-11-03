@@ -1,70 +1,69 @@
-#------------------------------
+#----------------------------------------------------------------
 # teamshrub_bowman_honours
-# 0X_ebird_tidy_v0
-# By: Elias Bowman 
+# Script: 0X_ebird_tidy_v0
+# Author: Elias Bowman
 # Created: 2024-07-03
-# Updated: 2024-10-04
-# Description: This script will do the initial processing and tidying of the ebird dataset. This script witll import the ebird dataset of the Yukon, a large file received from the ebird database, and it will clean and tidy the data to include only relevant variables for my analysis and limit the observations to those that surround QHI.
-# 
-# Roughly script count: #2
-# 
-#------------------------------
+# Updated: 2024-11-02
+# Description: This script imports a large eBird dataset for Yukon,
+# cleans it to retain relevant variables, and filters observations
+# near Qikiqtaruk - Herschel Island (QHI) for analysis.
+#----------------------------------------------------------------
 
-# importing packages
-library(tidyverse)
-library(readr)
-library(ggplot2)
-library(skimr)
-library(terra) # spatial data package
-library(leaflet)
+# Load necessary libraries
+library(tidyverse)    # Data manipulation
+library(readr)        # Data reading functions
+library(ggplot2)      # Plotting
+library(skimr)        # Data summary
+library(terra)        # Spatial data handling
+library(leaflet)      # Interactive mapping
 
+# Set file path for eBird data
+# ebird_file_path <- file.path("D:/ebird_data/ebird_download/ebd_CA-YT_unv_smp_relMay-2024/ebd_CA-YT_unv_smp_relMay-2024.txt") # Local hard drive path option (uncomment if needed)
+ebird_file_path <- file.path("data/raw/ebd_CA-YT_unv_smp_relMay-2024/ebd_CA-YT_unv_smp_relMay-2024.txt")
 
-# specify file paths for ebird data
-#ebird_file_path_harddrive <- "D:/Bowman_birds/ebird_download/ebd_CA-YT_unv_smp_relMay-2024/ebd_CA-YT_unv_smp_relMay-2024.txt" # path to harddrive data 
-ebird_file_path <- "C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_bowman_honours/data/raw/ebd_CA-YT_unv_smp_relMay-2024/ebd_CA-YT_unv_smp_relMay-2024.txt" 
-
-# read data from ebird
+# Load eBird data with tab-separated format and no quoted fields
 ebird_full_data <- read.table(ebird_file_path, header = TRUE, sep = "\t", quote = "", fill = TRUE, stringsAsFactors = FALSE)
 
-# specify columns of interest
-columns_to_keep <- c("OBSERVATION.DATE", "COMMON.NAME", "SCIENTIFIC.NAME", "OBSERVATION.COUNT", "COUNTY", "LOCALITY", "LOCALITY.ID", "YEAR", "LATITUDE", "LONGITUDE", "OBSERVER.ID", "GROUP.IDENTIFIER", "REVIEWED", "TRIP.COMMENTS", "SPECIES.COMMENTS", "SAMPLING.EVENT.IDENTIFIER", "TAXONOMIC.ORDER", "TAXON.CONCEPT.ID", "CATEGORY", "PROTOCOL.TYPE", "DURATION.MINUTES", "NUMBER.OBSERVERS", "GLOBAL.UNIQUE.IDENTIFIER")
+# Define columns to retain for analysis
+columns_to_keep <- c(
+  "OBSERVATION.DATE", "COMMON.NAME", "SCIENTIFIC.NAME", "OBSERVATION.COUNT",
+  "COUNTY", "LOCALITY", "LOCALITY.ID", "YEAR", "LATITUDE", "LONGITUDE", 
+  "OBSERVER.ID", "GROUP.IDENTIFIER", "REVIEWED", "TRIP.COMMENTS", 
+  "SPECIES.COMMENTS", "SAMPLING.EVENT.IDENTIFIER", "TAXONOMIC.ORDER", 
+  "TAXON.CONCEPT.ID", "CATEGORY", "PROTOCOL.TYPE", "DURATION.MINUTES", 
+  "NUMBER.OBSERVERS", "GLOBAL.UNIQUE.IDENTIFIER"
+)
 
-# process ebird data
-  # select only northern observations, convert date and isolate year, select columns of interest, and make all lowercase
+# Filter data for northern observations and select relevant columns
 ebird_north_data <- ebird_full_data %>%
-  filter(LATITUDE > 69) %>%
-  mutate(OBSERVATION.DATE = as.Date(OBSERVATION.DATE, format = "%Y-%m-%d")) %>%
-  mutate(YEAR = as.integer(format(OBSERVATION.DATE, "%Y"))) %>%
-  select(all_of(columns_to_keep)) %>%
-  rename_all(tolower)
+  filter(LATITUDE > 69) %>%                                  # Only northern observations (Latitude > 69)
+  mutate(
+    OBSERVATION.DATE = as.Date(OBSERVATION.DATE, format = "%Y-%m-%d"), # Convert date column to Date type
+    YEAR = as.integer(format(OBSERVATION.DATE, "%Y"))                  # Extract year for convenience
+  ) %>%
+  select(all_of(columns_to_keep)) %>%                        # Keep only selected columns
+  rename_all(tolower)                                        # Convert column names to lowercase
 
-# importing qikqtaruk outline shapefile
+# Load the Qikiqtaruk Island outline shapefile
 qhi_outline <- vect("C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_bowman_honours/data/shape/qhi_bird_polygons_July1/qhi_region.shp")
 
-# converting the coordinate system to mathc the ebird data 
+# Reproject the QHI shapefile to match the eBird data's coordinate system
 qhi_outline <- project(qhi_outline, "+proj=longlat +datum=WGS84", partial = FALSE)
 
-# ################## This does not currently work, need rejigging, but shouldnt be too too hard
-# qhi_buffer <- st_difference(st_buffer(qhi_coast, 25000), north_coast)
-# 
-# ggplot() +
-#   geom_sf(data = qhi_buffer, color = "black")  +
-#   geom_sf(data = north_coast, color = "red")
-
-# converting ebird_data to shapefiles
-ebird_coordinate_system <- "+proj=longlat +datum=WGS84" #specifying coordinate system
-  # NOTE: this is a dummy variable, I have not confirmed this is the coordinate system that ebird data uses, but it seems likely
-  # "longlat" is just saying that the data are georefrenced based on longitude and latitude
+# Convert eBird northern observations to a spatial vector
+ebird_coordinate_system <- "+proj=longlat +datum=WGS84" # CRS assumed for eBird data
 ebird_vect <- vect(ebird_north_data, geom = c("longitude", "latitude"), crs = ebird_coordinate_system)
 
-# trying to find only ebird observations that intersect with the qhi outline
+# Identify eBird observations that intersect with the QHI outline
 qhi_ebird_vect <- intersect(ebird_vect, qhi_outline)
 
-# turning ebird qhi spatvector back into a dataframe
+# Convert intersected spatial data back into a data frame for further analysis
 qhi_ebird <- as.data.frame(qhi_ebird_vect)
 
-
-# quick map of points
+# Visualize the intersected points with QHI boundary
+# Set map background
 bg <- get_tiles(ext(qhi_ebird_vect))
+
+# Plot the background and points on the map
 plotRGB(bg)
-points(qhi_ebird_vect, col="blue")
+points(qhi_ebird_vect, col = "blue")
