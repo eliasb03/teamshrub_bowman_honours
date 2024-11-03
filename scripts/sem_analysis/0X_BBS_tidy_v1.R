@@ -271,6 +271,7 @@ bbs.yearly <- bbs.top.spec %>%
 # removing unecessary objects from the environment
 rm(bbs.survey.temp, top_species, bbs.survey.transect)
 rm(top_num)
+rm(calculate_sampling_metrics, format_column_names, standardize_time)
 
 # Results of script:
 # bbs.survey
