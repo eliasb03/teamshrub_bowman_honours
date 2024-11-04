@@ -242,6 +242,8 @@ birdnet_heatmap(
   #julian.breaks = seq(from = 173, to = 186, by = 1),
   comparable.color.breaks = FALSE
 )
+
+
 # #############
 # sp.list <- c("Snow Bunting", "Lapland Longspur", "Savannah Sparrow", "Semipalmated Plover")
 # 

@@ -89,7 +89,8 @@ process_ebird_data <- function(data) {
     filter(LATITUDE > 69) %>%  # Only northern observations
     mutate(
       OBSERVATION.DATE = as.Date(OBSERVATION.DATE, format = "%Y-%m-%d"),
-      YEAR = as.integer(format(OBSERVATION.DATE, "%Y"))
+      YEAR = as.integer(format(OBSERVATION.DATE, "%Y")),
+      OBSERVATION.COUNT = as.double(OBSERVATION.COUNT)  # Convert observation.count to double
     ) %>%
     select(all_of(columns_to_keep)) %>%
     rename_all(tolower)
