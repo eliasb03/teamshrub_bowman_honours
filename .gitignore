@@ -89,3 +89,6 @@ D:/*
 
 # Ignore Spectrogram Outputs
 outputs/spectrograms/*
+
+# Ignore scrapwork outputs
+outputs/scrap/*
