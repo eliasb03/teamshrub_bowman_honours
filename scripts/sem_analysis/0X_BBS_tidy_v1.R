@@ -3,8 +3,9 @@
 # 0X_BBS_tidy_v0
 # By: Elias Bowman 
 # Created: 2024-09-19
-# 
-# Description: This script will import and tidy the Ranger collected Breeding Bird Data from Qikiqtaruk - Herschel Island Territorial Park 
+#
+# Description: This script will import and tidy the Ranger collected Breeding Bird Data 
+# from Qikiqtaruk - Herschel Island Territorial Park.
 #
 #------------------------------
 
@@ -14,21 +15,62 @@ library(tidyverse)
 library(skimr)
 library(lubridate)
 library(ggplot2)
+library(hms)
 
 # Importing Data
 bbs.data.path <- "D:/BBS_QHI_2024/QHI_BBS_survey_data_1990_2024.csv"
 bbs.weather.path <- "D:/BBS_QHI_2024/QHI_BBS_weather_data_1990_2024.csv"
-
 bbs.survey <- read.csv(bbs.data.path)
 bbs.weather <- read.csv(bbs.weather.path)
 
-# Defining Relevant Functions ####
+# Function to add observation ID and handle NA totals
+add_observation_id <- function(df) {
+  df %>%
+    mutate(
+      observation.id = row_number(),
+      total_changed = ifelse(is.na(total) | total == 0, TRUE, FALSE),
+      total = ifelse(is.na(total) | total == 0, 1, total)
+    )
+}
+
+# Function to format the date column
+format_date_column <- function(df) {
+  df %>%
+    mutate(date_ymd = paste(day, month, year, sep = "-") %>%
+             trimws() %>%
+             sub("^(\\d{1})-", "0\\1-", .)) %>%
+    mutate(date_ymd = dmy(date_ymd))
+}
+
+# Function to combine notes columns
+combine_notes <- function(df) {
+  df %>%
+    mutate(
+      notes_1 = case_when(
+        trimws(notes) != "" & trimws(x) != "" ~ paste(notes, x, sep = ", "),
+        trimws(notes) != "" ~ notes,
+        trimws(x) != "" ~ x,
+        TRUE ~ ""
+      )
+    ) %>%
+    select(-notes, -x) %>%
+    rename(notes = notes_1)
+}
+
+# Function to create indexing columns
+create_indexing_columns <- function(df) {
+  df %>%
+    mutate(
+      transect.id = paste(date, period, survey_num, transect, sep = "_"),
+      survey.id = paste(date, period, survey_num, sep = "_")
+    )
+}
 
 # Function to standardize time format, adding missing colons
 standardize_time <- function(time_str) {
   # Remove any spaces or extra characters
   time_str <- gsub("\\s+", "", time_str)
-  
+
   if (nchar(time_str) == 3 & grepl("^[0-9]{3}$", time_str)) {
     # For cases like "959" -> "9:59"
     time_str <- paste0(substr(time_str, 1, 1), ":", substr(time_str, 2, 3))
@@ -36,30 +78,70 @@ standardize_time <- function(time_str) {
     # For cases like "1030" -> "10:30"
     time_str <- paste0(substr(time_str, 1, 2), ":", substr(time_str, 3, 4))
   }
-  
+
   # If the time is "00:00", return NA
   if (time_str == "00:00"|time_str == "0:00"|time_str == "0"|time_str == "00"|time_str == "000") {
     return(NA)
   }
-  
+
   return(time_str)
 }
 
-# Function to format column names
-format_column_names <- function(df) {
-  colnames(df) <- colnames(df) %>%
-    tolower() %>%     # Convert to lowercase
-    gsub("_", ".", .) # Replace underscores with dots
-  return(df)
+standardize_and_parse_times <- function(df) {
+  df %>%
+    mutate(
+      time = sapply(time, standardize_time),
+      start.time = sapply(start.time, standardize_time),
+      end.time = sapply(end.time, standardize_time)
+    ) %>%
+    mutate(
+      start.time = hms::parse_hm(start.time),
+      end.time = hms::parse_hm(end.time),
+      time = hms::parse_hm(time)
+    )
 }
 
-# Function to calculate sampling time and effort
+# Function to create a date-time column
+create_date_time_column <- function(df) {
+  df %>%
+    mutate(date.time = as.POSIXct(paste(date_ymd, time), format = "%Y-%m-%d %H:%M:%S"))
+}
+
+# Function to fill missing start and end times within groups
+fill_missing_times <- function(df) {
+  df %>%
+    group_by(transect.id) %>%
+    fill(start.time, .direction = "downup") %>%
+    fill(end.time, .direction = "downup") %>%
+    ungroup()
+}
+
+# Function to recode period labels, remove "MID" observations, and convert PERIOD to a factor
+recode_period_labels <- function(df) {
+  df %>%
+    mutate(period = as.character(period)) %>%
+    mutate(period = ifelse(period %in% c("FALL", "LATE-1"), "LATE", period)) %>%
+    filter(period != "MID") %>%
+    mutate(
+      period = factor(period, levels = c("EARLY", "LATE")),  # Set factor levels as desired
+      doy = yday(date_ymd)
+    )
+}
+
+# Function to rename all column names to lowercase
+rename_columns_lowercase <- function(df) {
+  df %>%
+    rename_with(tolower)
+}
+
+# Function to calculate sampling time, effort, and effort multiplier
 calculate_sampling_metrics <- function(data) {
   data <- data %>%
     mutate(
-      sampling.time = as.numeric(difftime(End.time, Start.time, units = "mins")),
-      num_observers = sapply(strsplit(Observers, ","), length),
-      sampling_effort = sampling.time * num_observers)
+      sampling.time = as.numeric(difftime(end.time, start.time, units = "mins")),
+      num_observers = sapply(strsplit(observers, ","), length),
+      sampling_effort = sampling.time * num_observers
+    )
   
   # Get the min and max sampling effort values
   min_effort <- min(data$sampling_effort, na.rm = TRUE)
@@ -80,206 +162,222 @@ calculate_sampling_metrics <- function(data) {
   return(data)
 }
 
-# Modifying and Tidying Existing Dataframe ####
-# Giving each observation an id
-bbs.survey <- bbs.survey %>%
-  mutate(observation.id = row_number())
+# Function to clean and fill missing or short sampling times
+clean_sampling_times <- function(data) {
+  # Step 1: Select rows with less than 5 mins of sampling time or NA Start/End times
+  data_temp <- data %>%
+    filter((end.time - start.time) < 5 | is.na(start.time) | is.na(end.time)) %>%
+    group_by(transect.id) %>%
+    mutate(
+      # Fill Start.time with min(TIME) if NA and if valid TIME values exist
+      start.time = ifelse(
+        is.na(start.time),
+        ifelse(any(!is.na(time)), hms::as_hms(min(time, na.rm = TRUE)), NA),
+        start.time
+      ),
+      
+      # Fill End.time with max(TIME) if NA and if valid TIME values exist
+      end.time = ifelse(
+        is.na(end.time),
+        ifelse(any(!is.na(time)), hms::as_hms(max(time, na.rm = TRUE)), NA),
+        end.time
+      ),
+      
+      # If Start.time is filled but End.time is still NA, set End.time to Start.time if there's only one unique TIME
+      end.time = ifelse(
+        is.na(end.time) & !is.na(start.time) & n_distinct(na.omit(time)) == 1,
+        start.time,
+        end.time
+      ),
+      
+      # Ensure End.time is adjusted if sampling time is less than 5 minutes
+      end.time = ifelse(
+        (end.time - start.time) < 5,
+        ifelse(any(!is.na(time)), hms::as_hms(max(time, na.rm = TRUE)), end.time),
+        end.time
+      ),
+      
+      # Flag that End.time was filled in this step
+      end.time.filled = TRUE
+    ) %>%
+    ungroup()
+  
+  # Step 2: Update the original dataset with corrected End.time values
+  data <- data %>%
+    mutate(end.time.filled = FALSE) %>%
+    rows_update(data_temp, by = c("observation.id"))
+  
+  # Step 3: Summarize by survey.id to get the earliest Start.time and latest End.time for each survey
+  data_summary <- data %>%
+    group_by(survey.id) %>%
+    summarize(
+      start.time = hms::as_hms(min(start.time, na.rm = TRUE)),
+      end.time = hms::as_hms(max(end.time, na.rm = TRUE)),
+      .groups = 'drop'
+    )
+  
+  # Step 4: Join the summarized Start.time and End.time back to the main data
+  data <- data %>%
+    select(-start.time, -end.time) %>%  # Remove old Start.time and End.time columns
+    left_join(data_summary, by = "survey.id")  # Join the summarized Start.time and End.time
+  
+  return(data)
+}
 
-# Filling in total with 1 when NA or 0, and noting it in a new column
-bbs.survey <- bbs.survey %>%
-  mutate(
-    # Create a new boolean column indicating if total was changed
-    total_changed = ifelse(is.na(TOTAL) | TOTAL == 0, TRUE, FALSE),
-    
-    # Replace NA and 0 with 1
-    TOTAL = ifelse(is.na(TOTAL) | TOTAL == 0, 1, TOTAL)
-  )
+# Function to convert column names from snake_case to dot notation
+convert_column_names_to_dot <- function(data) {
+  colnames(data) <- gsub("_", ".", colnames(data))
+  return(data)
+}
 
-# Create a new formatted Date column ####
-bbs.survey$DATE_YMD <- paste(bbs.survey$DAY, bbs.survey$MONTH, bbs.survey$YEAR, sep = "-") %>%
-  trimws() %>%                         # Remove spaces
-  sub("^(\\d{1})-", "0\\1-", .)       # Add leading zero for single digit days
+# Function to reformat column order in the main dataset
+reformat_column_order <- function(data) {
+  data %>%
+    select(
+      observation.id,
+      survey.id,
+      date.ymd,
+      doy,
+      species,
+      spec.code,
+      total,
+      time,
+      sampling.time,
+      num.observers,
+      sampling.effort,
+      effort.multiplier,
+      breed,
+      behaviour,
+      notes,
+      observers,
+      date,
+      period,
+      year,
+      month,
+      day,
+      survey.num,
+      transect,
+      start.time,
+      end.time,
+      rec.num,
+      end.time.filled,
+      transect.id
+    )
+}
 
-# Convert DATE to proper date format (Year-Month-Day)
-bbs.survey$DATE_YMD <- dmy(bbs.survey$DATE_YMD)
-
-# Amalgamate notes into a single column
-bbs.survey <- bbs.survey %>%
-  mutate(notes = case_when(
-    trimws(NOTES) != "" & trimws(X) != "" ~ paste(NOTES, X, sep = ", "),  # Both notes exist
-    trimws(NOTES) != "" ~ NOTES,                                            # Only NOTES exists
-    trimws(X) != "" ~ X,                                                    # Only X exists
-    TRUE ~ ""                                                               # Both notes are NA or empty
-  )) %>%
-  select(-NOTES, -X)  # Remove original note columns
-
-# Create two new indexing columns ####
-bbs.survey <- bbs.survey %>%
-  mutate(transect_id = paste(DATE, PERIOD, SURVEY_NUM, TRANSECT, sep = "_")) %>%
-  mutate(survey_id = paste(DATE, PERIOD, SURVEY_NUM, sep = "_"))
-
-# Standardize TIME columns ####
-bbs.survey$TIME <- sapply(bbs.survey$TIME, standardize_time)
-bbs.survey$Start.time <- sapply(bbs.survey$Start.time, standardize_time)
-bbs.survey$End.time <- sapply(bbs.survey$End.time, standardize_time)
-
-# Parse columns as Time Data types
-bbs.survey$Start.time <- hms::parse_hm(bbs.survey$Start.time)
-bbs.survey$End.time <- hms::parse_hm(bbs.survey$End.time)
-bbs.survey$TIME <- hms::parse_hm(bbs.survey$TIME)
-
-# Create date_time column ####
-bbs.survey <- bbs.survey %>%
-  mutate(date_time = as.POSIXct(paste(DATE_YMD, TIME), format = "%Y-%m-%d %H:%M:%S"))
-
-# Fill in Start and End Times for all observations ####
-bbs.survey <- bbs.survey %>%
-  group_by(transect_id) %>%
-  fill(Start.time, .direction = "downup") %>%
-  fill(End.time, .direction = "downup")
-
-bbs.survey.temp <- bbs.survey %>%
-  filter((End.time - Start.time) < 5 | is.na(Start.time) | is.na(End.time)) %>%  # Select rows with less than 5 mins of sampling time or NA values
-  group_by(transect_id) %>%
-  mutate(
-    # Fill Start.time with min(TIME) if NA and if there are valid TIME values
-    Start.time = ifelse(is.na(Start.time), 
-                        ifelse(any(!is.na(TIME)), hms::as_hms(min(TIME, na.rm = TRUE)), NA), 
-                        Start.time),
-    
-    # Fill End.time with max(TIME) if NA and if there are valid TIME values
-    End.time = ifelse(is.na(End.time), 
-                      ifelse(any(!is.na(TIME)), hms::as_hms(max(TIME, na.rm = TRUE)), NA), 
-                      End.time),
-    
-    # If Start.time is filled but End.time is still NA, fill End.time with Start.time if there's only one unique time
-    End.time = ifelse(is.na(End.time) & !is.na(Start.time) & n_distinct(na.omit(TIME)) == 1, 
-                      Start.time, End.time),
-    
-    # Ensure End.time is corrected if sampling time is less than 5 minutes
-    End.time = ifelse((End.time - Start.time) < 5, 
-                      ifelse(any(!is.na(TIME)), hms::as_hms(max(TIME, na.rm = TRUE)), End.time), 
-                      End.time),
-    
-    end.time.filled = TRUE
-  ) %>%
-  ungroup()
-
-# Reintroduce modified bbs.survey with corrected end times
-bbs.survey <- bbs.survey %>%
-  mutate(end.time.filled = FALSE) %>%
-  rows_update(bbs.survey.temp, by = c("observation.id"))
-
-# recode wonky period labels
-bbs.survey <- bbs.survey %>%
-  mutate(PERIOD = as.character(PERIOD)) %>%  # Ensure period is a character
-  mutate(PERIOD = case_when(
-    PERIOD %in% c("FALL", "LATE-1") ~ "LATE",  # Recode FALL and LATE-1 to LATE
-    TRUE ~ PERIOD  # Keep the remaining periods unchanged
-  ))
-
-# removing observances at "MID" time period
-bbs.survey <- bbs.survey %>%
-  filter(PERIOD != "MID")
-
-# removing observances at "MID" time period
-bbs.survey <- bbs.survey %>%
-  mutate(doy = yday(DATE_YMD))
-
-# Create a transect level and survey level dataset ####
-bbs.survey.transect <- bbs.survey
-bbs.survey.temp <- bbs.survey %>%
-  group_by(survey_id) %>%
-  summarize(
-    # Get the earliest start time and latest end time for each survey.id
-    End.time = hms::as_hms(max(End.time, na.rm = TRUE)),
-    Start.time = hms::as_hms(min(Start.time, na.rm = TRUE)),
-    
-    .groups = 'drop'  # Ungroup after summarizing
-  )
-
-# Join the summarized dataset back to the original, dropping the old start.time and end.time
-bbs.survey <- bbs.survey %>%
-  select(-Start.time, -End.time) %>%  # Remove old start.time and end.time
-  left_join(bbs.survey.temp, by = "survey_id")  # Join with the summary
-
-# Calculate Sampling Time and Effort
-bbs.survey <- calculate_sampling_metrics(bbs.survey)
-bbs.survey.transect <- calculate_sampling_metrics(bbs.survey.transect)
-
-
-# Reformat Dataframe Column Names ####
-bbs.survey <- format_column_names(bbs.survey)
-bbs.survey.transect <- format_column_names(bbs.survey.transect)
-
-# Reformat column order
-bbs.survey <- bbs.survey %>%
-  select(
-    observation.id,
-    survey.id,
-    date.ymd,
-    doy,
-    species,
-    spec.code,
-    total,
-    time,
-    sampling.time,
-    num.observers,
-    sampling.effort,
-    effort.multiplier,
-    breed,
-    behaviour,
-    notes,
-    observers,
-    date,
-    period,
-    year,
-    month,
-    day,
-    survey.num,
-    transect,
-    start.time,
-    end.time,
-    rec.num,
-    end.time.filled,
-    transect.id
-  )
+### Functions for creating alternate datasets ####
 
 # Create long format version
-bbs.long <- bbs.survey %>%
-  uncount(total) 
+convert_to_long <- function(data){
+  data %>%
+    uncount(total)
+  return(data)
+}
 
-# Selecting for the top X species
-top_num <- 12
-top_species <- bbs.long %>%
-  group_by(spec.code) %>%
-  summarise(total.observations = n()) %>%  # Count the number of observations per species
-  arrange(desc(total.observations)) %>%     # Sort by number of observations in descending order
-  slice_head(n = top_num)                        # Select the top 15 species
+# Create only top X# species
+select_top_species <- function(data, top_num) {
+  top_species <- data %>%
+    group_by(spec.code) %>%
+    summarise(total.observations = n()) %>%  # Count the number of observations per species
+    arrange(desc(total.observations)) %>%     # Sort by number of observations in descending order
+    slice_head(n = top_num)     
+  
+  filtered_data <- data %>%
+    filter(spec.code %in% top_species$spec.code)
+  
+  return(filtered_data)
+}
 
-# Filter the original dataset to only include these top 15 species
-bbs.top.spec <- bbs.long %>%
-  filter(spec.code %in% top_species$spec.code)
+# Create bbs with only selected species
+select_species_list <- function(data, species_list) {
+  data %>%
+    filter(species %in% species_list)
+  
+  return(data)
+}
 
-# Summarize the data by species and year
-bbs.yearly <- bbs.top.spec %>%
-  group_by(species, year) %>%                      # Group by species and year
-  summarise(total.observations = n(),  # Count observations per species per year
-            scaled.observations = sum(as.numeric(effort.multiplier), na.rm = TRUE),
-            .groups = 'drop' ) # Drop the grouping structure after summarizing
+
+# Function to match species codes to species names
+fill_species_names <- function(data, mapping) {
+  # Perform a left join to add species names based on species codes
+  filled_data <- data %>%
+    left_join(mapping, by = "spec.code")
+  
+  return(filled_data)
+}
+
+# Function to summarize by year, selecting the larger number of observations from early and late transects
+summarize_by_year_species <- function(data, mapping) {
+  
+  # Summarize the data by species and year
+  summarized_data <- data %>%
+    group_by(spec.code, year) %>%
+    summarise(
+      total.observations_early = sum(ifelse(period == "EARLY", total, 0), na.rm = TRUE),
+      total.observations_late = sum(ifelse(period == "LATE", total, 0), na.rm = TRUE),
+      
+      # Keep metadata from the larger survey (EARLY or LATE)
+      larger_observation_count = pmax(total.observations_early, total.observations_late),
+      
+      # Retain metadata from the survey with the larger observation count
+      date.ymd = first(ifelse(larger_observation_count == total.observations_early, date.ymd[period == "EARLY"], date.ymd[period == "LATE"])),
+      survey.id = first(ifelse(larger_observation_count == total.observations_early, survey.id[period == "EARLY"], survey.id[period == "LATE"])),
+      observers = first(ifelse(larger_observation_count == total.observations_early, observers[period == "EARLY"], observers[period == "LATE"])),
+      sampling.time = first(ifelse(larger_observation_count == total.observations_early, sampling.time[period == "EARLY"], sampling.time[period == "LATE"])),
+      sampling.effort = first(ifelse(larger_observation_count == total.observations_early, sampling.effort[period == "EARLY"], sampling.effort[period == "LATE"])),
+      effort.multiplier = first(ifelse(larger_observation_count == total.observations_early, effort.multiplier[period == "EARLY"], effort.multiplier[period == "LATE"])),
+      num.observers = first(ifelse(larger_observation_count == total.observations_early, num.observers[period == "EARLY"], num.observers[period == "LATE"])),
+      start.time = first(ifelse(larger_observation_count == total.observations_early, start.time[period == "EARLY"], start.time[period == "LATE"])),
+      end.time = first(ifelse(larger_observation_count == total.observations_early, end.time[period == "EARLY"], end.time[period == "LATE"])),
+      
+      .groups = 'drop'  # Ungroup after summarizing
+    ) 
+  
+  # Fill in species names after summarizing
+  summarized_data <- fill_species_names(summarized_data, mapping)
+  
+  # Return the summarized data with the larger observation count and metadata from the larger survey
+  return(summarized_data)
+}
+
+### Applying transformations sequentially to bbs.survey ####
+bbs.survey <- bbs.survey %>%
+  rename_columns_lowercase() %>%
+  add_observation_id() %>%
+  format_date_column() %>%
+  combine_notes() %>%
+  create_indexing_columns() %>%
+  standardize_and_parse_times() %>%
+  create_date_time_column() %>%
+  fill_missing_times() %>%
+  clean_sampling_times () %>%
+  recode_period_labels() %>%
+  calculate_sampling_metrics() %>%
+  convert_column_names_to_dot() %>%
+  reformat_column_order
+
+
+# Create species ~ species.code mappings
+species_mapping <- unique(bbs.survey %>% select(spec.code, species))
+
+# Create long format version
+bbs.long <- convert_to_long(bbs.survey)
+
+# Create top species versions
+top_spec_num <- 15
+bbs.long.spec.top <- select_top_species(bbs.long, top_spec_num)
+
+# Create with species list
+species_list <- c("Common Eider", "Semipalmated Plover", "Semipalmated Sandpiper", "Baird's Sandpiper", "Red-necked Phalarope", "Glaucous Gull", "Lapland Longspur", "Snow Bunting", "Savannah Sparrow", "Common Redpoll", "Hoary Redpoll") # list of species notable in the 2012 Monitoring Report
+
+
+bbs.long.spec.list <- select_species_list(bbs.long, species_list)
+
+bbs.summary <- summarize_by_year_species(bbs.long, species_mapping)
 
 # removing unecessary objects from the environment
-rm(bbs.survey.temp, top_species, bbs.survey.transect)
-rm(top_num)
-rm(calculate_sampling_metrics, format_column_names, standardize_time)
+rm(top_spec_num, species_mapping,)
+rm(bbs.spec.top)
 
-# Results of script:
-# bbs.survey
-# bbs.long
-# bbs.top.spec
-# bbs.yearly
-
-
-
-  
-  
+bbs.summary.species <- bbs.summary %>%
+  filter(species %in% species_list)
