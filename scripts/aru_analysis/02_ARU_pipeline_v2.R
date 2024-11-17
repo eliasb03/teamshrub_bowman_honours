@@ -17,14 +17,15 @@ library(data.table)
 library(NSNSDAcoustics)
 
 # Importing BirdNET Script functions
-source("scripts/aru_analysis/01_birdNET_functions_v2.R")
+#source("scripts/aru_analysis/01_birdNET_functions_v2.R")
 
 # Global Variables ####
 
 # Main directory where ARU data is stored in hierarchical structure
 #main_dir <- "D:/ARU_QHI_2024"
 main_dir <-
-  "D:/ARU_code_optimization_data" # subsampled input folder for test work
+  #"D:/ARU_code_optimization_data" # subsampled input folder for test work
+  "D:/ARU_QHI_2024/ARUQ5_20Aug2024"
   #"C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_bowman_honours/data/temp/birdNET_input"
 # Field site specific variables
 qhi_latitude <- 69.5
