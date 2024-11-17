@@ -156,122 +156,131 @@ gather_birdNET_results <- function(results_dir, timezone = qhi_timezone) {
 }
 
 
-#################################################
-# FOLLOWING EXPERIMENTATION - NOT USED IN PROJECT YET
-
-#------------------------------
-# NSNSDAcoustics Spectrogram Function ####
-#------------------------------
-# Function wrapped from NSNSDAcoustics package to plot spectorgram of bird calls
-# specific parameters can be modified in function to alter output
-plot_spectro <- function(audio_dir, dataframe, bird_name){
-  
-  plot.calls <- dataframe[dataframe$common_name == bird, ]
-  
-  birdnet_spectro(
-    data = plot.calls,
-    audio.directory = audio_dir,
-    title = paste0(bird, " Calls"),
-    frq.lim = c(0.5, 12),
-    new.window = TRUE,
-    spec.col = viridis::viridis(30),
-    box = FALSE,
-  )
-}
-
-## Example Function Call
-# example_audio_dir <- "C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_bowman_honours/data/temp/birdNET_input/ARUQ2_17Aug2024/Data"
-# example_dataframe <- read.csv("C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_bowman_honours/data/temp/birdNET_input/ARUQ2_17Aug2024/Output/formatted_output.csv")
-# bird <- "Lapland Longspur"
-# plot_spectro(example_audio_dir, example_dataframe, bird)
-
-#------------------------------
-# NSNSDAcoustics Graphing Functions ####
-#------------------------------
-# Wrapping NSNSDAs graphing functions
-
-# always using static ggplot style (interactive = FALSE)
-# optional to add focal species and colors
-birdNET_bar <- function(dat, f.species = NULL, f.colors = NULL) {
-  if(is.null(f.colors) && !(is.null(f.species))){
-    f.colors = viridis(length(f.species))
-  }
-  dat$dateTimeLocal <- as.POSIXct(dat$dateTimeLocal)
-  dat <- as.data.table(dat)
-  
-  birdnet_barchart(
-    data = dat,
-    interactive = FALSE,
-    focal.species = f.species,
-    focal.colors = f.colors
-  )
-  
-}
-
-birdNET_bar_interactive <- function(dat) {
-  dat$dateTimeLocal <- as.POSIXct(dat$dateTimeLocal)
-  dat <- as.data.table(dat)
-  
-  birdnet_barchart(
-    data = dat,
-    interactive = TRUE
-  )
-  
-}
 
 
-# Example Calls
-# plot_data <- read.csv("C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_bowman_honours/data/temp/birdNET_input/ARUQ2_17Aug2024/Output/gathered_results.csv")
-#plot_data <- read.csv("C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_bowman_honours/data/temp/birdNET_input/ARU_combined_formatted_results.csv")
-plot_data <- read.csv("D:/ARU_code_optimization_data/ARUQ6_17Aug2024/Output/ARUQ6_17Aug2024.BirdNET_formatted_results.csv")
-
-# plot_data <- read.csv("D:/ARU_QHI_2024/ARUQ1_17Aug2024/Output/gathered_results.csv")
-species <- c("Snow Bunting","Lapland Longspur", "Savannah Sparrow")
-colors <- c('#00BE67', '#C77CFF', '#c51b8a', '#c26b2a')
-birdNET_bar(plot_data, f.species = species, f.colors = colors)
-birdNET_bar_interactive(plot_data)
+####################################################
+birdNET_batch_analyze("D:/ARU_QHI_2024/ARUQ3_21Aug2024/Data", "D:/ARU_QHI_2024/ARUQ3_21Aug2024/Output", week = -1, sensi = 1, conf = 0.1, overlap = 1.5,
+                                  rtype = "r", lat = qhi_latitude, lon = qhi_longitude,
+                                  species_list = NULL, thread_count = NULL)
 
 
-##############
-birdnet_heatmap(
-  data = plot_data,
-  locationID = 'qhi',
-  common.name = 'Savannah Sparrow',
-  conf.threshold = 0.2,
-  dates.sampled = plot_data$date,
-  #julian.breaks = seq(from = 173, to = 186, by = 1),
-  comparable.color.breaks = FALSE
-)
-
-
-# #############
-# sp.list <- c("Snow Bunting", "Lapland Longspur", "Savannah Sparrow", "Semipalmated Plover")
+# #################################################
+# # FOLLOWING EXPERIMENTATION - NOT USED IN PROJECT YET
 # 
-# # Empty list to store plots
-# plots <- list()
-# 
-# # Loop through species and generate heatmaps
-# for (i in 1:length(sp.list)) {
+# #------------------------------
+# # NSNSDAcoustics Spectrogram Function ####
+# #------------------------------
+# # Function wrapped from NSNSDAcoustics package to plot spectorgram of bird calls
+# # specific parameters can be modified in function to alter output
+# plot_spectro <- function(audio_dir, dataframe, bird_name){
 #   
-#   print(paste0('Working on ', sp.list[i]))
+#   plot.calls <- dataframe[dataframe$common_name == bird, ]
 #   
-#   # Generate the heatmap for the current species
-#   g <- birdnet_heatmap(
-#     data = plot_data,
-#     locationID = 'qhi',
-#     common.name = sp.list[i],
-#     conf.threshold = 0.2,
-#     dates.sampled = plot_data$date,
-#     julian.breaks = seq(from = 173, to = 186, by = 1),
-#     comparable.color.breaks = TRUE
+#   birdnet_spectro(
+#     data = plot.calls,
+#     audio.directory = audio_dir,
+#     title = paste0(bird, " Calls"),
+#     frq.lim = c(0.5, 12),
+#     new.window = TRUE,
+#     spec.col = viridis::viridis(30),
+#     box = FALSE,
 #   )
-#   
-#   # Store the plot in the list
-#   plots[[i]] <- g
 # }
 # 
-# # Display the 4 heatmaps in a grid
-# cowplot::plot_grid(plotlist = plots, ncol = 2)
+# ## Example Function Call
+# # example_audio_dir <- "C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_bowman_honours/data/temp/birdNET_input/ARUQ2_17Aug2024/Data"
+# # example_dataframe <- read.csv("C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_bowman_honours/data/temp/birdNET_input/ARUQ2_17Aug2024/Output/formatted_output.csv")
+# # bird <- "Lapland Longspur"
+# # plot_spectro(example_audio_dir, example_dataframe, bird)
+# 
+# #------------------------------
+# # NSNSDAcoustics Graphing Functions ####
+# #------------------------------
+# # Wrapping NSNSDAs graphing functions
+# 
+# # always using static ggplot style (interactive = FALSE)
+# # optional to add focal species and colors
+# birdNET_bar <- function(dat, f.species = NULL, f.colors = NULL) {
+#   if(is.null(f.colors) && !(is.null(f.species))){
+#     f.colors = viridis(length(f.species))
+#   }
+#   dat$dateTimeLocal <- as.POSIXct(dat$dateTimeLocal)
+#   dat <- as.data.table(dat)
+#   
+#   birdnet_barchart(
+#     data = dat,
+#     interactive = FALSE,
+#     focal.species = f.species,
+#     focal.colors = f.colors
+#   )
+#   
+# }
+# 
+# birdNET_bar_interactive <- function(dat) {
+#   dat$dateTimeLocal <- as.POSIXct(dat$dateTimeLocal)
+#   dat <- as.data.table(dat)
+#   
+#   birdnet_barchart(
+#     data = dat,
+#     interactive = TRUE
+#   )
+#   
+# }
+# 
+# 
+# # Example Calls
+# # plot_data <- read.csv("C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_bowman_honours/data/temp/birdNET_input/ARUQ2_17Aug2024/Output/gathered_results.csv")
+# #plot_data <- read.csv("C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_bowman_honours/data/temp/birdNET_input/ARU_combined_formatted_results.csv")
+# plot_data <- read.csv("D:/ARU_code_optimization_data/ARUQ6_17Aug2024/Output/ARUQ6_17Aug2024.BirdNET_formatted_results.csv")
+# birdNET_bar_interactive(ARU_output)
+# 
+# # plot_data <- read.csv("D:/ARU_QHI_2024/ARUQ1_17Aug2024/Output/gathered_results.csv")
+# species <- c("Snow Bunting","Lapland Longspur", "Savannah Sparrow")
+# colors <- c('#00BE67', '#C77CFF', '#c51b8a', '#c26b2a')
+# birdNET_bar(plot_data, f.species = species, f.colors = colors)
+# 
+# 
+# 
+# ##############
+# birdnet_heatmap(
+#   data = ARU_output,
+#   locationID = 'qhi',
+#   common.name = 'Snow Bunting',
+#   conf.threshold = 0.2,
+#   dates.sampled = ARU_output$date,
+#   #julian.breaks = seq(from = 173, to = 186, by = 1),
+#   comparable.color.breaks = FALSE
+# )
+# 
+# 
+# # #############
+# # sp.list <- c("Snow Bunting", "Lapland Longspur", "Savannah Sparrow", "Semipalmated Plover")
+# # 
+# # # Empty list to store plots
+# # plots <- list()
+# # 
+# # # Loop through species and generate heatmaps
+# # for (i in 1:length(sp.list)) {
+# #   
+# #   print(paste0('Working on ', sp.list[i]))
+# #   
+# #   # Generate the heatmap for the current species
+# #   g <- birdnet_heatmap(
+# #     data = plot_data,
+# #     locationID = 'qhi',
+# #     common.name = sp.list[i],
+# #     conf.threshold = 0.2,
+# #     dates.sampled = plot_data$date,
+# #     julian.breaks = seq(from = 173, to = 186, by = 1),
+# #     comparable.color.breaks = TRUE
+# #   )
+# #   
+# #   # Store the plot in the list
+# #   plots[[i]] <- g
+# # }
+# # 
+# # # Display the 4 heatmaps in a grid
+# # cowplot::plot_grid(plotlist = plots, ncol = 2)
 
 
 

@@ -92,3 +92,6 @@ outputs/spectrograms/*
 
 # Ignore scrapwork outputs
 outputs/scrap/*
+
+# Ignore hypothesis outputs
+outputs/hypothesis/*
