@@ -119,6 +119,10 @@ ggplot() +
            ylim = c(aru_loc_bbox["ymin"], aru_loc_bbox["ymax"]))
 
 
+ggplot() +
+  geom_sf(data = qhi_coast, color = "black", fill = "black") +
+  theme_void()
+
 # # Display qhi terrain map with only bee_proj datapoints
 # ggplot() +
 #   geom_sf(data = qhi_terrain, aes(fill = unit_name), color = "black") +
