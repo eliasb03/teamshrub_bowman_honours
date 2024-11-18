@@ -22,6 +22,8 @@ library(hms)
 bbs.data.path <- "D:/BBS_QHI_2024/QHI_BBS_survey_data_1990_2024.csv"
 bbs.survey <- read.csv(bbs.data.path)
 
+guild_mapping <- read.csv("data/raw/bird_guild_mapping.csv")
+
 # bbs.weather.path <- "D:/BBS_QHI_2024/QHI_BBS_weather_data_1990_2024.csv"
 # bbs.weather <- read.csv(bbs.weather.path)
 
@@ -233,41 +235,6 @@ convert_column_names_to_dot <- function(data) {
   return(data)
 }
 
-# Function to reformat column order in the main dataset
-reformat_column_order <- function(data) {
-  data %>% 
-    select(
-      observation.id,
-      survey.id,
-      date.ymd,
-      doy,
-      species,
-      spec.code,
-      total,
-      time,
-      sampling.time,
-      num.observers,
-      sampling.effort,
-      effort.multiplier,
-      breed,
-      behaviour,
-      notes,
-      observers,
-      date,
-      period,
-      year,
-      month,
-      day,
-      survey.num,
-      transect,
-      start.time,
-      end.time,
-      rec.num,
-      end.time.filled,
-      transect.id
-    )
-}
-
 # Function to capitalize species codes
 capitalize_species_code <- function(data) {
   data %>% # Solves for an error where a common eider had species code "cOEI"
@@ -316,11 +283,66 @@ correct_species_mapping <- function(data) {
   return(data)
 }
 
-# Create long format version
-convert_to_long <- function(data){
-  data %>%
-    uncount(total)
+# Function to left_join guild mapping data into bbs.dat
+apply_guilds <- function(data) {
+  
+  # Check if 'species' column already exists in the data
+  if ("species" %in% colnames(data)) {
+    # If species exists, just join and resolve any conflicts
+    data <- data %>%
+      left_join(guild_mapping, by = "spec.code") %>%
+      mutate(species = coalesce(species.x, species.y)) %>%  # Resolve species conflicts
+      select(-species.x, -species.y)  # Remove the extra columns
+  } else {
+    # If species doesn't exist, directly add the species column from guild_mapping
+    data <- data %>%
+      left_join(guild_mapping, by = "spec.code")
+  }
+  
   return(data)
+}
+
+# Function to reformat column order in the main dataset
+reformat_column_order <- function(data) {
+  data %>% 
+    select(
+      observation.id,
+      survey.id,
+      date.ymd,
+      doy,
+      species,
+      spec.code,
+      guild,
+      total,
+      time,
+      sampling.time,
+      num.observers,
+      sampling.effort,
+      effort.multiplier,
+      breed,
+      behaviour,
+      notes,
+      observers,
+      guild2,
+      date,
+      period,
+      year,
+      month,
+      day,
+      survey.num,
+      transect,
+      start.time,
+      end.time,
+      rec.num,
+      end.time.filled,
+      transect.id
+    )
+}
+
+convert_to_long <- function(data) {
+  data %>%
+    mutate(original.total = total) %>%  # Add the original total as a new column
+    uncount(total)  # Uncount the rows based on the 'total' column
 }
 
 # Create only top X# species
@@ -337,7 +359,6 @@ select_top_species <- function(data, top_num) {
   return(filtered_data)
 }
 
-
 # Function to match species codes to species names
 fill_species_names <- function(data, mapping) {
   # Perform a left join to add species names based on species codes
@@ -347,38 +368,56 @@ fill_species_names <- function(data, mapping) {
   return(filled_data)
 }
 
-# Function to summarize by year, selecting the larger number of observations from early and late transects
-summarize_by_year_species <- function(data, mapping) {
-  
-  # Summarize the data by species and year
+# Summary Function to join by year, period, and species
+summarize_by_year_period_spec <- function(data) {
   summarized_data <- data %>%
-    group_by(spec.code, year) %>%
+    group_by(spec.code, year, period) %>%
     summarise(
-      total.observations_early = sum(ifelse(period == "EARLY", total, 0), na.rm = TRUE),
-      total.observations_late = sum(ifelse(period == "LATE", total, 0), na.rm = TRUE),
-      
-      # Keep metadata from the larger survey (EARLY or LATE)
-      larger_observation_count = pmax(total.observations_early, total.observations_late),
-      
-      # Retain metadata from the survey with the larger observation count
-      date.ymd = first(ifelse(larger_observation_count == total.observations_early, date.ymd[period == "EARLY"], date.ymd[period == "LATE"])),
-      survey.id = first(ifelse(larger_observation_count == total.observations_early, survey.id[period == "EARLY"], survey.id[period == "LATE"])),
-      observers = first(ifelse(larger_observation_count == total.observations_early, observers[period == "EARLY"], observers[period == "LATE"])),
-      sampling.time = first(ifelse(larger_observation_count == total.observations_early, sampling.time[period == "EARLY"], sampling.time[period == "LATE"])),
-      sampling.effort = first(ifelse(larger_observation_count == total.observations_early, sampling.effort[period == "EARLY"], sampling.effort[period == "LATE"])),
-      effort.multiplier = first(ifelse(larger_observation_count == total.observations_early, effort.multiplier[period == "EARLY"], effort.multiplier[period == "LATE"])),
-      num.observers = first(ifelse(larger_observation_count == total.observations_early, num.observers[period == "EARLY"], num.observers[period == "LATE"])),
-      start.time = first(ifelse(larger_observation_count == total.observations_early, start.time[period == "EARLY"], start.time[period == "LATE"])),
-      end.time = first(ifelse(larger_observation_count == total.observations_early, end.time[period == "EARLY"], end.time[period == "LATE"])),
-      
+      total.count = n(),  # Count the total number of observations
+      # Summarize metadata using the first value for each group
+      survey.id = first(survey.id),
+      observers = first(observers),
+      sampling.time = first(sampling.time),
+      sampling.effort = first(sampling.effort),
+      effort.multiplier = first(effort.multiplier),
+      num.observers = first(num.observers),
+      start.time = first(start.time),
+      end.time = first(end.time),
+      date.ymd = first(date.ymd),
       .groups = 'drop'  # Ungroup after summarizing
-    ) 
+    )
   
-  # Fill in species names after summarizing
-  summarized_data <- fill_species_names(summarized_data, mapping)
-  
-  # Return the summarized data with the larger observation count and metadata from the larger survey
   return(summarized_data)
+}
+
+# Summary Function to select the row with the largest total.count per species and year
+select_larger_count <- function(data) {
+  data_with_max <- data %>%
+    group_by(spec.code, year) %>%
+    slice_max(total.count, n = 1) %>%  # Select the row with the maximum total_count
+    ungroup()  # Ungroup after selection
+  
+  return(data_with_max)
+}
+
+# Summary Function to reformat summary columns
+reformat_summary <- function(data) {
+  data %>% 
+    select(
+      spec.code,
+      species,
+      total.count,
+      guild,
+      guild2,
+      year,
+      date.ymd,
+      observers,
+      sampling.effort,
+      effort.multiplier,
+      survey.id,
+      sampling.time,
+      num.observers
+    )
 }
 
 ### Applying transformations to bbs.survey ####
@@ -397,34 +436,20 @@ bbs.survey <- bbs.survey %>%
   convert_column_names_to_dot() %>%
   capitalize_species_code() %>% 
   correct_species_mapping() %>%
+  apply_guilds() %>%
   reformat_column_order
+
+# Creating long and summary bbs data ####
+# Create long format version
+bbs.long <- convert_to_long(bbs.survey)
 
 # Create species ~ species.code mappings
 species_mapping <- unique(bbs.survey %>% select(spec.code, species))
 
-# Create long format version
-bbs.long <- convert_to_long(bbs.survey)
-
 # Summarize to the year level
-bbs.summary <- summarize_by_year_species(bbs.long, species_mapping)
-
-###############
-# Create top species versions
-top_spec_num <- 15
-bbs.long.spec.top <- select_top_species(bbs.long, top_spec_num)
-
-# Create with species list
-species_list <- c("Common Eider", "Semipalmated Plover", "Semipalmated Sandpiper", "Baird's Sandpiper", "Red-necked Phalarope", "Glaucous Gull", "Lapland Longspur", "Snow Bunting", "Savannah Sparrow", "Common Redpoll", "Hoary Redpoll") # list of species notable in the 2012 Monitoring Report
-
-# Creating a version with only the topc species
-bbs.long.spec.list <- bbs.long %>%
-  filter(species %in% species_list)
-
-# removing unecessary objects from the environment
-rm(top_spec_num)
-
-
-
-
-
+bbs.summary <- bbs.long %>%
+  summarize_by_year_period_spec() %>%
+  select_larger_count() %>%
+  apply_guilds() %>%
+  reformat_summary()
 
