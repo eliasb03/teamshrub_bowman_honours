@@ -121,24 +121,22 @@ bbs.summary <- bbs.summary %>%
   mutate(yearly.rel.abundance = total.count / species.max) %>%
   ungroup() 
 
-unique(bbs.summary$species)
-
 
 # Summarize to guild level
 
 
-ggplot(filter(bbs.summary, guild == "shorebird"), aes(x = year, y = yearly.rel.abundance, color = spec.code)) +
-  geom_point(size = 2) +
+
+# Filtering by Cameron-Approved-Species List ####
+bbs.summary.f <- filter(bbs.summary, spec.code %in% species.list$spec.code)
+
+ggplot(bbs.summary.f, aes(x = year, y = yearly.rel.abundance, color = guild)) +
+  geom_point(size = 2, alpha = 0.2) +
   geom_smooth(method = lm) +
   labs(
     x = "Year",
     y = "Relative Abundance"
   ) +
   theme_half_open(font_size = 14)
-
-# Filtering by Cameron-Approved-Species List ####
-bbs.summary.f <- filter(bbs.summary, spec.code %in% species.list$spec.code)
-
 
 
 
