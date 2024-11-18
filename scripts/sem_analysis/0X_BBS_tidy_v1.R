@@ -17,7 +17,7 @@ library(skimr)
 library(lubridate)
 library(ggplot2)
 library(hms)
-
+library(stringi)
 # Importing Data
 bbs.data.path <- "D:/BBS_QHI_2024/QHI_BBS_survey_data_1990_2024.csv"
 bbs.survey <- read.csv(bbs.data.path)
@@ -283,8 +283,8 @@ correct_species_mapping <- function(data) {
   return(data)
 }
 
-# Function to left_join guild mapping data into bbs.dat
-apply_guilds <- function(data) {
+# Function to left_join guild mapping data into bbs.data
+apply_guilds <- function(data, guild.mapping) {
   
   # Check if 'species' column already exists in the data
   if ("species" %in% colnames(data)) {
@@ -345,29 +345,6 @@ convert_to_long <- function(data) {
     uncount(total)  # Uncount the rows based on the 'total' column
 }
 
-# Create only top X# species
-select_top_species <- function(data, top_num) {
-  top_species <- data %>%
-    group_by(spec.code) %>%
-    summarise(total.observations = n()) %>%  # Count the number of observations per species
-    arrange(desc(total.observations)) %>%     # Sort by number of observations in descending order
-    slice_head(n = top_num)     
-  
-  filtered_data <- data %>%
-    filter(spec.code %in% top_species$spec.code)
-  
-  return(filtered_data)
-}
-
-# Function to match species codes to species names
-fill_species_names <- function(data, mapping) {
-  # Perform a left join to add species names based on species codes
-  filled_data <- data %>%
-    left_join(mapping, by = "spec.code")
-  
-  return(filled_data)
-}
-
 # Summary Function to join by year, period, and species
 summarize_by_year_period_spec <- function(data) {
   summarized_data <- data %>%
@@ -403,12 +380,9 @@ select_larger_count <- function(data) {
 # Summary Function to reformat summary columns
 reformat_summary <- function(data) {
   data %>% 
-    mutate(
-      species.name = as.character(species)
-    ) %>%
     select(
       spec.code,
-      species.name,
+      species,
       total.count,
       guild,
       guild2,
@@ -422,6 +396,14 @@ reformat_summary <- function(data) {
       num.observers
     )
 }
+
+# Sumary Function to correct for the non breaking space issue in species
+clean_non_breaking_spaces <- function(df, column) {
+  df[[column]] <- stri_replace_all_fixed(df[[column]], "\u00A0", " ")
+  df[[column]] <- enc2utf8(df[[column]]) # Ensure UTF-8 encoding
+  return(df)
+}
+
 
 ### Applying transformations to bbs.survey ####
 bbs.survey <- bbs.survey %>%
@@ -439,8 +421,9 @@ bbs.survey <- bbs.survey %>%
   convert_column_names_to_dot() %>%
   capitalize_species_code() %>% 
   correct_species_mapping() %>%
-  apply_guilds() %>%
+  apply_guilds(guild.mapping) %>%
   reformat_column_order
+
 
 # Creating long and summary bbs data ####
 # Create long format version
@@ -460,8 +443,9 @@ species.list <- left_join(tibble(species = species.list), # Convert species_list
 bbs.summary <- bbs.long %>%
   summarize_by_year_period_spec() %>%
   select_larger_count() %>%
-  apply_guilds() %>%
-  reformat_summary()
+  apply_guilds(guild.mapping) %>%
+  reformat_summary() %>%
+  clean_non_breaking_spaces("species")
 
 # save bbs.summary, bbs.survey, bbs.long to the data/processed/bbs folder
 write.csv(bbs.summary, "data/clean/bbs/bbs_yearly_summary.csv", row.names = FALSE)
@@ -470,3 +454,5 @@ write.csv(bbs.long, "data/clean/bbs/bbs_long_processed.csv", row.names = FALSE)
 
 # save species_list to the data/processed/bbs folder
 write.csv(species.list, "data/clean/bbs/species_list.csv", row.names = FALSE)
+write.csv(species.mapping, "data/clean/bbs/species_code_mapping.csv", row.names = FALSE)
+
