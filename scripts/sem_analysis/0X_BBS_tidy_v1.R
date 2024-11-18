@@ -22,7 +22,7 @@ library(hms)
 bbs.data.path <- "D:/BBS_QHI_2024/QHI_BBS_survey_data_1990_2024.csv"
 bbs.survey <- read.csv(bbs.data.path)
 
-guild_mapping <- read.csv("data/raw/bird_guild_mapping.csv")
+guild.mapping <- read.csv("data/raw/bird_guild_mapping.csv")
 
 # bbs.weather.path <- "D:/BBS_QHI_2024/QHI_BBS_weather_data_1990_2024.csv"
 # bbs.weather <- read.csv(bbs.weather.path)
@@ -290,13 +290,13 @@ apply_guilds <- function(data) {
   if ("species" %in% colnames(data)) {
     # If species exists, just join and resolve any conflicts
     data <- data %>%
-      left_join(guild_mapping, by = "spec.code") %>%
+      left_join(guild.mapping, by = "spec.code") %>%
       mutate(species = coalesce(species.x, species.y)) %>%  # Resolve species conflicts
       select(-species.x, -species.y)  # Remove the extra columns
   } else {
-    # If species doesn't exist, directly add the species column from guild_mapping
+    # If species doesn't exist, directly add the species column from guild.mapping
     data <- data %>%
-      left_join(guild_mapping, by = "spec.code")
+      left_join(guild.mapping, by = "spec.code")
   }
   
   return(data)
@@ -403,9 +403,12 @@ select_larger_count <- function(data) {
 # Summary Function to reformat summary columns
 reformat_summary <- function(data) {
   data %>% 
+    mutate(
+      species.name = as.character(species)
+    ) %>%
     select(
       spec.code,
-      species,
+      species.name,
       total.count,
       guild,
       guild2,
@@ -444,7 +447,14 @@ bbs.survey <- bbs.survey %>%
 bbs.long <- convert_to_long(bbs.survey)
 
 # Create species ~ species.code mappings
-species_mapping <- unique(bbs.survey %>% select(spec.code, species))
+species.mapping <- unique(bbs.survey %>% select(spec.code, species))
+
+# Create list of species notable in the 2012 Monitoring Report
+species.list <- c("Common Eider", "Semipalmated Plover", "Semipalmated Sandpiper", "Baird's Sandpiper", "Red-necked Phalarope", "Glaucous Gull", "Lapland Longspur", "Snow Bunting", "Savannah Sparrow", "Common Redpoll", "Hoary Redpoll") # list of species notable in the 2012 Monitoring Report
+
+# Perform left join to get species codes for notable species
+species.list <- left_join(tibble(species = species.list), # Convert species_list into a tibble with a proper character vector column
+                          species.mapping, by = "species")
 
 # Summarize to the year level
 bbs.summary <- bbs.long %>%
@@ -453,3 +463,10 @@ bbs.summary <- bbs.long %>%
   apply_guilds() %>%
   reformat_summary()
 
+# save bbs.summary, bbs.survey, bbs.long to the data/processed/bbs folder
+write.csv(bbs.summary, "data/clean/bbs/bbs_yearly_summary.csv", row.names = FALSE)
+write.csv(bbs.survey, "data/clean/bbs/bbs_survey_processed.csv", row.names = FALSE)
+write.csv(bbs.long, "data/clean/bbs/bbs_long_processed.csv", row.names = FALSE)
+
+# save species_list to the data/processed/bbs folder
+write.csv(species.list, "data/clean/bbs/species_list.csv", row.names = FALSE)
