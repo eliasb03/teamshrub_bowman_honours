@@ -1,8 +1,9 @@
 #------------------------------
 # teamshrub_bowman_honours
-# 0X_BBS_tidy_v0
+# 0X_BBS_tidy_v1
 # By: Elias Bowman 
 # Created: 2024-09-19
+# Last updated: 2024-11-17
 #
 # Description: This script will import and tidy the Ranger collected Breeding Bird Data 
 # from Qikiqtaruk - Herschel Island Territorial Park.
@@ -19,9 +20,10 @@ library(hms)
 
 # Importing Data
 bbs.data.path <- "D:/BBS_QHI_2024/QHI_BBS_survey_data_1990_2024.csv"
-bbs.weather.path <- "D:/BBS_QHI_2024/QHI_BBS_weather_data_1990_2024.csv"
 bbs.survey <- read.csv(bbs.data.path)
-bbs.weather <- read.csv(bbs.weather.path)
+
+# bbs.weather.path <- "D:/BBS_QHI_2024/QHI_BBS_weather_data_1990_2024.csv"
+# bbs.weather <- read.csv(bbs.weather.path)
 
 # Function to add observation ID and handle NA totals
 add_observation_id <- function(df) {
@@ -87,6 +89,7 @@ standardize_time <- function(time_str) {
   return(time_str)
 }
 
+# Function to standarize and parse times, applies standardize_time
 standardize_and_parse_times <- function(df) {
   df %>%
     mutate(
@@ -232,7 +235,7 @@ convert_column_names_to_dot <- function(data) {
 
 # Function to reformat column order in the main dataset
 reformat_column_order <- function(data) {
-  data %>%
+  data %>% 
     select(
       observation.id,
       survey.id,
@@ -265,7 +268,53 @@ reformat_column_order <- function(data) {
     )
 }
 
-### Functions for creating alternate datasets ####
+# Function to capitalize species codes
+capitalize_species_code <- function(data) {
+  data %>% # Solves for an error where a common eider had species code "cOEI"
+    mutate(spec.code = toupper(spec.code))
+}
+
+# Function to manually correct species mapping errors
+correct_species_mapping <- function(data) {
+  # # Run once to determine species with  incorrect mapping
+  # species_mapping <- unique(bbs.survey %>% select(spec.code, species))
+  # 
+  # conflicts_species <- species_mapping %>%
+  #   group_by(species) %>%
+  #   summarise(n_codes = n_distinct(spec.code)) %>%
+  #   filter(n_codes > 1)
+  # 
+  # conflicts_codes <- species_mapping %>%
+  #   group_by(spec.code) %>%
+  #   summarise(n_species = n_distinct(species)) %>%
+  #   filter(n_species > 1)
+  
+  # Define manual updates
+  manual_updates <- tibble::tribble(
+    ~species, ~spec.code,
+    "Greater White-fronted Goose", "GWFG",
+    "Surf Scoter", "SUSC",
+    "bird spp.", "BIRD",
+    "Herring Gull", "HERG"
+  )
+  
+  # Apply updates to the dataset
+  data <- data %>%
+    mutate(
+      species = case_when(
+        species %in% manual_updates$species ~ manual_updates$species[match(species, manual_updates$species)],
+        spec.code %in% manual_updates$spec.code ~ manual_updates$species[match(spec.code, manual_updates$spec.code)],
+        TRUE ~ species
+      ),
+      spec.code = case_when(
+        species %in% manual_updates$species ~ manual_updates$spec.code[match(species, manual_updates$species)],
+        spec.code %in% manual_updates$spec.code ~ manual_updates$spec.code[match(spec.code, manual_updates$spec.code)],
+        TRUE ~ spec.code
+      )
+    )
+  
+  return(data)
+}
 
 # Create long format version
 convert_to_long <- function(data){
@@ -286,14 +335,6 @@ select_top_species <- function(data, top_num) {
     filter(spec.code %in% top_species$spec.code)
   
   return(filtered_data)
-}
-
-# Create bbs with only selected species
-select_species_list <- function(data, species_list) {
-  data %>%
-    filter(species %in% species_list)
-  
-  return(data)
 }
 
 
@@ -340,7 +381,7 @@ summarize_by_year_species <- function(data, mapping) {
   return(summarized_data)
 }
 
-### Applying transformations sequentially to bbs.survey ####
+### Applying transformations to bbs.survey ####
 bbs.survey <- bbs.survey %>%
   rename_columns_lowercase() %>%
   add_observation_id() %>%
@@ -354,8 +395,9 @@ bbs.survey <- bbs.survey %>%
   recode_period_labels() %>%
   calculate_sampling_metrics() %>%
   convert_column_names_to_dot() %>%
+  capitalize_species_code() %>% 
+  correct_species_mapping() %>%
   reformat_column_order
-
 
 # Create species ~ species.code mappings
 species_mapping <- unique(bbs.survey %>% select(spec.code, species))
@@ -363,6 +405,10 @@ species_mapping <- unique(bbs.survey %>% select(spec.code, species))
 # Create long format version
 bbs.long <- convert_to_long(bbs.survey)
 
+# Summarize to the year level
+bbs.summary <- summarize_by_year_species(bbs.long, species_mapping)
+
+###############
 # Create top species versions
 top_spec_num <- 15
 bbs.long.spec.top <- select_top_species(bbs.long, top_spec_num)
@@ -370,14 +416,15 @@ bbs.long.spec.top <- select_top_species(bbs.long, top_spec_num)
 # Create with species list
 species_list <- c("Common Eider", "Semipalmated Plover", "Semipalmated Sandpiper", "Baird's Sandpiper", "Red-necked Phalarope", "Glaucous Gull", "Lapland Longspur", "Snow Bunting", "Savannah Sparrow", "Common Redpoll", "Hoary Redpoll") # list of species notable in the 2012 Monitoring Report
 
-
-bbs.long.spec.list <- select_species_list(bbs.long, species_list)
-
-bbs.summary <- summarize_by_year_species(bbs.long, species_mapping)
+# Creating a version with only the topc species
+bbs.long.spec.list <- bbs.long %>%
+  filter(species %in% species_list)
 
 # removing unecessary objects from the environment
-rm(top_spec_num, species_mapping,)
-rm(bbs.spec.top)
+rm(top_spec_num)
 
-bbs.summary.species <- bbs.summary %>%
-  filter(species %in% species_list)
+
+
+
+
+
