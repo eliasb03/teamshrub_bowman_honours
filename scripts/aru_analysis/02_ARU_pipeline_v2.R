@@ -26,7 +26,7 @@ library(NSNSDAcoustics)
 main_dir <-
   #"D:/ARU_code_optimization_data" # subsampled input folder for test work
   "D:/ARU_QHI_2024/ARUQ5_20Aug2024"
-  #"C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_bowman_honours/data/temp/birdNET_input"
+#"C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_bowman_honours/data/temp/birdNET_input"
 # Field site specific variables
 qhi_latitude <- 69.5
 qhi_longitude <- -138.9
@@ -169,7 +169,7 @@ check_aru_files <- function(aru_dir) {
 
 # move files from the toignore_ARU__.txt file to wavignore/ dir
 remove_ignore_files <- function(main_dir) {
-
+  
   aru_dirs <- list.dirs(main_dir, recursive = FALSE)
   
   for (aru_dir in aru_dirs) {
@@ -190,7 +190,7 @@ remove_ignore_files <- function(main_dir) {
     check_and_create_dir(wavignore_dir)
     
     cat("Directory wavignore/ created... \n")
-
+    
     
     # Read log file
     ignore_log <- read.csv(log_file)
