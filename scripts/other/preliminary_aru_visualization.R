@@ -1,6 +1,5 @@
-
-
 # preliminary_aru_visualization
+
 
 # Define the function
 plot_frequency_distribution <- function(input_vector, top_n = 15, plot_title = "Frequency Distribution") {
@@ -27,7 +26,7 @@ plot_frequency_distribution <- function(input_vector, top_n = 15, plot_title = "
     theme_minimal() +
     theme_half_open(font_size = 14) +
     theme(axis.text.x = element_text(angle = 25, hjust = 1))
-    
+  
 }
 
 # importing the 3 processed ARU data
@@ -191,7 +190,7 @@ ggplot(aru_tomst_weekly, aes(x = week, y = mean_value, color = aru)) +
 
 #########
 # Monthly
-aru_tomst_monthly <- monthly_averages %>%
+aru_tomst_monthly <- monthly_values %>%
   filter(locality_id %in% c("TOMST29_QHI", "TOMST39_QHI", "TOMST4_QHI")) %>%
   mutate(aru = case_when(
     locality_id == "TOMST29_QHI" ~ "ARUQ3",
