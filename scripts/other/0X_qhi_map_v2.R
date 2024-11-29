@@ -129,7 +129,7 @@ ggplot() +
 #   geom_sf(data = aru_locations %>% filter(bee_proj), color = "black", size = 5) +
 #   scale_fill_viridis_d() +
 #   labs(fill = "Unit Name") +
-#   coord_sf(xlim = c(aru_loc_bbox["xmin"], aru_loc_bbox["xmax"]), 
+#   coord_sf(xlim = c(aru_loc_bbox["xmin"], aru_loc_bbox["xmax"]),
 #            ylim = c(aru_loc_bbox["ymin"], aru_loc_bbox["ymax"]))
 
 # Create a table showing the count of observations in each unit_name
