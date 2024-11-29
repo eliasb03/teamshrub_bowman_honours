@@ -17,6 +17,8 @@ guild.mapping <- read.csv("data/raw/bird_guild_mapping.csv")
 # Loading Packages
 library(tidyverse)  # For dplyr, tidyr, etc.
 library(rlang)      # For tidy evaluation tools
+library(ggplot2)
+library(cowplot)
 
 # Creating relevant functions ####
 # Function to match species codes to species names
@@ -98,6 +100,14 @@ fill_missing_years <- function(data, species_col, year_col, count_col) {
   return(filled_data)
 }
 
+# Function to create scaled.total by effort multiplier
+create_scaled_total <- function(data) {
+  data <- data %>%
+    mutate(total.scaled = ifelse(!is.na(effort.multiplier), total.count * effort.multiplier, 0))
+  
+  return(data)
+}
+
 # Filling in missing years with 0s ####
 bbs.summary <- fill_missing_years(
   data = bbs.summary, 
@@ -119,7 +129,23 @@ bbs.summary <- bbs.summary %>%
   ungroup() %>%
   group_by(year, spec.code) %>%
   mutate(yearly.rel.abundance = total.count / species.max) %>%
-  ungroup() 
+  ungroup()
+
+
+bbs.summary <- bbs.summary %>%
+  create_scaled_total() %>%
+  group_by(spec.code) %>%
+  mutate(species.scaled.max = max(total.scaled)) %>%
+  ungroup() %>%
+  group_by(year, spec.code) %>%
+  mutate(yearly.rel.abundance.scaled = total.scaled / species.scaled.max) %>%
+  ungroup()
+
+high.threshold <- 0.5
+
+bbs.summary <- bbs.summary %>%
+  mutate(logistic.abundance.scaled = ifelse(yearly.rel.abundance.scaled >= high.threshold, 1, 0)) %>%
+  mutate(logistic.abundance = ifelse(yearly.rel.abundance >= high.threshold, 1, 0))
 
 
 # Summarize to guild level
@@ -129,8 +155,10 @@ bbs.summary <- bbs.summary %>%
 # Filtering by Cameron-Approved-Species List ####
 bbs.summary.f <- filter(bbs.summary, spec.code %in% species.list$spec.code)
 
+#################################################
+
 ggplot(bbs.summary.f, aes(x = year, y = yearly.rel.abundance, color = guild)) +
-  geom_point(size = 2, alpha = 0.2) +
+  geom_point(size = 1, alpha = 0.2) +
   geom_smooth(method = lm) +
   labs(
     x = "Year",
@@ -138,8 +166,26 @@ ggplot(bbs.summary.f, aes(x = year, y = yearly.rel.abundance, color = guild)) +
   ) +
   theme_half_open(font_size = 14)
 
+ggplot(filter(bbs.summary.f, guild == "shorebird"), aes(x = year, y = yearly.rel.abundance, color = guild)) +
+  geom_point(size = 1, alpha = 0.2) +
+  geom_smooth(method = lm, linewidth = 1) +
+  labs(
+    x = "Year",
+    y = "Relative Abundance"
+  ) +
+  theme_half_open(font_size = 14)
 
+ggplot(filter(bbs.summary, species == "Semipalmated Sandpiper"), aes(x = year, y = yearly.rel.abundance)) +
+  geom_point(size = 1, alpha = 0.2) +
+  geom_smooth(method = lm, linewidth = 1) +
+  labs(
+    x = "Year",
+    y = "Relative Abundance"
+  ) +
+  theme_half_open(font_size = 14)
 
+simple.bbs <- bbs.summary.f %>%
+  select(year, spec.code, species, guild, yearly.rel.abundance)
 
 # probably need a species specific relative abundance or guild specific - or after filtering maybe... hmmmmmmm
 
