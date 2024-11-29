@@ -18,6 +18,7 @@ library(lubridate)
 library(ggplot2)
 library(hms)
 library(stringi)
+
 # Importing Data
 bbs.data.path <- "D:/BBS_QHI_2024/QHI_BBS_survey_data_1990_2024.csv"
 bbs.survey <- read.csv(bbs.data.path)
@@ -339,12 +340,14 @@ reformat_column_order <- function(data) {
     )
 }
 
+# Function to create long dataset
 convert_to_long <- function(data) {
   data %>%
     mutate(original.total = total) %>%  # Add the original total as a new column
     uncount(total)  # Uncount the rows based on the 'total' column
 }
 
+# Summary Function ####
 # Summary Function to join by year, period, and species
 summarize_by_year_period_spec <- function(data) {
   summarized_data <- data %>%
