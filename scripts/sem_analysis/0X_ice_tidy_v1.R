@@ -95,12 +95,11 @@ ice_data_yearly <- calculate_yearly_stats(ice_data, ice_cover_threshold)
 # Various Plots ####
 # Plotting ice drop date
 ggplot(ice_data_yearly, aes(x = year, y = spring_drop_doy)) +
-  geom_point(color = "blue", size = 2) +
+  geom_point(color = "#A2BFFE", size = 2) +
   geom_smooth(method = "lm", color = "darkblue") +
   labs(
-    title = "Latest Target Day vs. Year",
     x = "Year",
-    y = "Latest Target Day (DOY)"
+    y = "Day of Drop in Sea Ice Cover"
   ) +
   theme_half_open(font_size = 14)
 
