@@ -10,24 +10,44 @@
 #
 #------------------------------
 
-# Importing Packages ####
+# Setting Project Working Environment ####
+proj.path <- "C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_bowman_honours/"
+setwd(proj.path)
+
+# Importing Packages
 library(dplyr)
 library(tidyverse)
 library(skimr)
 library(lubridate)
-library(ggplot2)
 library(hms)
 library(stringi)
+library(rlang)  
+library(ggplot2)
+library(cowplot)
 
-# Importing Data
+# Declaring and Importing Relevant Data ####
+# Breeding Bird Survey Data
 bbs.data.path <- "D:/BBS_QHI_2024/QHI_BBS_survey_data_1990_2024.csv"
+bbs.data.path <- "data/raw/breeding_bird_survey_QHI_2024/QHI_BBS_survey_data_1990_2024.csv"
 bbs.survey <- read.csv(bbs.data.path)
 
-guild.mapping <- read.csv("data/raw/bird_guild_mapping.csv")
+# List of Species to Select
+  # Create list of species notable in the 2012 Monitoring Report
+species.list <- c("Common Eider", "Semipalmated Plover", "Semipalmated Sandpiper", "Baird's Sandpiper", "Red-necked Phalarope", "Glaucous Gull", "Lapland Longspur", "Snow Bunting", "Savannah Sparrow", "Common Redpoll", "Hoary Redpoll") # list of species notable in the 2012 Monitoring Report
 
+# Guild Mapping Document
+# guild.mapping <- read.csv("data/raw/bird_guild_mapping.csv") # on computer
+guild.mapping.path <- "D:/bird_guild_mapping.csv" # on hard drive
+guild.mapping.path <- "data/raw/bird_guild_mapping.csv"
+guild.mapping <- read.csv(guild.mapping.path)
+
+# Weather and Metadata for BBS Data
 # bbs.weather.path <- "D:/BBS_QHI_2024/QHI_BBS_weather_data_1990_2024.csv"
 # bbs.weather <- read.csv(bbs.weather.path)
 
+
+
+# Declaring functions to process breeding bird survey ####  
 # Function to add observation ID and handle NA totals
 add_observation_id <- function(df) {
   df %>%
@@ -347,6 +367,96 @@ convert_to_long <- function(data) {
     uncount(total)  # Uncount the rows based on the 'total' column
 }
 
+# Function to match species codes to species names
+apply_species_names <- function(data, species.mapping) {
+  # Perform a left join to add species names based on species codes
+  if ("species" %in% colnames(data)) {
+    filled_data <- data %>%
+      left_join(species.mapping, by = "spec.code") %>%
+      mutate(species = coalesce(species.x, species.y)) %>%  # Resolve species conflicts
+      select(-species.x, -species.y)  # Remove the extra columns
+  } else {
+    filled_data <- data %>%
+      left_join(species.mapping, by = "spec.code")
+  }
+  
+  return(filled_data)
+}
+
+
+# Function to left_join guild mapping data into bbs.data
+apply_guilds <- function(data, guild.mapping) {
+  
+  # Check if 'species' column already exists in the data
+  if ("species" %in% colnames(data)) {
+    # If species exists, just join and resolve any conflicts
+    data <- data %>%
+      left_join(guild.mapping, by = "spec.code") %>%
+      mutate(species = coalesce(species.x, species.y)) %>%  # Resolve species conflicts
+      select(-species.x, -species.y)  # Remove the extra columns
+  } else {
+    # If species doesn't exist, directly add the species column from guild.mapping
+    data <- data %>%
+      left_join(guild.mapping, by = "spec.code")
+  }
+  
+  if ("guild.x" %in% colnames(data)) {
+    data <- data %>%
+      mutate(guild = coalesce(guild.x, guild.y)) %>%  # Resolve guild conflicts
+      select(-guild.x, -guild.y) %>%  # Remove the extra columns 
+      mutate(guild2 = coalesce(guild2.x, guild2.y)) %>%  # Resolve guild conflicts
+      select(-guild2.x, -guild2.y)
+  }
+  
+  return(data)
+}
+
+# Function to reformat applied and filled columns
+reformat_columns <- function(data) {
+  # Reformat the columns to be more readable
+  data <- data %>%
+    select(spec.code, species, year, total.count, guild, guild2, observers, effort.multiplier, sampling.effort, sampling.time, num.observers, survey.id, filled.in)
+  
+  return(data)
+}
+
+
+# Function for filling in missing years with 0s
+fill_missing_years <- function(data, species_col, year_col, count_col) {
+  # Extract unique species and years
+  all_species <- unique(data[[species_col]])
+  all_years <- unique(data[[year_col]])
+  
+  # Create a complete grid of species and years
+  complete_data <- expand.grid(
+    species = all_species,
+    year = all_years
+  ) %>%
+    rename(
+      !!species_col := species, 
+      !!year_col := year
+    )
+  
+  # Merge with the original data and fill missing values
+  filled_data <- complete_data %>%
+    left_join(data, by = c(species_col, year_col)) %>%
+    mutate(
+      filled.in = is.na(.data[[count_col]]), # TRUE if the count was filled
+      !!count_col := ifelse(filled.in, 0, .data[[count_col]]) # Fill with 0 if missing
+    )
+  
+  return(filled_data)
+}
+
+
+# Function to create scaled.total by effort multiplier
+create_scaled_total <- function(data) {
+  data <- data %>%
+    mutate(total.scaled = ifelse(!is.na(effort.multiplier), total.count * effort.multiplier, 0))
+  
+  return(data)
+}
+
 # Summary Function ####
 # Summary Function to join by year, period, and species
 summarize_by_year_period_spec <- function(data) {
@@ -435,9 +545,6 @@ bbs.long <- convert_to_long(bbs.survey)
 # Create species ~ species.code mappings
 species.mapping <- unique(bbs.survey %>% select(spec.code, species))
 
-# Create list of species notable in the 2012 Monitoring Report
-species.list <- c("Common Eider", "Semipalmated Plover", "Semipalmated Sandpiper", "Baird's Sandpiper", "Red-necked Phalarope", "Glaucous Gull", "Lapland Longspur", "Snow Bunting", "Savannah Sparrow", "Common Redpoll", "Hoary Redpoll") # list of species notable in the 2012 Monitoring Report
-
 # Perform left join to get species codes for notable species
 species.list <- left_join(tibble(species = species.list), # Convert species_list into a tibble with a proper character vector column
                           species.mapping, by = "species")
@@ -450,12 +557,14 @@ bbs.summary <- bbs.long %>%
   reformat_summary() %>%
   clean_non_breaking_spaces("species")
 
+
+
 # save bbs.summary, bbs.survey, bbs.long to the data/processed/bbs folder
-write.csv(bbs.summary, "data/clean/bbs/bbs_yearly_summary.csv", row.names = FALSE)
-write.csv(bbs.survey, "data/clean/bbs/bbs_survey_processed.csv", row.names = FALSE)
-write.csv(bbs.long, "data/clean/bbs/bbs_long_processed.csv", row.names = FALSE)
+write.csv(bbs.summary, paste0(proj.path, "data/clean/bbs/bbs_yearly_summary.csv"), row.names = FALSE)
+write.csv(bbs.survey, paste0(proj.path, "data/clean/bbs/bbs_survey_processed.csv"), row.names = FALSE)
+write.csv(bbs.long, paste0(proj.path, "data/clean/bbs/bbs_long_processed.csv"), row.names = FALSE)
 
 # save species_list to the data/processed/bbs folder
-write.csv(species.list, "data/clean/bbs/species_list.csv", row.names = FALSE)
-write.csv(species.mapping, "data/clean/bbs/species_code_mapping.csv", row.names = FALSE)
+write.csv(species.list, paste0(proj.path, "data/clean/bbs/species_list.csv"), row.names = FALSE)
+write.csv(species.mapping, paste0(proj.path, "data/clean/bbs/species_code_mapping.csv"), row.names = FALSE)
 

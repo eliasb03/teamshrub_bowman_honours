@@ -141,11 +141,24 @@ bbs.summary <- bbs.summary %>%
   mutate(yearly.rel.abundance.scaled = total.scaled / species.scaled.max) %>%
   ungroup()
 
-high.threshold <- 0.5
+high.threshold <- 0.33
 
 bbs.summary <- bbs.summary %>%
-  mutate(logistic.abundance.scaled = ifelse(yearly.rel.abundance.scaled >= high.threshold, 1, 0)) %>%
-  mutate(logistic.abundance = ifelse(yearly.rel.abundance >= high.threshold, 1, 0))
+  mutate(
+    logistic.abundance.scaled = ifelse(yearly.rel.abundance.scaled >= high.threshold, 1, 0),
+    logistic.abundance = ifelse(yearly.rel.abundance >= high.threshold, 1, 0)
+  ) %>%
+  group_by(species) %>%
+  mutate(
+    median_abundance = median(yearly.rel.abundance.scaled[yearly.rel.abundance.scaled > 0], na.rm = TRUE),  # Median for non-zero values
+    abundance_level = case_when(
+      yearly.rel.abundance.scaled == 0 ~ "Absent",                        # Absent if exactly 0
+      yearly.rel.abundance.scaled > median_abundance ~ "High",           # High if above the median
+      yearly.rel.abundance.scaled > 0 & yearly.rel.abundance.scaled <= median_abundance ~ "Low"  # Low if between 0 and median
+    )
+  ) %>%
+  ungroup() %>%
+  mutate(abundance_level = factor(abundance_level, levels = c("Absent", "Low", "High")))  # Convert to factor
 
 
 # Summarize to guild level
