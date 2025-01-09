@@ -1,8 +1,9 @@
 #------------------------------
 # teamshrub_bowman_honours
-# 0X_BBS_guilds_v0
+# 0X_BBS_tidy_v2
 # By: Elias Bowman 
 # Created: 2024-11-17
+# Updated: 2024-01-09
 #
 # Description: This script summarizes Breeding Bird Data into guild levels
 # Should only be run after BBS_tidy
@@ -39,26 +40,12 @@ guild.mapping <- read.csv(guild.mapping.path)
 #------------------------------
 # Function Definitions
 #------------------------------
-
-# 1. Functions to clean dataset ####
-# Main function to clean the dataset
-clean_bbs_data <- function(df) {
-  df %>%
-    rename_columns_lowercase %>%           # Rename columns to lowercase
-    convert_column_names_to_dot() %>%      # Convert column names to dot notation
-    capitalize_species_code() %>%          # Capitalize species codes
-    add_observation_id() %>%               # Add observation ID and handle NA totals
-    combine_notes() %>%                    # Combine notes columns
-    create_indexing_columns() %>%          # Create indexing columns
-    correct_species_mapping()              # Correct species mapping errors
-}
-
+# 1. Functions to clean data set ####
 # Helper Function: Rename all column names to lowercase
 rename_columns_lowercase <- function(df) {
   df %>%
     rename_with(tolower)
 }
-
 
 # Helper function: Convert column names from snake_case to dot notation
 convert_column_names_to_dot <- function(df) {
@@ -131,29 +118,20 @@ correct_species_mapping <- function(df) {
     )
 }
 
-# 2. Functions to fix time columns ####
-# Main function to clean times
-clean_times <- function(df) {
+# Main function to clean the dataset
+clean_bbs_data <- function(df) {
   df %>%
-    # Step 1: Format the date column using the helper function
-    format_date_column() %>%
-    
-    # Step 2: Standardize and parse time columns using the helper function
-    standardize_and_parse_times() %>%
-    
-    # Step 3: Create a date-time column using the helper function
-    create_date_time_column() %>%
-    
-    # Step 4: Fill missing start and end times within groups using the helper function
-    fill_missing_times() %>%
-    
-    # Step 5: Clean and fill missing or short sampling times using the helper function
-    clean_sampling_times() %>%
-    
-    # Step 6: Recode period labels and calculate day of year using the helper function
-    recode_period_labels()
+    rename_columns_lowercase %>%           # Rename columns to lowercase
+    convert_column_names_to_dot() %>%      # Convert column names to dot notation
+    capitalize_species_code() %>%          # Capitalize species codes
+    add_observation_id() %>%               # Add observation ID and handle NA totals
+    combine_notes() %>%                    # Combine notes columns
+    create_indexing_columns() %>%          # Create indexing columns
+    correct_species_mapping()              # Correct species mapping errors
 }
 
+
+# 2. Functions to fix time columns ####
 # Helper function: Calculate day of year
 calculate_doy <- function(date_column) {
   yday(date_column)
@@ -164,42 +142,16 @@ create_date_string <- function(day, month, year) {
   sprintf("%02d-%02d-%04d", day, month, year)
 }
 
-# Helper function: Fill missing times within groups
-fill_missing_group_times <- function(df, group.col, time.cols) {
-  df %>%
-    group_by(across(all_of(group.col))) %>%
-    fill(all_of(time.cols), .direction = "downup") %>%
-    ungroup()
-}
-
-# Helper function: Adjust incorrect short sampling times
-adjust_short_sampling_times <- function(start.time, end.time, valid.times) {
-  # Ensure inputs are in a consistent format
-  duration <- as.numeric(difftime(end.time, start.time, units = "mins"))
-  
-  # Adjust short sampling times
-  adjusted.end.time <- ifelse(
-    duration < 5 & !is.na(start.time),
-    hms::as_hms(max(valid.times, na.rm = TRUE)),
-    end.time
-  )
-  
-  return(adjusted.end.time)
-}
-
-# Helper functio: Summarize start and end times by group
-summarize_sampling_times <- function(df, group.col, time.cols) {
-  df %>%
-    group_by(across(all_of(group.col))) %>%
-    summarize(
-      across(all_of(time.cols), ~ hms::as_hms(ifelse(all(is.na(.)), NA, min(., na.rm = TRUE)), .groups = 'drop'))
-    )
-}
-
 # Helper function: Format the date column
 format_date_column <- function(df) {
   df %>%
     mutate(date.ymd = dmy(create_date_string(day, month, year)))
+}
+
+# Helper function: Create a date-time column
+create_date_time_column <- function(df) {
+  df %>%
+    mutate(date.time = as.POSIXct(paste(date.ymd, time), format = "%Y-%m-%d %H:%M:%S"))
 }
 
 # Helper function: Standardize time format, adding missing colons
@@ -238,48 +190,79 @@ standardize_and_parse_times <- function(df) {
     )
 }
 
-# Helper function: Create a date-time column
-create_date_time_column <- function(df) {
+# Helper function: Find the latest start time in a survey
+find_latest_end_time <- function(df) {
   df %>%
-    mutate(date.time = as.POSIXct(paste(date.ymd, time), format = "%Y-%m-%d %H:%M:%S"))
-}
-
-# Helper function: Fill missing start and end times within groups
-fill_missing_times <- function(df) {
-  fill_missing_group_times(df, "transect.id", c("start.time", "end.time"))
-}
-
-# Helper function: Clean and fill missing or short sampling times
-clean_sampling_times <- function(df, group.col = "survey.id") {
-  df %>%
+    group_by(survey.id) %>%
     mutate(
-      # Ensure all time columns are <hms>
-      start.time = if (!inherits(start.time, "hms")) hms::as_hms(start.time) else start.time,
-      end.time = if (!inherits(end.time, "hms")) hms::as_hms(end.time) else end.time,
-      time = if (!inherits(time, "hms")) hms::as_hms(time) else time
-    ) %>%
-    group_by(across(all_of(group.col))) %>%
-    mutate(
-      # Fill missing start and end times with valid times from `time`
-      start.time = coalesce(
-        start.time,
-        if (all(is.na(time))) NA else hms::as_hms(min(time, na.rm = TRUE))
-      ),
-      end.time = coalesce(
-        end.time,
-        if (all(is.na(time))) NA else hms::as_hms(max(time, na.rm = TRUE))
+      latest.end = case_when(
+        any(!is.na(end.time)) ~ suppressWarnings(
+          max(
+            c(
+              max(as.duration(end.time), na.rm = TRUE),
+              max(as.duration(time), na.rm = TRUE)
+            ), na.rm = TRUE
+          )
+        ),
+        TRUE ~ NA_real_  # If both end.time and time are missing, return NA
       )
     ) %>%
-    # Reapply type enforcement after adjusting times
+    ungroup() %>%
+    mutate(latest.end = as_hms(latest.end))  # Convert to hms format
+}
+
+# Helper function: Find the earliest start time in a survey
+find_earliest_start_time <- function(df) {
+  df %>%
+    group_by(survey.id) %>%
     mutate(
-      end.time = adjust_short_sampling_times(
-        start.time,
-        end.time,
-        valid.times = time
-      ),
-      end.time = if (!inherits(end.time, "hms")) hms::as_hms(end.time) else end.time
+      earliest.start = case_when(
+        !all(is.na(start.time)) ~ suppressWarnings(
+          min(
+            c(
+              min(as.duration(start.time), na.rm = TRUE),
+              min(as.duration(time), na.rm = TRUE)
+            ), na.rm = TRUE
+          )
+        ),
+        all(is.na(start.time)) & !all(is.na(time)) ~ suppressWarnings(min(as.duration(time), na.rm = TRUE)),  # If no start.time, use min(time)
+        TRUE ~ NA_real_  # If both start.time and time are missing, return NA
+      )
     ) %>%
-    ungroup()
+    ungroup() %>%
+    mutate(earliest.start = as_hms(earliest.start))  # Convert to hms format
+}
+# Helper function: Fill in start and end times for each observation
+fill_survey_times <- function(df) {
+  df %>%
+    group_by(survey.id) %>%
+    mutate(
+      start.time = earliest.start,
+      end.time = latest.end
+    ) %>%
+    ungroup() %>%
+    mutate(start.time = as_hms(start.time)) %>% # Convert to hms format
+    mutate(end.time = as_hms(end.time))  # Convert to hms format
+  
+}
+
+# Big Helper function: Adjust survey times by survey id
+adjust_survey_times <- function(df) {
+  df <- df %>%
+    # Standardize and parse time columns
+    mutate(
+      time = hms::parse_hm(time),
+      start.time = hms::parse_hm(start.time),
+      end.time = hms::parse_hm(end.time)
+    )
+  
+  # Apply the helper functions in sequence
+  df <- df %>%
+    find_earliest_start_time() %>%
+    find_latest_end_time() %>%
+    fill_survey_times()
+  
+  return(df)
 }
 
 # Helper function: Recode period labels and calculate day of year
@@ -293,24 +276,133 @@ recode_period_labels <- function(df) {
     )
 }
 
-# # 3. Function to apply guilds
-# # apply_guilds(guild.mapping) %>%
-# # Function to add observation ID and handle NA totals
-# 
-# # 3. Functions to calculate sampling metric
-# calculate_sampling_metrics() %>%
-#   # Creating Yearly Relative Abundance Metric, scaled totals, etc.
-# 
-# # 4. Function to fill in missing years with 0s
-# 
-# # 5. Function to filter observations to species list
-# 
-# #------------------------------
-# # Main Processing Pipeline
-# #------------------------------
-# 
-# 
-# #------------------------------
-# # Execution
-# #------------------------------
+# Main function to clean times
+clean_times <- function(df) {
+  df %>%
+    # Step 1: Format the date column using the helper function
+    format_date_column() %>%
+    
+    # Step 2: Standardize and parse time columns using the helper function
+    standardize_and_parse_times() %>%
+    
+    # Step 3: Create a date-time column using the helper function
+    create_date_time_column() %>%
+    
+    # Step 4: Clean and fill missing or short sampling times using the helper function
+    adjust_survey_times() %>%
+    
+    # Step 5: Recode period labels and calculate day of year using the helper function
+    recode_period_labels()
+}
+
+# 3. Function to apply guilds ####
+# Function to left_join guild mapping data into bbs.data
+apply_guilds <- function(data, guild.mapping) {
+  
+  # Check if 'species' column already exists in the data
+  if ("species" %in% colnames(data)) {
+    # If species exists, just join and resolve any conflicts
+    data <- data %>%
+      left_join(guild.mapping, by = "spec.code") %>%
+      mutate(species = coalesce(species.x, species.y)) %>%  # Resolve species conflicts
+      select(-species.x, -species.y)  # Remove the extra columns
+  } else {
+    # If species doesn't exist, directly add the species column from guild.mapping
+    data <- data %>%
+      left_join(guild.mapping, by = "spec.code")
+  }
+  
+  return(data)
+}
+
+# 4. Function to calculate sampling effort metric ####
+
+  # Creating Yearly Relative Abundance Metric, scaled totals, etc.
+# Function to calculate sampling time, effort, and effort multiplier
+calculate_sampling_metrics <- function(data) {
+  data <- data %>%
+    mutate(
+      sampling.time = as.numeric(difftime(end.time, start.time, units = "mins")),
+      num.observers = sapply(strsplit(observers, ","), length),
+      sampling.effort = sampling.time * num.observers
+    )
+  
+  # Get the min and max sampling effort values
+  min.effort <- min(data$sampling.effort, na.rm = TRUE)
+  max.effort <- max(data$sampling.effort, na.rm = TRUE)
+  
+  # Dynamically calculate the max multiplier as the ratio of max to min effort
+  if (min.effort == max.effort) {
+    data <- data %>%
+      mutate(effort.multiplier = 1)
+  } else {
+    max.multiplier <- max.effort / min.effort
+    
+    # Scale the effort multiplier to range between 1 and max_multiplier
+    data <- data %>%
+      mutate(effort.multiplier = 1 + (max.multiplier - 1) * (max.effort - sampling.effort) / (max.effort - min.effort))
+  }
+  
+  return(data)
+}
+
+# 5. Function to convert to long ####
+# 6. Function to summarize to year level ####
+# 7. Function to fill in missing years with 0s ####
+fill_missing_years <- function(data, species.col, year.col, count.col, fill.value = 0) {
+  # Check if the required columns exist
+  if (!all(c(species.col, year.col, count.col) %in% colnames(data))) {
+    stop("One or more of the specified columns do not exist in the data.")
+  }
+  
+  # Extract unique species and years
+  all.species <- unique(data[[species.col]])
+  all.years <- unique(data[[year.col]])
+  
+  # Create a complete grid of species and years
+  complete_data <- expand.grid(
+    species = all.species,
+    year = all.years
+  ) %>%
+    rename(
+      !!species.col := species, 
+      !!year.col := year
+    )
+  
+  # Merge with the original data and fill missing values
+  filled.data <- complete.data %>%
+    left_join(data, by = c(species.col, year.col)) %>%
+    mutate(
+      !!count.col := coalesce(.data[[count.col]], fill.value) # Fill with the specified fill_value
+    )
+  
+  return(filled_data)
+}
+
+# 6. Function to filter observations to species list
+
+#------------------------------
+# Main Processing Pipeline
+#------------------------------
+
+bbs.summary.test <- bbs.survey %>%
+  clean_bbs_data() %>%
+  clean_times() %>%
+  apply_guilds(guild.mapping) %>%
+  calculate_sampling_metrics() 
+
+
+# %>%
+#   fill_missing_years(
+#     species.col = "spec.code", 
+#     year.col = "year", 
+#     count.col = "total.count"
+#   )
+  
+
+#------------------------------
+# Execution
+#------------------------------
+
+
 
