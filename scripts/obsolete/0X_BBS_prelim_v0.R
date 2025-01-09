@@ -5,7 +5,7 @@
 # Created: 2024-09-24
 # 
 # Description: This script will do some preliminary work and visualizations of the Ranger collected Breeding Bird Data from Qikiqtaruk - Herschel Island Territorial Park 
-#
+# WAS USED BUT THEN MOVED TO OBSOLETE AFTER USE - MIGHT HAVE HELPFUL CODE BUT NOT GOING TO BE USED IN THIS FORM IN THE MAIN ANALYSIS (2025-01-08)
 #------------------------------
 
 
