@@ -22,12 +22,13 @@ library(viridis)
 # Set Script Variables
 #------------------------------
 buffer_size <- 25000  # Buffer width around QHI region
+  # sf_use_s2() is true, so this is metres
 coordinate_system <- "+proj=longlat +datum=WGS84 +no_defs"  # Project coordinate system
 
 # File import paths
 yukon_shape_file <- "data/raw/shape/yukon_borders_surveyed/Yukon_Borders_-_Surveyed.shp"
 terrain_classification <- "data/raw/shape/qhi_vegetation_terrain_map/Ecological_classification_Herschel_Island/Ecological_classification_Herschel_Island.shp"
-aru_points <- "D:/ARU_mapping/aru_locations/qhi_aru_locations_2024.shp"
+#aru_points <- "D:/ARU_mapping/aru_locations/qhi_aru_locations_2024.shp"
 
 # Import Yukon outline data
 yukon <- st_read(yukon_shape_file) %>%
