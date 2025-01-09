@@ -16,9 +16,9 @@ library(purrr)
 
 # Define keywords indicating nesting or breeding behavior
 nest_words <- c("nest", "nests", "nesting", "egg", "eggs", "chick", "chicks", "fledge", 
-                "fledgling", "fledglings", "hatch", "hatching", "hatchling", "hatchlings", 
-                "brood", "broods", "nestling", "nestlings", "nestsite", "breed", "breeding", 
-                "baby", "clutch", "mating", "mate", "incubating", "incubate", "flush", "flushed")
+                "fledgling", "fledglings", "hatch", "hatched", "hatching", "hatchling", "hatchlings", 
+                "brood", "broods", "nested",  "nestling", "nestlings", "nestsite", "nest site", "breed", "breeding", 
+                "baby", "babies", "clutch", "mating", "mate", "incubating", "incubate", "flush", "flushed")
 
 # Specify columns to check for nest-related keywords in BBS data
 columns_to_check <- c("notes", "behaviour", "breed")
