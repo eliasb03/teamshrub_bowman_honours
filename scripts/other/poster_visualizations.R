@@ -6,7 +6,8 @@ library(stringr)
 library(cowplot)
 library(terra)
 library(sf)
-library(tmap)c
+library(tmap)
+library(ggmosaic)
 
 #----------------------
 # Variable Background ####
@@ -117,8 +118,8 @@ ggplot(bbs.summary.f.mod, aes(x = year, y = yearly.rel.abundance.scaled, color =
   ) +
   scale_color_manual(
     values = c(
-      "Insectivore" = "#FF0939", # Teal
-      "Marine Bird" = "#09BFFF" # Orange
+      "Insectivore" = "#685850", #"#FF0939", # Teal
+      "Marine Bird" = "#E0900A"#"#09BFFF" # Orange
     )
   ) +
   theme_half_open(font_size = 14) +
@@ -128,29 +129,46 @@ View(bbs.summary.f)
 
 # Logistic Regression Plots ####
 # Creating logistic dataset
-logistic.data <- bbs.summary.f %>% 
-  select(species, guild, logistic.abundance, year) %>%
-  left_join(select(ice_data, year, spring_drop_doy), by = "year") %>%
-  left_join(temp_data, by = "year") %>% 
-  left_join(select(snow_data, year, P1_mean), by = "year") %>%
-  left_join(select(leaf_data, year, P2_mean), by = "year") %>%
-  mutate(level = ifelse(logistic.abundance == 1, "High Abundance Year", "Low Abundance Year"),
-         guild2 = ifelse(guild %in% c("passerine","shorebird"), "Insectivore", "Marine Bird")) %>%
-  mutate(level = factor(level, levels = c("Low Abundance Year", "High Abundance Year")),
-         guild = factor(guild, levels = c("passerine", "shorebird", "waterbird")),
-         guild2 = factor(guild2, levels = c("Marine Bird", "Insectivore")))
+# logistic.data <- bbs.summary.f %>% 
+#   select(species, guild, logistic.abundance, year) %>%
+#   left_join(select(ice_data, year, spring_drop_doy), by = "year") %>%
+#   left_join(temp_data, by = "year") %>% 
+#   left_join(select(snow_data, year, P1_mean), by = "year") %>%
+#   left_join(select(leaf_data, year, P2_mean), by = "year") %>%
+#   mutate(level = ifelse(logistic.abundance == 1, "High Abundance Year", "Low Abundance Year"),
+#          guild2 = ifelse(guild %in% c("passerine","shorebird"), "Insectivore", "Marine Bird")) %>%
+#   mutate(level = factor(level, levels = c("Low Abundance Year", "High Abundance Year")),
+#          guild = factor(guild, levels = c("passerine", "shorebird", "waterbird")),
+#          guild2 = factor(guild2, levels = c("Marine Bird", "Insectivore")))
 
-logistic.data.unfiltered <- bbs.summary %>% 
-  select(species, guild, logistic.abundance, year) %>%
+logistic.data <- bbs.summary %>% 
+  select(species, guild, abundance_level, logistic.abundance, yearly.rel.abundance.scaled, year) %>%
   left_join(select(ice_data, year, spring_drop_doy), by = "year") %>%
   left_join(temp_data, by = "year") %>% 
   left_join(select(snow_data, year, P1_mean), by = "year") %>%
   left_join(select(leaf_data, year, P2_mean), by = "year") %>%
   mutate(level = ifelse(logistic.abundance == 1, "High Abundance Year", "Low Abundance Year"),
-         guild2 = ifelse(guild %in% c("passerine","shorebird"), "Insectivore", "Marine Bird")) %>%
-  mutate(level = factor(level, levels = c("Low Abundance Year", "High Abundance Year")),
-         guild = factor(guild, levels = c("passerine", "shorebird", "waterbird")),
-         guild2 = factor(guild2, levels = c("Insectivore", "Marine Bird")))
+    abundance_level = factor(abundance_level, levels = c("Absent", "Low", "High")),
+    guild2 = ifelse(guild %in% c("passerine", "shorebird"), "Insectivore", "Marine Bird")
+  ) %>%
+  mutate(
+    level = factor(level, levels = c("Low Abundance Year", "High Abundance Year")),
+    guild = factor(guild, levels = c("passerine", "shorebird", "waterbird")),
+    guild2 = factor(guild2, levels = c("Marine Bird", "Insectivore"))
+  )  %>%  filter(species %in% species.list$species)
+
+
+# logistic.data.unfiltered <- bbs.summary %>% 
+#   select(species, guild, logistic.abundance, year) %>%
+#   left_join(select(ice_data, year, spring_drop_doy), by = "year") %>%
+#   left_join(temp_data, by = "year") %>% 
+#   left_join(select(snow_data, year, P1_mean), by = "year") %>%
+#   left_join(select(leaf_data, year, P2_mean), by = "year") %>%
+#   mutate(level = ifelse(logistic.abundance == 1, "High Abundance Year", "Low Abundance Year"),
+#          guild2 = ifelse(guild %in% c("passerine","shorebird"), "Insectivore", "Marine Bird")) %>%
+#   mutate(level = factor(level, levels = c("Low Abundance Year", "High Abundance Year")),
+#          guild = factor(guild, levels = c("passerine", "shorebird", "waterbird")),
+#          guild2 = factor(guild2, levels = c("Insectivore", "Marine Bird")))
 
 
 plotting.logistic.data <- logistic.data %>%
@@ -172,54 +190,64 @@ plotting.logistic.data <- logistic.data %>%
   # )
 
 # count the most common marine bird species in logistic.data.unfiltered
-logistic.data.unfiltered %>%
-  filter(guild == "shorebird") %>%
-  count(species) %>%
-  arrange(desc(n)) %>%
-  head(10) %>%
-  pull(species)
+# logistic.data.unfiltered %>%
+#   filter(guild == "shorebird") %>%
+#   count(species) %>%
+#   arrange(desc(n)) %>%
+#   head(10) %>%
+#   pull(species)
 
-group_colors <- c("High Abundance Year" = "#FF0939", "Low Abundance Year" = "#09BFFF")
+#group_colors <- c("High Abundance Year" = "#FF0939", "Low Abundance Year" = "#09BFFF")
+group_colors <- c("High Abundance Year" = "#97D959", "Low Abundance Year" = "#9E7749")
+
 
 box_plot_theme <- function(first = FALSE, last = FALSE) {
   list(
     scale_fill_manual(values = group_colors),
     #scale_color_manual(c("black", "black")),
     theme_half_open(font_size = 14), 
-    if (first) {
-      theme(
-        axis.title.x = element_blank(),
-        axis.title.y = element_blank(),
-        legend.position = "none",
-        axis.title = element_blank(),
-        plot.background = element_rect(fill=pbackground_color, color=NA),
-        plot.margin = unit(c(0, 0, 0, 0), "cm"))
-    }   else if (last) {
-      theme(
-        axis.title.x = element_blank(),
-        axis.title.y = element_blank(),
-        axis.title = element_blank(),
-        axis.text.y = element_blank(),
-        plot.background = element_rect(fill=pbackground_color, color=NA),
-        plot.margin = unit(c(0, 0, 0, 0), "cm"),)
-    }
-    else if (!first) {
-      theme(
-        axis.title.x = element_blank(),
-        axis.title.y = element_blank(),
-        legend.position = "none",
-        axis.title = element_blank(),
-        axis.text.y = element_blank(),
-        plot.background = element_rect(fill=pbackground_color, color=NA),
-        plot.margin = unit(c(0, 0, 0, 0), "cm"))
-    }
+    theme(
+          axis.title.x = element_blank(),
+          axis.title.y = element_blank(),
+          axis.title = element_blank(),
+          plot.background = element_rect(fill=pbackground_color, color=NA),
+          plot.margin = unit(c(0, 0, 0, 0), "cm")
+          )
+  
+    # if (first) {
+    #   theme(
+    #     axis.title.x = element_blank(),
+    #     axis.title.y = element_blank(),
+    #     legend.position = "none",
+    #     axis.title = element_blank(),
+    #     plot.background = element_rect(fill=pbackground_color, color=NA),
+    #     plot.margin = unit(c(0, 0, 0, 0), "cm"))
+    # }   else if (last) {
+    #   theme(
+    #     axis.title.x = element_blank(),
+    #     axis.title.y = element_blank(),
+    #     axis.title = element_blank(),
+    #     axis.text.y = element_blank(),
+    #     plot.background = element_rect(fill=pbackground_color, color=NA),
+    #     plot.margin = unit(c(0, 0, 0, 0), "cm"),)
+    # }
+    # else if (!first) {
+    #   theme(
+    #     axis.title.x = element_blank(),
+    #     axis.title.y = element_blank(),
+    #     legend.position = "none",
+    #     axis.title = element_blank(),
+    #     axis.text.y = element_blank(),
+    #     plot.background = element_rect(fill=pbackground_color, color=NA),
+    #     plot.margin = unit(c(0, 0, 0, 0), "cm"))
+    # }
   )
 }
 
 
-
-
-snowmelt.box <- 
+  
+  
+#snowmelt.box <- 
   ggplot(plotting.logistic.data, aes(y = guild2, x = P1_mean, fill = level)) +
   geom_boxplot(color = "black", alpha = 0.7) +
   labs(
@@ -229,7 +257,7 @@ snowmelt.box <-
   ) +
   box_plot_theme(last = TRUE)
 
-ice.box <- 
+#ice.box <- 
   ggplot(plotting.logistic.data, aes(y = guild2, x = spring_drop_doy, fill = level)) +
   geom_boxplot(color = "black", alpha = 0.7) +
   labs(
@@ -259,6 +287,10 @@ temp.box <-
   ) +
   box_plot_theme()
 
+snowmelt.box
+ice.box
+
+
 plot_grid(
   NULL, ice.box, snowmelt.box, NULL,
   ncol = 4)
@@ -268,6 +300,73 @@ plot_grid(
 #   ncol = 2,
 #   align = "hv",
 #   rel_widths = c(10, 10, 10, 10))
+
+#ice_histogram <- 
+ggplot(plotting.logistic.data, aes(x = spring_drop_doy)) +
+  geom_histogram(binwidth = 5, fill = "#1f77b4", color = "black", alpha = 0.7) +
+  labs(
+    title = "Distribution of Spring Sea Ice Drop-Off (Day of Year)",
+    x = "Day of Year (Sea Ice Drop-Off)",
+    y = "Frequency"
+  ) +
+  theme_minimal(base_size = 14)
+
+#snow_histogram <- 
+ggplot(plotting.logistic.data, aes(x = P1_mean)) +
+  geom_histogram(binwidth = 5, fill = "#ff7f0e", color = "black", alpha = 0.7) +
+  labs(
+    title = "Distribution of Snowmelt Date (Day of Year)",
+    x = "Day of Year (Snowmelt)",
+    y = "Frequency"
+  ) +
+  theme_minimal(base_size = 14)
+
+
+# Define thresholds
+ice_threshold <- 143  # Example threshold for spring_drop_doy
+snow_threshold <- 143 # Example threshold for P1_mean
+
+# Categorize and count observations
+categorized_data <- plotting.logistic.data %>%
+  mutate(
+    ice_level = ifelse(spring_drop_doy <= ice_threshold, "Low", "High"),
+    snow_level = ifelse(P1_mean <= snow_threshold, "Low", "High")
+  )
+
+# Summarize counts for each category
+summary_counts <- categorized_data %>%
+  summarise(
+    ice_low_count = sum(ice_level == "Low", na.rm = TRUE),
+    ice_high_count = sum(ice_level == "High", na.rm = TRUE),
+    snow_low_count = sum(snow_level == "Low", na.rm = TRUE),
+    snow_high_count = sum(snow_level == "High", na.rm = TRUE)
+  )
+
+# View summary counts
+summary_counts
+
+mosaic_data <- plotting.logistic.data %>%
+  mutate(
+    ice_level = ifelse(spring_drop_doy <= ice_threshold, "Early", "Late"),
+    snow_level = ifelse(P1_mean <= snow_threshold, "Early", "Late")
+) %>%
+  select(species, guild, abundance_level, level, ice_level, snow_level)# %>%
+  #drop_na(level, ice_level) %>% # Ensure no missing data in the factors
+  
+
+# Create the mosaic plot
+ice_mosaic_plot <- ggplot(data = ice_mosaic_data) +
+  geom_mosaic(aes(weight = 1, x = product(abundance_level, ice_level), fill = abundance_level)) +
+  labs(
+    title = "Mosaic Plot of Bird Abundance vs. Ice Years",
+    x = "Ice Years (Early vs. Late)",
+    y = "Proportion",
+    fill = "Abundance Level"
+  ) +
+  scale_fill_manual(values = c("High" = "#FF0939", "Low" = "#09BFFF", "Absent" = "yellow")) +
+  theme_minimal(base_size = 14)
+
+ice_mosaic_plot
 
 #----------------------
 # Acoustic ####
