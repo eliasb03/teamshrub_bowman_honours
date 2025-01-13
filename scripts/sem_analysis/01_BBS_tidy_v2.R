@@ -1,12 +1,12 @@
 #------------------------------
 # teamshrub_bowman_honours
-# 0X_BBS_tidy_v2
+# 01_BBS_tidy_v2
 # By: Elias Bowman 
 # Created: 2024-11-17
-# Updated: 2024-01-09
+# Updated: 2024-01-13
 #
-# Description: This script summarizes Breeding Bird Data into guild levels
-# Should only be run after BBS_tidy
+# Description: This script imports, tidies, and summarizes the Breeding Bird Survey data for the Qikiqtaruk - Herschel Island site. It associates guilds to species and creates scaled and non-scaled realtive and logistic abundance values.
+# Caution using current scaled totals - over inflate low effort years - consider using something like a power law to reduce the impact of having few observers and low sampling time
 #------------------------------
 
 # Setting Project Working Environment ####
@@ -17,6 +17,7 @@ setwd(proj.path)
 library(tidyverse)  # For dplyr, tidyr, etc.
 library(rlang)      # For tidy evaluation tools
 library(dplyr)
+library(tidyr)
 library(skimr)
 library(lubridate)
 library(hms)
@@ -29,13 +30,44 @@ bbs.data.path <- "data/raw/breeding_bird_survey_QHI_2024/QHI_BBS_survey_data_199
 guild.mapping.path <- "D:/bird_guild_mapping.csv"
 guild.mapping.path <- "data/raw/bird_guild_mapping.csv"
 
-species.list <- c("Common Eider", "Semipalmated Plover", "Semipalmated Sandpiper", 
-                  "Baird's Sandpiper", "Red-necked Phalarope", "Glaucous Gull", 
-                  "Lapland Longspur", "Snow Bunting", "Savannah Sparrow", 
-                  "Common Redpoll", "Hoary Redpoll")
+# hard coded species list, as vector
+species.list <- data.frame(
+  species = c(
+    "Common Eider",
+    "Semipalmated Plover",
+    "Semipalmated Sandpiper",
+    "Baird's Sandpiper",
+    "Red-necked Phalarope",
+    "Glaucous Gull",
+    "Lapland Longspur",
+    "Snow Bunting",
+    "Savannah Sparrow",
+    "Common Redpoll",
+    "Hoary Redpoll"
+  ),
+  spec.code = c(
+    "COEI",
+    "SEPL",
+    "SESA",
+    "BASA",
+    "RNPL",
+    "GLGU",
+    "LALO",
+    "SNBU",
+    "SAVS",
+    "CORE",
+    "HORE"
+  )
+)
+# importing species list, as dataframe
+species.list <- read.csv("data/clean/bbs/species_list.csv")
+
 
 bbs.survey <- read.csv(bbs.data.path)
 guild.mapping <- read.csv(guild.mapping.path)
+
+# logistic high vs low relative abundance threshold
+logistic.threshold <- 0.5
 
 #------------------------------
 # Function Definitions
@@ -118,6 +150,17 @@ correct_species_mapping <- function(df) {
     )
 }
 
+special_cases <- function(df){
+  # in 1992 the late survey happened over two days, i want to manually rewrite the first part of the transect (transect 1), to have the same date as transect 2 and 3l and add a note that i did this
+  df <- df %>%
+    mutate(date = case_when(date == "29-Jun-92" ~ "28-Jun-92",
+                            TRUE ~ date),
+           notes = case_when(date == "29-Jun-92" ~ "Date changed from 29-June-92 to 28-Jun-92 match other transects",
+                             TRUE ~ notes))
+  
+  
+}
+
 # Main function to clean the dataset
 clean_bbs_data <- function(df) {
   df %>%
@@ -125,6 +168,9 @@ clean_bbs_data <- function(df) {
     convert_column_names_to_dot() %>%      # Convert column names to dot notation
     capitalize_species_code() %>%          # Capitalize species codes
     add_observation_id() %>%               # Add observation ID and handle NA totals
+  
+    special_cases() %>%                    # Handle special cases
+      
     combine_notes() %>%                    # Combine notes columns
     create_indexing_columns() %>%          # Create indexing columns
     correct_species_mapping()              # Correct species mapping errors
@@ -197,18 +243,16 @@ find_latest_end_time <- function(df) {
     mutate(
       latest.end = case_when(
         any(!is.na(end.time)) ~ suppressWarnings(
-          max(
-            c(
-              max(as.duration(end.time), na.rm = TRUE),
-              max(as.duration(time), na.rm = TRUE)
-            ), na.rm = TRUE
-          )
+          max(as.duration(c(end.time, time)), na.rm = TRUE)
         ),
-        TRUE ~ NA_real_  # If both end.time and time are missing, return NA
+        any(!is.na(time)) ~ suppressWarnings(
+          max(as.duration(time), na.rm = TRUE)
+        ),
+        TRUE ~ NA_real_
       )
     ) %>%
     ungroup() %>%
-    mutate(latest.end = as_hms(latest.end))  # Convert to hms format
+    mutate(latest.end = ifelse(is.na(latest.end), NA, hms::as_hms(latest.end)))  # Convert to hms or keep NA
 }
 
 # Helper function: Find the earliest start time in a survey
@@ -299,6 +343,11 @@ clean_times <- function(df) {
 # Function to left_join guild mapping data into bbs.data
 apply_guilds <- function(data, guild.mapping) {
   
+  if ("guild" %in% colnames(data) & "guild2" %in% colnames(data)) {
+    data <- data %>%
+      select(-guild, -guild2)  # Remove exisiting 'guild1' and 'guild2'
+  }  
+  
   # Check if 'species' column already exists in the data
   if ("species" %in% colnames(data)) {
     # If species exists, just join and resolve any conflicts
@@ -347,62 +396,150 @@ calculate_sampling_metrics <- function(data) {
 }
 
 # 5. Function to convert to long ####
+convert_to_long <- function(data) {
+  data %>%
+    mutate(original.total = total) %>%  # Add the original total as a new column
+    uncount(total)  # Uncount the rows based on the 'total' column
+}
+
 # 6. Function to summarize to year level ####
-# 7. Function to fill in missing years with 0s ####
-fill_missing_years <- function(data, species.col, year.col, count.col, fill.value = 0) {
-  # Check if the required columns exist
-  if (!all(c(species.col, year.col, count.col) %in% colnames(data))) {
-    stop("One or more of the specified columns do not exist in the data.")
-  }
-  
-  # Extract unique species and years
-  all.species <- unique(data[[species.col]])
-  all.years <- unique(data[[year.col]])
-  
-  # Create a complete grid of species and years
-  complete_data <- expand.grid(
-    species = all.species,
-    year = all.years
-  ) %>%
-    rename(
-      !!species.col := species, 
-      !!year.col := year
+# Helper function: join by year, period, and species
+summarize_by_year_period_spec <- function(data) {
+  summarized_data <- data %>%
+    group_by(spec.code, year, period) %>%
+    summarise(
+      total.count = n(),  # Count the total number of observations
+      # Summarize metadata using the first value for each group
+      species = first(species),
+      guild = first(guild),
+      guild2 = first(guild2),
+      survey.id = first(survey.id),
+      observers = first(observers),
+      sampling.time = first(sampling.time),
+      sampling.effort = first(sampling.effort),
+      effort.multiplier = first(effort.multiplier),
+      num.observers = first(num.observers),
+      original.total = first(original.total),
+      start.time = first(start.time),
+      end.time = first(end.time),
+      time = first(time),
+      date.ymd = first(date.ymd),
+      doy = first(doy),
+      day = first(day),
+      month = first(month),
+      year = first(year),
+      notes = first(notes),
+      .groups = 'drop'  # Ungroup after summarizing
     )
   
-  # Merge with the original data and fill missing values
-  filled.data <- complete.data %>%
-    left_join(data, by = c(species.col, year.col)) %>%
+  return(summarized_data)
+}
+
+# Helper function: Select the row with the largest total.count per species and year
+select_larger_count <- function(data) {
+  data_with_max <- data %>%
+    group_by(spec.code, year) %>%
+    slice_max(total.count, n = 1) %>%  # Select the row with the maximum total_count
+    ungroup()  # Ungroup after selection
+  
+  return(data_with_max)
+}
+
+summarize_to_year <- function(data) {
+  summarized_data <- data %>%
+    summarize_by_year_period_spec() %>%
+    select_larger_count()
+  
+  return(summarized_data)
+}
+
+# 7. Function to fill in missing years with 0s #### 
+  expand_and_fill <- function(df) {
+  # List of metadata columns
+  metadata_cols <- names(df)[!(names(df) %in% c("year", "spec.code", "total.count"))]
+  
+  # Generate all combinations of year and spec.code
+  expanded_df <- df %>%
+    expand(year, spec.code) %>%
+    left_join(df, by = c("year", "spec.code")) %>%
     mutate(
-      !!count.col := coalesce(.data[[count.col]], fill.value) # Fill with the specified fill_value
+      total.count = replace_na(total.count, 0),
+      across(all_of(metadata_cols), ~ replace_na(., NA))
     )
   
-  return(filled_data)
+  return(expanded_df)
 }
 
 # 6. Function to filter observations to species list
+
+# 8. Function to create scaled totals and relative abundances ####
+create_abundances <- function(data, threshold) {
+  data <- data %>%
+    create_scaled_total() %>%
+    create_relative_and_logistic_abundance(., threshold)
+  
+  return(data)
+}
+  
+create_scaled_total <- function(data) {
+  data <- data %>%
+    mutate(total.scaled = ifelse(!is.na(effort.multiplier), total.count * effort.multiplier, 0))
+  
+  return(data)
+}
+
+create_relative_and_logistic_abundance <- function(data, threshold) {
+  # Add calculated columns
+  data <- data %>%
+    group_by(spec.code) %>%  # Group by species
+    mutate(
+      # Relative abundances
+      rel.abundance.total = total.count / max(total.count, na.rm = TRUE),
+      rel.abundance.scaled = total.scaled / max(total.scaled, na.rm = TRUE),
+      
+      # Logistic IDs based on relative abundances
+      logistic.id.total = factor(
+        if_else(rel.abundance.total > threshold, "high", "low"),
+        levels = c("low", "high")),
+        logistic.id.scaled = factor(
+          if_else(rel.abundance.scaled > threshold, "high", "low"),
+          levels = c("low", "high"))
+    ) %>%
+    ungroup()
+  
+  return(data)
+}
+
+# 9. Function to reorder columns ####
+reorder_columns <- function(data) {
+  data %>%
+    select(year, spec.code, species, total.count, rel.abundance.total, total.scaled, logistic.id.total, rel.abundance.scaled, logistic.id.scaled, guild, guild2, observers, sampling.effort, effort.multiplier, sampling.time, num.observers, notes, survey.id, period, start.time, end.time, time, date.ymd, doy, day, month)
+}
+
+# 10.Function to filter according to species list ####
+filter_bbs <- function(data) {
+  data %>%
+    filter(spec.code %in% species.list$spec.code)
+}
+
 
 #------------------------------
 # Main Processing Pipeline
 #------------------------------
 
-bbs.summary.test <- bbs.survey %>%
+bbs.survey.long <- bbs.survey %>%
   clean_bbs_data() %>%
   clean_times() %>%
   apply_guilds(guild.mapping) %>%
-  calculate_sampling_metrics() 
+  calculate_sampling_metrics() %>%
+  convert_to_long()
 
+bbs.summary <- bbs.survey.long %>%
+  summarize_to_year() %>%
+  expand_and_fill() %>%
+  apply_guilds(guild.mapping) %>%
+  create_abundances(threshold = logistic.threshold) %>%
+  reorder_columns()
 
-# %>%
-#   fill_missing_years(
-#     species.col = "spec.code", 
-#     year.col = "year", 
-#     count.col = "total.count"
-#   )
-  
-
-#------------------------------
-# Execution
-#------------------------------
-
-
-
+bbs.clean <- bbs.summary %>%
+  filter_bbs()
