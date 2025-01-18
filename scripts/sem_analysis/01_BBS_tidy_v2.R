@@ -8,11 +8,6 @@
 # Description: This script imports, tidies, and summarizes the Breeding Bird Survey data for the Qikiqtaruk - Herschel Island site. It associates guilds to species and creates scaled and non-scaled realtive and logistic abundance values.
 # Caution using current scaled totals - over inflate low effort years - consider using something like a power law to reduce the impact of having few observers and low sampling time
 #------------------------------
-
-# Setting Project Working Environment ####
-proj.path <- "C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_bowman_honours/"
-setwd(proj.path)
-
 # Loading Packages
 library(tidyverse)  # For dplyr, tidyr, etc.
 library(rlang)      # For tidy evaluation tools
@@ -24,10 +19,10 @@ library(hms)
 library(stringi)
 
 # Declaring and Importing Relevant Data ####
-bbs.data.path <- "D:/BBS_QHI_2024/QHI_BBS_survey_data_1990_2024.csv"
+#bbs.data.path <- "D:/BBS_QHI_2024/QHI_BBS_survey_data_1990_2024.csv"
 bbs.data.path <- "data/raw/breeding_bird_survey_QHI_2024/QHI_BBS_survey_data_1990_2024.csv"
 
-guild.mapping.path <- "D:/bird_guild_mapping.csv"
+#guild.mapping.path <- "D:/bird_guild_mapping.csv"
 guild.mapping.path <- "data/raw/bird_guild_mapping.csv"
 
 # hard coded species list, as vector
@@ -68,6 +63,7 @@ guild.mapping <- read.csv(guild.mapping.path)
 
 # logistic high vs low relative abundance threshold
 logistic.threshold <- 0.5
+
 
 #------------------------------
 # Function Definitions
@@ -543,3 +539,12 @@ bbs.summary <- bbs.survey.long %>%
 
 bbs.clean <- bbs.summary %>%
   filter_bbs()
+
+# Saving bbs.clean
+output_path <- "data/clean/sem/" # Output path
+write_csv(bbs.clean, paste0(output_path, "bbs_data.csv"))
+
+# Removing unneeded objects
+rm(bbs.data.path, guild.mapping.path)
+rm(bbs.survey, bbs.survey.long)
+rm(add_observation_id, adjust_survey_times, apply_guilds, calculate_doy, calculate_sampling_metrics, capitalize_species_code, clean_bbs_data, clean_times, combine_notes, convert_column_names_to_dot, convert_to_long, correct_species_mapping, create_abundances, create_date_string, create_date_time_column, create_indexing_columns, create_relative_and_logistic_abundance, create_scaled_total, expand_and_fill, fill_survey_times, filter_bbs, find_earliest_start_time, find_latest_end_time, format_date_column, recode_period_labels, rename_columns_lowercase, reorder_columns, select_larger_count, special_cases, standardize_and_parse_times, standardize_time, summarize_by_year_period_spec, summarize_to_year)

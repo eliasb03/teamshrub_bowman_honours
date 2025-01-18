@@ -89,48 +89,11 @@ calculate_yearly_stats <- function(data, threshold = ice_cover_threshold) {
 ice_data <- import_ice_data(file_path)
 ice_data_yearly <- calculate_yearly_stats(ice_data, ice_cover_threshold)
 
+# Saving ice data
+output_path <- "data/clean/sem/" # Output path
+write_csv(ice_data_yearly, paste0(output_path, "ice_data.csv"))
 
 # Removing unneeded workspace objects
 rm(ice_data)
 rm(file_path, ice_cover_threshold)
 rm(calculate_yearly_stats, clean_column_names, import_ice_data)
-
-
-# # Some plots for fun ##################################
-# library(ggplot2)
-# library(cowplot)
-# # Various Plots ####
-# # Plotting ice drop date
-# ggplot(ice_data_yearly, aes(x = year, y = spring_drop_doy)) +
-#   geom_point(color = "#A2BFFE", size = 2) +
-#   geom_smooth(method = "lm", color = "darkblue") +
-#   labs(
-#     x = "Year",
-#     y = "Day of Drop in Sea Ice Cover"
-#   ) +
-#   theme_half_open(font_size = 14)
-# 
-# # Plotting yearly concentrations
-# year.of.interest <- 1968
-# ggplot(filter(ice_data, year == year.of.interest), aes(x = week, y = conc)) +
-#   geom_line(color = "#A2BFFE", size = 2) +  # Line plot
-#   theme_minimal() +
-#   labs(
-#     x = "Year",  # X-axis label
-#     y = "Average Ice Coverage",  # Y-axis label
-#     title = "Average Concentration of Ice Cover over Time"  # Plot title
-#   ) +
-#   theme_half_open(font_size = 14)
-# 
-# 
-# ggplot(ice_data, aes(x = year, y = conc)) +
-#   #geom_line(color = "#A2BFFE", size = 2) +  # Line plot
-#   geom_point(size = 2, colour = "lightblue") +  # Points on the line
-#   geom_smooth(method = lm) +
-#   theme_minimal() +
-#   labs(
-#     x = "Year",  # X-axis label
-#     y = "Average Ice Coverage",  # Y-axis label
-#     title = "Average Concentration of Ice Cover over Time"  # Plot title
-#   ) +
-#   theme_half_open(font_size = 14)

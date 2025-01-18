@@ -60,8 +60,13 @@ qhi_phenology <- merge(snowmelt_avg, SALARC_budburst_avg, by = "Year") %>%
     snowmelt_mean = P1_mean,
     snowmelt_sd = P1_sd,
     budburst_mean = P2_mean,
-    budburst_sd = P2_sd
+    budburst_sd = P2_sd,
+    year = Year
   ) # rename p1 to snowmelt, p2 to budburst
+
+# Saving qhi_phenology
+output_path <- "data/clean/sem/" # Output path
+write_csv(qhi_phenology, paste0(output_path, "phenology_data.csv"))
 
 # Close unused data
 rm(qiphen,
