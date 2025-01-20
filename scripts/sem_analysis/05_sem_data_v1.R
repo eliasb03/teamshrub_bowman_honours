@@ -44,7 +44,7 @@ join_by_year <- function(bbs_data, ice_data, phenology_data, climate_data,
 
 # Example usage
 # Specify the columns to keep
-bbs_cols <- c("year", "spec.code", "species", "rel.abundance.total", "rel.abundance.scaled", "logistic.id.total")
+bbs_cols <- c("year", "spec.code", "species", "guild", "rel.abundance.total", "rel.abundance.scaled", "logistic.id.total")
 
 ice_cols <- c("spring_drop_doy")
 phenology_cols <- c("snowmelt_mean", "budburst_mean")
