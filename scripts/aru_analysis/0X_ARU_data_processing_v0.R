@@ -5,6 +5,7 @@
 # Created: 2024-11-18
 #
 # Description: This script will process the csv outputs from BirdNET runs on ARU recordings
+# Should handle the full csv output from 02_ARU_pipeline
 #------------------------------
 
 # Load necessary libraries
