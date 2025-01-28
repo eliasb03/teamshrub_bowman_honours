@@ -56,9 +56,9 @@ random_subset <- random_data %>%
 # temp_mod <- bf(temp ~ ice.melt)
 
 bird_mod <- bf(bird.abundance ~ ice.melt + temp + snowmelt + budburst + guild + (1|species) + (1|year))
-budburst_mod <- bf(budburst ~ snowmelt + temp + guild + (1|species) + (1|year))
-snowmelt_mod <- bf(snowmelt ~ temp + guild + (1|species) + (1|year))
-temp_mod <- bf(temp ~ ice.melt + guild + (1|species) + (1|year))
+budburst_mod <- bf(budburst ~ snowmelt + temp + (1|year))
+snowmelt_mod <- bf(snowmelt ~ temp + (1|year))
+temp_mod <- bf(temp ~ ice.melt + (1|year))
 
 # Defining Priors ######
 # Priors for bird.abundance model ####
