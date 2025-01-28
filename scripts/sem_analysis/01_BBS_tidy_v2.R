@@ -57,6 +57,45 @@ species.list <- data.frame(
 # importing species list, as dataframe
 species.list <- read.csv("data/clean/bbs/species_list.csv")
 
+# Expanded species list
+species.list.exp <- data.frame(
+  species = c(
+    "Common Eider",
+    "Semipalmated Plover",
+    "Semipalmated Sandpiper",
+    "Baird's Sandpiper",
+    "Red-necked Phalarope",
+    "Glaucous Gull",
+    "Lapland Longspur",
+    "Snow Bunting",
+    "Savannah Sparrow",
+    "Common Redpoll",
+    "Hoary Redpoll",
+    "Greater White-fronted Goose",
+    "Northern Pintail",
+    "Red-throated Loon",
+    "Long-tailed Jaeger",
+    "Black Guillemot"
+  ),
+  spec.code = c(
+    "COEI",
+    "SEPL",
+    "SESA",
+    "BASA",
+    "RNPL",
+    "GLGU",
+    "LALO",
+    "SNBU",
+    "SAVS",
+    "CORE",
+    "HORE",
+    "GWFG",
+    "NOPI",
+    "RTLO",
+    "LTJA",
+    "BLGU"
+  )
+)
 
 bbs.survey <- read.csv(bbs.data.path)
 guild.mapping <- read.csv(guild.mapping.path)
@@ -515,7 +554,8 @@ reorder_columns <- function(data) {
 # 10.Function to filter according to species list ####
 filter_bbs <- function(data) {
   data %>%
-    filter(spec.code %in% species.list$spec.code)
+    #filter(spec.code %in% species.list$spec.code)
+    filter(spec.code %in% species.list.exp$spec.code)
 }
 
 
