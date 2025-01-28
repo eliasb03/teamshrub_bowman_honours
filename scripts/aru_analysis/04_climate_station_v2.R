@@ -1,0 +1,60 @@
+#------------------------------
+# teamshrub_bowman_honours
+# 04_climate_station_v2
+# By: Elias Bowman 
+# Created: 2025-01-27
+#
+# Description: This script imports climate station data from Herschel Island Yukon Territory Climate Station
+# Climate ID: 2100636
+# https://climate.weather.gc.ca/climate_data/hourly_data_e.html?hlyRange=1994-02-01%7C2025-01-27&dlyRange=1974-07-01%7C2025-01-27&mlyRange=1974-01-01%7C2007-01-01&StationID=1560&Prov=YT&urlExtension=_e.html&searchType=stnName&optLimit=yearRange&StartYear=1840&EndYear=2024&selRowPerPage=25&Line=0&searchMethod=contains&txtStationName=herschel+island&timeframe=1&time=UTC&time=UTC&Year=2024&Month=5&Day=27#
+# Using dailyhourly values, we can create hourly windspeed data for the duration of the summer
+#------------------------------
+
+library(tidyverse)
+library(cowplot)
+
+# Import data
+data.dir <- "data/raw/herschel_climate_station_2024"
+file.list <- list.files(data.dir, full.names = TRUE)
+hourly.files <- grep("hourly", file.list, value = TRUE)
+
+combined_hourly_data <- hourly.files %>%
+  map_dfr(read_csv)
+
+windspeed <- combined_hourly_data %>%
+  select(
+    longitude = `Longitude (x)`,
+    latitude = `Latitude (y)`,
+    station_name = `Station Name`,
+    datetime_utc = `Date/Time (UTC)`,
+    month = Month,
+    day = Day,
+    wind_speed_kmh = `Wind Spd (km/h)`,
+    win_dir_10deg = `Wind Dir (10s deg)`
+  ) %>%
+  mutate(
+    datetime_utc = as.POSIXct(datetime_utc, tz = "UTC"), # Ensure date is in UTC
+    datetime_whitehorse = with_tz(datetime_utc, tzone = "America/Whitehorse"), # Convert to Whitehorse timezone
+    day = as.numeric(day),
+    month = as.numeric(month),
+    wind_speed_kmh = as.numeric(wind_speed_kmh),
+    is_missing = is.na(wind_speed_kmh) # Create a flag for missing data
+  ) %>%
+  filter(month >= 5 & month <= 8) # Filter for months May to August
+
+
+# Plot windspeed over time with missing data highlighted
+ggplot(windspeed, aes(x = datetime_whitehorse, y = wind_speed_kmh)) +
+  geom_line(color = "blue", na.rm = TRUE, size = 1) + # Line for available data
+  geom_point(color = "black", size = 0.75) +
+  labs(
+    title = "Hourly Windspeed at Herschel Station in 2024",
+    x = "Date",
+    y = "Wind Speed (km/h)"
+  ) +
+  theme_half_open(font_size = 14)
+
+
+
+
+
