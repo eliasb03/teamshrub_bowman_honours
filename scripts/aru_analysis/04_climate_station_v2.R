@@ -8,9 +8,12 @@
 # Climate ID: 2100636
 # https://climate.weather.gc.ca/climate_data/hourly_data_e.html?hlyRange=1994-02-01%7C2025-01-27&dlyRange=1974-07-01%7C2025-01-27&mlyRange=1974-01-01%7C2007-01-01&StationID=1560&Prov=YT&urlExtension=_e.html&searchType=stnName&optLimit=yearRange&StartYear=1840&EndYear=2024&selRowPerPage=25&Line=0&searchMethod=contains&txtStationName=herschel+island&timeframe=1&time=UTC&time=UTC&Year=2024&Month=5&Day=27#
 # Using dailyhourly values, we can create hourly windspeed data for the duration of the summer
+# Using zoo.approx, we use linear interpolation to fill in data to 30 minute intervals to match ARU data
 #------------------------------
 
 library(tidyverse)
+library(zoo)
+
 library(cowplot)
 
 # Import data
@@ -43,16 +46,44 @@ windspeed <- combined_hourly_data %>%
   filter(month >= 5 & month <= 8) # Filter for months May to August
 
 
-# Plot windspeed over time with missing data highlighted
-ggplot(windspeed, aes(x = datetime_whitehorse, y = wind_speed_kmh)) +
-  geom_line(color = "blue", na.rm = TRUE, size = 1) + # Line for available data
-  geom_point(color = "black", size = 0.75) +
-  labs(
-    title = "Hourly Windspeed at Herschel Station in 2024",
-    x = "Date",
-    y = "Wind Speed (km/h)"
-  ) +
-  theme_half_open(font_size = 14)
+# Add windspeed data
+full_time <- tibble(datetime_whitehorse = seq(
+  min(windspeed$datetime_whitehorse),
+  max(windspeed$datetime_whitehorse),
+  by = "30 mins"
+))
+
+windspeed.filled <- windspeed %>%
+  right_join(full_time, by = "datetime_whitehorse") %>%
+  # Step 1: Create an 'infilled' column (FALSE for original, TRUE for infilled, handle case where data is missing by leaving FALSE)
+  mutate(infilled = case_when(
+    is_missing ~ FALSE,               # If is_missing is TRUE, set infilled to FALSE
+    is.na(wind_speed_kmh) ~ TRUE,     # If wind_speed_kmh is NA, set infilled to TRUE
+    !(is.na(wind_speed_kmh)) ~ FALSE,     # If wind_speed_kmh is NA, set infilled to TRUE
+  )) %>%
+  # Step 2: Oorder by time
+  arrange(datetime_whitehorse) %>%
+  # Step 3: Fill missing values using linear interpolation 
+  mutate(wind_speed_kmh = ifelse((infilled == TRUE), 
+                                 zoo::na.approx(wind_speed_kmh, na.rm = FALSE), 
+                                 wind_speed_kmh)) %>%
+  # Step 4: Select only date time and winspeed
+  select(datetime_whitehorse, wind_speed_kmh)
+
+rm(combined_hourly_data, full_time)
+
+
+# 
+# # Plot windspeed over time with missing data highlighted
+# ggplot(windspeed, aes(x = datetime_whitehorse, y = wind_speed_kmh)) +
+#   geom_line(color = "blue", na.rm = TRUE, size = 1) + # Line for available data
+#   geom_point(color = "black", size = 0.75) +
+#   labs(
+#     title = "Hourly Windspeed at Herschel Station in 2024",
+#     x = "Date",
+#     y = "Wind Speed (km/h)"
+#   ) +
+#   theme_half_open(font_size = 14)
 
 
 
