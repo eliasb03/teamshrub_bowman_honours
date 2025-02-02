@@ -1,7 +1,7 @@
 #------------------------------
 # teamshrub_bowman_honours
-# 0X_tomst_v1
-# By: Jeremy, modified by Elias
+# 0X_tomst_v2
+# By: Jeremy's original script, converted by Elias
 #
 # Description: This script will read TOMST data and calculate relevant values
 #------------------------------
@@ -96,94 +96,4 @@ tomst.mapping <- tomst.mapping %>%
 tomst_data <- merge(tsd_short, tomst.mapping, by = "tomst_num", all.y = TRUE, allow.cartesian=TRUE)
 
 rm(tms.f, tms.calc, files_table)
-
-# aru.tomst <- tomst.mapping %>%
-#   mutate(locality_id = paste0("TOMST", tomst_num, "_QHI")) %>%
-#   left_join(month.tomst.data, by = "locality_id") %>%
-#   filter(month == "7") %>%
-#   mutate(temp_hl = ifelse(mean_value > median(mean_value), "high", "low")) %>%
-#   mutate(temp_hml = case_when(
-#     mean_value <= quantile(mean_value, 1/3) ~ "low",
-#     mean_value <= quantile(mean_value, 2/3) ~ "med",
-#     TRUE ~ "high"
-#   ))   #mutate(temp_hl = ifelse(mean_value > 9.75, "cool", "warm"))
-# 
-# 
-
-
-
-##############################
-# Aggregate to daily/monthly averages
-## aggregates all those sensors to monthly values # choose between minimu percentile
-monthly.tms <- mc_agg(tms.calc,fun=c("mean","min","max"),period = "day",min_coverage=1,use_utc = F)
-monthly.tms <- mc_agg(tms.calc,fun=c("mean","percentile"),percentiles = c(0.05,0.95),period = "day",min_coverage=1,use_utc = F)
-
-
-## export the object out of the MC framework
-export_dt <- data.table(mc_reshape_long(monthly.tms))
-export_dt[, serial_number:=NULL] ##removing useless col
-export_dt[, datetime := ymd(datetime)] ## :=  creates or update a column in data.table, here we swith to a lubridate format with ymd
-export_dt[, month := month(datetime)] ## extracting the month
-export_dt[, day := day(datetime)] ## extracting the day
-export_dt[, week := week(datetime)] ## extracting the week
-export_dt[, year := year(datetime)] ## extracting the year
-export_dt[, tomst_num := str_extract(locality_id, "(?<=TOMST)\\d+")] # Adding a tomst_num column
-
-export_dt <- export_dt[year == 2024,]# filter for only 2024
-
-
-
-# Summarize by 10 minute stretches from 0:00-0:10 and from 0:30-0:40
-
-
-
-
-# filter for monthly averages
-monthly_values <- export_dt[,.(mean_value = mean(value,na.rm=T)),
-                              by=.(month, sensor_name, locality_id, tomst_num)] # na.rm=T remove incomplete months 
-# filter for daily averages
-daily_values <- export_dt[,.(mean_value = mean(value,na.rm=T)),
-                          by=.(month,day,sensor_name,height,week, locality_id, tomst_num)] # na.rm=T remove incomplete days 
-
-# filter for weekly averages
-weekly_values <- export_dt[,.(mean_value = mean(value,na.rm=T)),
-                           by=.(month,sensor_name,height,week, locality_id, tomst_num)] # na.rm=T remove incomplete days 
-
-# Tomsts 1:40 exist, missing/unreliable data from tomsts 2, 5, 11, 14
-#setdiff(1:40, monthly_values$tomst_num)
-
-
-month.tomst.data <- monthly_values %>%
-  filter(sensor_name == "TMS_T3_mean") %>%
-  filter(month %in% c("6", "7"))
-
-daily.tomst.data <- daily_values %>%
-  filter(sensor_name == "TMS_T3_mean") %>%
-  filter(month %in% c("6", "7")) %>%
-  mutate(date = ymd(paste0("2024-", month, "-", day)))
-
-# Data manually built for matching ARU to TOMST
-tomst.mapping <- read.csv("data/raw/aru_tomst_mapping.csv") 
-tomst.of.interest <- c(1,  2,  3,  4,  7,  9, 11, 13, 14, 15, 16, 17, 20, 27, 29, 33, 35, 39, 40)
-
-aru.tomst <- tomst.mapping %>%
-  mutate(locality_id = paste0("TOMST", tomst_num, "_QHI")) %>%
-  left_join(month.tomst.data, by = "locality_id") %>%
-  filter(month == "7") %>%
-  mutate(temp_hl = ifelse(mean_value > median(mean_value), "high", "low")) %>%
-  mutate(temp_hml = case_when(
-    mean_value <= quantile(mean_value, 1/3) ~ "low",
-    mean_value <= quantile(mean_value, 2/3) ~ "med",
-    TRUE ~ "high"
-  ))   #mutate(temp_hl = ifelse(mean_value > 9.75, "cool", "warm"))
-
-
-# # plot tomst.mapping, tms_3_mean vs ARU
-ggplot(aru.tomst, aes(x = aru_name, y = mean_value, color = temp_hml)) +
-  geom_boxplot() +
-  #geom_point(size = 2) +
-  labs(x = "ARU",
-       y = "Average Air Temp") +
-  theme(text = element_text(size = 14),
-        axis.text.x = element_text(angle = 45, hjust = 1))
-
+rm(tsd_short)
