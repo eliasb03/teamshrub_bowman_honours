@@ -47,14 +47,14 @@ windspeed <- combined_hourly_data %>%
 
 
 # Add windspeed data
-full_time <- tibble(datetime_whitehorse = seq(
+full_time_wind <- tibble(datetime_whitehorse = seq(
   min(windspeed$datetime_whitehorse),
   max(windspeed$datetime_whitehorse),
   by = "30 mins"
 ))
 
 windspeed.filled <- windspeed %>%
-  right_join(full_time, by = "datetime_whitehorse") %>%
+  right_join(full_time_wind, by = "datetime_whitehorse") %>%
   # Step 1: Create an 'infilled' column (FALSE for original, TRUE for infilled, handle case where data is missing by leaving FALSE)
   mutate(infilled = case_when(
     is_missing ~ FALSE,               # If is_missing is TRUE, set infilled to FALSE
