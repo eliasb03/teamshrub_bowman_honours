@@ -70,22 +70,4 @@ windspeed.filled <- windspeed %>%
   # Step 4: Select only date time and winspeed
   select(datetime_whitehorse, wind_speed_kmh)
 
-rm(combined_hourly_data, full_time)
-
-
-# 
-# # Plot windspeed over time with missing data highlighted
-# ggplot(windspeed, aes(x = datetime_whitehorse, y = wind_speed_kmh)) +
-#   geom_line(color = "blue", na.rm = TRUE, size = 1) + # Line for available data
-#   geom_point(color = "black", size = 0.75) +
-#   labs(
-#     title = "Hourly Windspeed at Herschel Station in 2024",
-#     x = "Date",
-#     y = "Wind Speed (km/h)"
-#   ) +
-#   theme_half_open(font_size = 14)
-
-
-
-
-
+rm(combined_hourly_data, full_time_wind)
