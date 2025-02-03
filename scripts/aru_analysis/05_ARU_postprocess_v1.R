@@ -12,14 +12,8 @@
 library(tidyverse)
 library(data.table)
 library(lubridate)
-library(patchwork)
-library(zoo)
 
 library(ggplot2)
-#library(terra)
-#library(sf)
-#library(stringi)
-
 
 # Define the path to the ARU data folder
 
@@ -99,14 +93,28 @@ raw_aru_data <- process_aru_folder(aru_all_output_folder,
                                    confidence_threshold,
                                    toignore)
 
+# This line of code is only here to handle an issue with ARUQ14 where the datetime isnt formatting correctly, all others are
+# Note that ARUQ14 still isnt filling in seconds correctly, but i dont think that should matter
+raw_aru_data[[7]][, detectionTimeLocal := as.POSIXct(detectionTimeLocal, format = "%Y-%m-%d %H:%M")]
+raw_aru_data[[7]][, dateTimeLocal := ifelse(
+  grepl("^\\d{4}-\\d{2}-\\d{2}$", dateTimeLocal),
+  paste0(dateTimeLocal, " 00:00:00"),
+  dateTimeLocal
+)]
+
+
 # Define the summarization function
 summarize_species_by_time <- function(dt) {
   # Convert to 30-minute intervals
+  cat("running: \n")
+  cat(unique(dt$locationID))
+  cat("\n")
   dt[, time_interval := floor_date(detectionTimeLocal, unit = "30 minutes")]
+  cat("part1 done \n")
   
   # Group by species, ARU, and time_interval, and count occurrences
   summarized_data <- dt[, .(species_count = .N), by = .(common_name, locationID, time_interval)]
-  
+  cat("done \n")
   return(summarized_data)
 }
 
@@ -144,7 +152,4 @@ summarized_aru_data <- lapply(summarized_aru_data, function(dt)
     by.y = c("datetime", "aru_name"),
     all.x = TRUE
   ))
-
-#########
-# Plotting aru date coverage
 
