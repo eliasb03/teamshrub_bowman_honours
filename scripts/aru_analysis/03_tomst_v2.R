@@ -77,8 +77,8 @@ tsd_short <- tsd_short[datetime >= start.date & datetime <= end.date]
 # choosing only sensros I want
 tsd_short <- tsd_short[sensor_name %in% c("TMS_T3", "snow")]
 tsd_short[, tomst_num := str_extract(locality_id, "(?<=TOMST)\\d+")]
-tsd_short[, datetime := ymd_hms(datetime)] ## :=  creates or update a column in data.table, here we switch to a lubridate format with ymd
-######### ISSUE HERE WHERE TIMES WITH 00:00:00 as the hms don't parse as lubridate objects
+tsd_short[, datetime := ymd_hms(datetime, truncated=3)] ## :=  creates or update a column in data.table, here we switch to a lubridate format with ymd
+# Note the truncated=3 argument in ymd_hms, which resolves an issue in ymd_hms, handling midnight (00:00:00) records
 # Change the timezone of datetime from UTC to UTC-7 (e.g., Pacific Time)
 tsd_short[, datetime := with_tz(datetime, tzone = "Etc/GMT+7")]
 tsd_short[, time_to := with_tz(time_to, tzone = "Etc/GMT+7")]
@@ -94,6 +94,15 @@ tomst.mapping <- tomst.mapping %>%
 
 # join aru id with tomst
 tomst_data <- merge(tsd_short, tomst.mapping, by = "tomst_num", all.y = TRUE, allow.cartesian=TRUE)
+
+# Creating simple version to join with ARU data
+tomst_temp <- tomst_data %>%
+  filter(sensor_name == "TMS_T3") %>%
+  select(datetime, value, aru_name)
+
+tomst_snow <- tomst_data %>%
+  filter(sensor_name == "snow") %>%
+  select(datetime, value, aru_name)
 
 rm(tms.f, tms.calc, files_table)
 rm(tsd_short)
