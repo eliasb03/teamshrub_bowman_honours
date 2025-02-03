@@ -70,4 +70,10 @@ windspeed.filled <- windspeed %>%
   # Step 4: Select only date time and winspeed
   select(datetime_whitehorse, wind_speed_kmh)
 
+# Write windspeed to data/clean/aru folder
+write_csv(windspeed.filled, "data/clean/aru/windspeed_filled.csv")
+
+# import windspeed data from folder
+windspeed.filled <- read_csv("data/clean/aru/windspeed_filled.csv")
+
 rm(combined_hourly_data, full_time_wind)

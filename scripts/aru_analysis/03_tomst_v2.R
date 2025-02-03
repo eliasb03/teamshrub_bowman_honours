@@ -95,6 +95,12 @@ tomst.mapping <- tomst.mapping %>%
 # join aru id with tomst
 tomst_data <- merge(tsd_short, tomst.mapping, by = "tomst_num", all.y = TRUE, allow.cartesian=TRUE)
 
+# Write tomst_data to the data/clean directory
+write_csv(tomst_data, "data/clean/aru/tomst_data.csv")
+
+# import tomst_data 
+tomst_data <- read_csv("data/clean/aru/tomst_data.csv")
+
 # Creating simple version to join with ARU data
 tomst_temp <- tomst_data %>%
   filter(sensor_name == "TMS_T3") %>%
@@ -104,7 +110,6 @@ tomst_temp <- tomst_data %>%
 tomst_snow <- tomst_data %>%
   filter(sensor_name == "snow") %>%
   mutate(snow_prob = value) %>%
-  select(datetime, snow_prob, aru_name)
+  select(datetime, snow_prob, aru_name, tomst_num)
 
 rm(tms.f, tms.calc, files_table)
-rm(tsd_short)
