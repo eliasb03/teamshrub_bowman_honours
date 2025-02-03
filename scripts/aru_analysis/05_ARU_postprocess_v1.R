@@ -20,6 +20,8 @@ library(ggplot2)
 base_dir <- "D:/ARU_QHI_2024"
 aru_all_output_folder <- "D:/ARU_QHI_2024/output_total"
 
+# Confidence threshold 
+confidence_threshold <- 0.5 # KEY THING I HAVENT CHOSEN YET
 
 # Columns to remove (replace with actual column names you want to exclude)
 columns_to_remove <- c(
@@ -35,8 +37,6 @@ columns_to_remove <- c(
   "min_conf"
 )
 
-# Confidence threshold
-confidence_threshold <- 0.5
 
 # Remove 1.5 overlap
 # Define the function to remove 1.5 overlap
@@ -152,4 +152,31 @@ summarized_aru_data <- lapply(summarized_aru_data, function(dt)
     by.y = c("datetime", "aru_name"),
     all.x = TRUE
   ))
+
+
+# Reordering the list based on ARU numbers
+aru_numbers <- sapply(summarized_aru_data, function(dt) {
+  # Extract the number after "ARU" 
+  as.integer(sub("ARUQ", "", dt$locationID[1]))  # Removes 'ARU' and converts the result to integer
+})
+summarized_aru_data <- # Reorder the list based on the extracted numbers
+  summarized_aru_data[order(aru_numbers)]
+
+
+# Creating a single data.table with all of the ARU data
+aru_analysis_datatable <- rbindlist(summarized_aru_data)
+aru_analysis_dataframe <- as.data.frame(aru_analysis_datatable)
+
+
+# Write as individual csv files
+lapply(summarized_aru_data, function(dt) {
+  # Get the unique value from column 'x' (assuming the column exists in all data.tables)
+  unique_value <- unique(dt$locationID)[1]  # Get the first value of the location ID column
+  
+  # Write the data.table to a CSV with the unique value as part of the file name
+  write_csv(dt, paste0("data/clean/aru/individual/", unique_value, "_data.csv"))
+})
+
+# Save final dataset
+write_csv(aru_analysis_dataframe, "data/clean/aru/aru_analysis_data.csv")
 
