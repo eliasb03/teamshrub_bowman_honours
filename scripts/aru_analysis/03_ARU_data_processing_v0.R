@@ -1,6 +1,6 @@
 #------------------------------
 # teamshrub_bowman_honours
-# 0X_ARU_data_processing_v0
+# 0X_ARU_postprocess_v0
 # By: Elias Bowman 
 # Created: 2024-11-18
 #
@@ -11,7 +11,11 @@
 # Load necessary libraries
 library(tidyverse)
 library(data.table)
+library(lubridate)
+library(patchwork)
+library(zoo)
 
+library(ggplot2)
 #library(terra)
 #library(sf)
 #library(stringi)
@@ -37,7 +41,7 @@ remove_overlap <- function(dt) {
 
 # Define a function to extract locationID from recordingID
 extract_locationID <- function(dt) {
-  dt[, locationID := sub("^(ARUQ\\d+)_.*", "\\1", recordingID)]
+  dt[, locationID := sub("^(ARUQ\\d+)B?\\D.*", "\\1", recordingID)]
   return(dt)
 }
 
@@ -76,10 +80,210 @@ process_aru_folder <- function(folder_path, cols_to_remove, confidence_threshold
 }
 
 # Process all folders
-processed_aru_data <- lapply(aru_all_output_folder, function(folder) {
-  process_aru_folder(folder, columns_to_remove, confidence_threshold, toignore)
+raw_aru_data <- process_aru_folder(aru_all_output_folder, columns_to_remove, confidence_threshold, toignore)
+
+# Define the summarization function
+summarize_species_by_time <- function(dt) {
+  # Convert to 30-minute intervals
+  dt[, time_interval := floor_date(detectionTimeLocal, unit = "30 minutes")]
+  
+  # Group by species, ARU, and time_interval, and count occurrences
+  summarized_data <- dt[, .(species_count = .N), by = .(common_name, locationID, time_interval)]
+  
+  return(summarized_data)
+}
+
+summarized_aru_data <- lapply(raw_aru_data, function(dt) {
+  # Call the summarize function on each data.table in the list
+  summarize_species_by_time(dt)
 })
 
+# Add windspeed data
+summarized_aru_data <- lapply(summarized_aru_data, function(dt) merge(dt, windspeed.filled, by.x = "time_interval", by.y = "datetime_whitehorse", all.x = TRUE))
+
+# Add tomst data 
+
+
+
+
+
+
+
+
+###################
+# 
+# 
+# create_top_species_plot <- function(summarized_aru_data, aru_index, top_n = 10) {
+#   # Assuming the first element in summarized_aru_data is the first ARU
+#   aru_data <- summarized_aru_data[[aru_index]]
+#   
+#   # Summarize the top species detected in the ARU
+#   top_species <- aru_data[, .(species_count = sum(species_count)), by = common_name][order(-species_count)][1:top_n]
+#   
+#   # Create a bar plot of the top species
+#   plot <- ggplot(top_species, aes(x = reorder(common_name, species_count), y = species_count)) +
+#     geom_bar(stat = "identity", fill = "skyblue") +
+#     coord_flip() +  # Flip the coordinates for better readability
+#     labs(x = "Species", y = "Number of Detections", title = paste("Top", top_n, "Species Detected in ARU", aru_index)) +
+#     theme_minimal()  # Optional, for a clean look
+# }
+# 
+# # Create a loop
+# for (i in seq_along(summarized_aru_data)) {
+#   plot <- create_top_species_plot(summarized_aru_data, i)
+#   print(plot)
+# }
+# 
+# 
+# 
+# # Assuming the first element in summarized_aru_data is the first ARU
+# first_aru_data <- summarized_aru_data[[1]]
+# 
+# # Summarize the top 10 species detected in the first ARU
+# top_10_species <- first_aru_data[, .(species_count = sum(species_count)), by = common_name][order(-species_count)][1:15]
+# 
+# # Create a bar plot of the top 10 species
+# ggplot(top_10_species, aes(x = reorder(common_name, species_count), y = species_count)) +
+#   geom_bar(stat = "identity", fill = "black") +
+#   coord_flip() +  # Flip the coordinates for better readability
+#   labs(x = "Species", y = "Number of Detections", title = "Top 10 Species Detected in the First ARU") +
+#   theme_minimal()  # Optional, for a clean look
+# 
+
+###################
+# Function to create a plot for a single ARU
+create_top_species_plot <- function(summarized_aru_data, aru_index, top_n = 15) {
+  # Extract the data for the specified ARU
+  aru_data <- summarized_aru_data[[aru_index]]
+  
+  # Summarize the top species detected in the ARU
+  top_species <- aru_data[, .(species_count = sum(species_count)), by = common_name][order(-species_count)][1:top_n]
+  
+  # Create a bar plot of the top species
+  plot <- ggplot(top_species, aes(x = reorder(common_name, species_count), y = species_count)) +
+    geom_bar(stat = "identity", fill = "blue") +
+    coord_flip() +  # Flip the coordinates for better readability
+    labs(x = "Species", y = "Number of Detections", title = paste("Top", top_n, "Species Detected in ARU", aru_index)) +
+    theme_minimal()  # Optional, for a clean look
+  
+  return(plot)
+}
+
+# Create a list of plots for all ARUs
+plot_list <- lapply(seq_along(summarized_aru_data), function(i) {
+  create_top_species_plot(summarized_aru_data, i)
+})
+
+# Combine all plots into a grid using patchwork
+mega_plot <- wrap_plots(plot_list, ncol = 2)  # Adjust ncol for the number of columns in the grid
+
+# Display the mega plot
+print(mega_plot)
+
+###################
+library(data.table)
+library(ggplot2)
+library(ggridges)  # For ridgeline plots
+library(lubridate) # For working with dates and times
+
+# Assuming summarized_aru_data is your list of data.tables
+aru1_data <- summarized_aru_data[[1]]  # Extract data for ARU 1
+
+# Step 1: Identify the top 15 species by total detection count
+top_species <- aru1_data[, .(total_count = sum(species_count)), by = common_name][order(-total_count)][1:25, common_name]
+
+# Step 2: Filter the data to include only the top 15 species
+aru1_top_species <- aru1_data[common_name %in% top_species]
+
+# Step 3: Create a ridgeline plot
+ridge_plot <- ggplot(aru1_top_species, aes(x = time_interval, y = common_name, height = species_count, fill = common_name)) +
+  geom_density_ridges(stat = "identity", scale = 3, alpha = 0.8) +
+  labs(
+    x = "Time",
+    y = "Species",
+    title = "Detection Rate Over Time for Top 15 Species in ARU 1",
+    subtitle = "Distribution of species detections over time",
+    fill = "Species"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "none",  # Remove legend for cleaner look
+    axis.text.y = element_text(size = 10)  # Adjust species name size
+  )
+
+# Display the plot
+print(ridge_plot)
+# 
+# 
+# # Convert 'timestamp' to 30-minute intervals
+# final_data[, time_interval := floor_date(detectionTimeLocal, unit = "30 minutes")]
+# 
+# # Group by species, ARU, and the 30-minute time interval
+# summarized_data <- final_data[, .(species_count = .N), by = .(scientific_name, locationID, time_interval)]
+# 
+# # Define the summarization function
+# summarize_species_by_time <- function(dt) {
+#   # Convert 'timestamp' to 30-minute intervals
+#   dt[, time_interval := floor_date(timestamp, unit = "30 minutes")]
+#   
+#   # Group by species, ARU, and time_interval, and count occurrences
+#   summarized_data <- dt[, .(species_count = .N), by = .(species, aru, time_interval)]
+#   
+#   return(summarized_data)
+# }
+# 
+# # Process and summarize each CSV file in the folder, keeping each as a separate data.table in the list
+# processed_and_summarized_aru_data <- lapply(list.files(aru_all_output_folder, pattern = "\\.csv$", full.names = TRUE), function(file_path) {
+#   # Step 1: Process the data
+#   processed_data <- process_aru_data(file_path, columns_to_remove, confidence_threshold, toignore)
+#   
+#   # Step 2: Summarize the data
+#   summarized_data <- summarize_species_by_time(processed_data)
+#   
+#   return(summarized_data)
+# })
+# 
+
+# summarize_detections_30min <- function(dt_list) {
+#   # Apply summarization function to each data.table in the list
+#   summarized_list <- lapply(dt_list, function(dt) {
+#     # Ensure it's a data.table
+#     if (!is.data.table(dt)) setDT(dt)
+#     
+#     # Convert to POSIXct in Whitehorse timezone
+#     #dt[, detectionTimeLocal := as.POSIXct(detectionTimeLocal, tz = "America/Whitehorse")]
+#     
+#     # Create 30-minute time bins
+#     dt[, time_bin := floor(as.numeric(dateTimeLocal) / (30 * 60)) * (30 * 60)]
+#     dt[, time_bin := as.POSIXct(time_bin, origin = "1970-01-01", tz = "America/Whitehorse")]
+#     
+#     # Summarize detections
+#     dt[, .(detection_count = .N), by = .(aru, species, time_bin)]
+#   })
+#   
+#   # Combine all summarized data.tables into one
+#   summarized_dt <- rbindlist(summarized_list, use.names = TRUE, fill = TRUE)
+#   
+#   return(summarized_dt)
+# }
+# 
+# # Example usage
+# dt_summary <- summarize_detections_30min(processed_aru_data)
+
+
+# Create a list of data.tables from processed_aru_data, one for each ARU, which has the counts of the number of each species detected in each 10 minute recording
+# 
+# # Define a function to summarize the data
+# summarize_aru_data <- function(dt) {
+#   # Group by recordingID and species
+#   dt <- dt[, .(count = .N), by = .(recordingID, species)]
+#   
+#   # Pivot the data to have species as columns
+#   dt <- dcast(dt, recordingID ~ species, value.var = "count", fill = 0)
+#   
+#   return(dt)
+# }
+# fuckit <- summarize_aru_data(processed_aru_data[[1]])
 
 # ################
 # # Temporary function to update ARUQ0 which didnt track dates correctly
