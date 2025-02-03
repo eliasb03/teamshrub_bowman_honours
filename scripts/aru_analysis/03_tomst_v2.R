@@ -98,11 +98,48 @@ tomst_data <- merge(tsd_short, tomst.mapping, by = "tomst_num", all.y = TRUE, al
 # Creating simple version to join with ARU data
 tomst_temp <- tomst_data %>%
   filter(sensor_name == "TMS_T3") %>%
-  select(datetime, value, aru_name)
+  select(datetime, value, aru_name, tomst_num)
 
 tomst_snow <- tomst_data %>%
   filter(sensor_name == "snow") %>%
-  select(datetime, value, aru_name)
+  select(datetime, value, aru_name, tomst_num)
 
 rm(tms.f, tms.calc, files_table)
 rm(tsd_short)
+
+
+###########
+# Assuming tomst_temp and tomst_snow are your data.tables
+# Convert them to data.frames if necessary
+tomst_temp2 <- as.data.frame(tomst_temp)
+tomst_snow2 <- as.data.frame(tomst_snow)
+
+# Generate plots for each unique tomst_num
+plots <- lapply(unique(tomst_temp2$tomst_num), function(tomst) {
+  # Filter the data for the current tomst_num
+  temp_data <- tomst_temp2[tomst_temp2$tomst_num == tomst, ]
+  snow_data <- tomst_snow2[tomst_snow2$tomst_num == tomst, ]
+  
+  # Find the temperature y-axis limits for the current tomst_num
+  temp_limits <- range(temp_data$value, na.rm = TRUE)
+  
+  # Create the plot
+  p <- ggplot(temp_data, aes(x = datetime, y = value)) +
+    geom_line(color = "blue") +  # Plot the temperature value
+    # Overlay snow values as points at the top (1) and bottom (0) of the y-axis scale
+    geom_point(data = snow_data, aes(x = datetime, y = value * (temp_limits[2] - temp_limits[1]) + temp_limits[1]), 
+               color = "red", shape = 16) +  # Adjust snow y-axis position
+    scale_y_continuous(
+      limits = temp_limits,
+      sec.axis = sec_axis(~ . - temp_limits[1], name = "Snow (0/1)")  # Secondary axis for snow
+    ) +
+    labs(title = paste("Tomst Number:", tomst),
+         x = "Datetime",
+         y = "Temperature Value") +
+    theme_minimal()
+  
+  return(p)
+})
+
+# Wrap the plots into a grid using cowplot
+plot_grid(plotlist = plots, ncol = 4)  # Adjust ncol as needed
