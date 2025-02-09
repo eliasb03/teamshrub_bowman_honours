@@ -106,15 +106,10 @@ raw_aru_data[[7]][, dateTimeLocal := ifelse(
 # Define the summarization function
 summarize_species_by_time <- function(dt) {
   # Convert to 30-minute intervals
-  cat("running: \n")
-  cat(unique(dt$locationID))
-  cat("\n")
   dt[, time_interval := floor_date(detectionTimeLocal, unit = "30 minutes")]
-  cat("part1 done \n")
   
   # Group by species, ARU, and time_interval, and count occurrences
   summarized_data <- dt[, .(species_count = .N), by = .(common_name, locationID, time_interval)]
-  cat("done \n")
   return(summarized_data)
 }
 
@@ -165,6 +160,7 @@ summarized_aru_data <- # Reorder the list based on the extracted numbers
 
 # Creating a single data.table with all of the ARU data
 aru_analysis_datatable <- rbindlist(summarized_aru_data)
+aru_analysis_datatable <- aru_analysis_datatable[!is.na(time_interval)]
 aru_analysis_dataframe <- as.data.frame(aru_analysis_datatable)
 
 
@@ -178,5 +174,5 @@ lapply(summarized_aru_data, function(dt) {
 })
 
 # Save final dataset
-write_csv(aru_analysis_dataframe, "data/clean/aru/aru_analysis_data.csv")
+write_csv(aru_analysis_dataframe, paste0("data/clean/aru/aru_analysis_data", "_conf", confidence_threshold,".csv"))
 
