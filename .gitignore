@@ -85,6 +85,9 @@ packrat/lib*/
 # Ignore various obsolete raw data files
 **/data/raw/obsolete/
 
+# Ignore raw phenology data, pictures, number files, etc.
+**/Phenology_2024/
+
 # Ignore All Files on HardDrive
 D:/*
 # It is important that we ignore all Breeding Bird Data
