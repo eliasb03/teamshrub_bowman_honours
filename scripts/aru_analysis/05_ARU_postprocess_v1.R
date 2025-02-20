@@ -176,3 +176,5 @@ lapply(summarized_aru_data, function(dt) {
 # Save final dataset
 write_csv(aru_analysis_dataframe, paste0("data/clean/aru/aru_analysis_data", "_conf", confidence_threshold,".csv"))
 
+aru_analysis_dataframe <- read_csv(paste0("data/clean/aru/aru_analysis_data", "_conf", confidence_threshold,".csv"))
+
