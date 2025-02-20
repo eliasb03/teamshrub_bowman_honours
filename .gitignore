@@ -75,10 +75,15 @@ Rplots.pdf
 
 packrat/lib*/
 
-# Ignore all data files
-data/*
-# It is important that we are ignoring Ebird Downloads, Shape Files, Audio Files
+# Ignore specific data files
+# Ignore annotation files
+**/to_annotate/
 
+# Ignore large ARU exports
+**/Jeremy_ARU_export/
+
+# Ignore various obsolete raw data files
+**/data/raw/obsolete/
 
 # Ignore All Files on HardDrive
 D:/*
