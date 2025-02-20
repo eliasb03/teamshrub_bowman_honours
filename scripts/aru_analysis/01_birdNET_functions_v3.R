@@ -8,8 +8,7 @@
 # Description:
 # This script defines functions to execute BirdNET Analyzer commands 
 # via the command line and to format and gather results using the 
-# NSNSDAcoustics package. The workflow integrates BirdNET for 
-# bird sound analysis with custom adjustments for specific datasets.
+# NSNSDAcoustics package. It does not use the wrapper function to run BirdNET from NSNSDAcoustics as for whatever reason they would not work on my central computer. Instead this script creates its own wrapper of the command line code to make an R-friendly method of running BirdNET.
 #
 # References:
 # BirdNET Analyzer: https://github.com/kahst/BirdNET-Analyzer
