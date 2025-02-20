@@ -71,8 +71,8 @@ process_climateNA_files <- function(directory) {
   
   # Combine all rows into a single dataframe
   final_data <- bind_rows(data_list) %>%
-    select(-ID1, -ID2) %>%  # Remove the ID columns
-    select(Year, everything()) # Move the Year column to the front
+    select(-ID1, -ID2) # Remove the ID columns
+#  %>%    select(year, everything()) # Move the Year column to the front
   message("ClimateNA output files successfully processed.")
   return(final_data)
 }
@@ -90,7 +90,7 @@ elevation <- 2 # elevation in metres of site
 input_df <- create_input_df(latitude, longitude, elevation)
 
 # Define file paths
-input_file_path <- "data/raw/climateNA/climateNA_input_test.csv"
+input_file_path <- "data/raw/climateNA/climateNA_input.csv"
 output_dir <- "data/raw/climateNA/output/"
 
 # Write input file

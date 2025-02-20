@@ -12,7 +12,7 @@ library(dplyr)
 library(lubridate)
 
 # File path to ice data
-file_path <- "C:/Users/elias/OneDrive/Documents/University/Honours/teamshrub_bowman_honours/data/raw/raw_iceweb_data_16Nov2024/cwa01_02_awtt_1968_2024_0402_1126.csv"
+file_path <- "data/raw/ice_cover/cwa01_02_awtt_1968_2024_0402_1126.csv"
 
 # Define the ice cover threshold for drop date
 ice_cover_threshold <- 0.85
