@@ -1,6 +1,6 @@
 #------------------------------
 # teamshrub_bowman_honours
-# 06_sem_model_v1
+# 06_bbs_sem_model_v1
 # By: Elias Bowman 
 # Created: 2024-10-16
 # Last update: 2025-02-09
@@ -48,16 +48,19 @@ random_data <- tibble(
   # Random year between 1990 and 2024 (as a factor)
   year = as.factor(sample(1990:2024, n_rows, replace = TRUE)),
   
-  # Random species code (single letter)
-  spec.code = sample(letters, n_rows, replace = TRUE),
-  
-  # Random species name from four possible options
-  species = sample(c("Species A", "Species B", "Species C", "Species D"), n_rows, replace = TRUE),
+  # Random species name from 16 possible options
+  species = sample(
+    c("Species A", "Species B", "Species C", "Species D", "Species E", "Species F",  # Guild 1 (6 species)
+      "Species G", "Species H", "Species I", "Species J", "Species K", "Species L",  # Guild 2 (6 species)
+      "Species M", "Species N", "Species O", "Species P"),                          # Guild 3 (4 species)
+    n_rows, replace = TRUE
+  ),
   
   # Assign guild based on species
   guild = case_when(
-    species %in% c("Species A", "Species B") ~ "Guild 1",
-    species %in% c("Species C", "Species D") ~ "Guild 2",
+    species %in% c("Species A", "Species B", "Species C", "Species D", "Species E", "Species F") ~ "Guild 1",
+    species %in% c("Species G", "Species H", "Species I", "Species J", "Species K", "Species L") ~ "Guild 2",
+    species %in% c("Species M", "Species N", "Species O", "Species P") ~ "Guild 3",
     TRUE ~ "Other"
   ),
   

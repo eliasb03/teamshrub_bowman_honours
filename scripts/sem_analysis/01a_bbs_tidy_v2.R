@@ -3,9 +3,9 @@
 # 01a_bbs_tidy_v2
 # By: Elias Bowman 
 # Created: 2024-11-17
-# Updated: 2024-01-13
+# Updated: 2024-02-10
 #
-# Description: This script imports, tidies, and summarizes the Breeding Bird Survey data for the Qikiqtaruk - Herschel Island site. It associates guilds to species and creates scaled and non-scaled realtive and logistic abundance values.
+# Description: This script imports, tidies, and summarizes the Breeding Bird Survey data for the Qikiqtaruk - Herschel Island site. It associates guilds to species and creates scaled and non-scaled relative and logistic abundance values.
 # Caution using current scaled totals - over inflate low effort years - consider using something like a power law to reduce the impact of having few observers and low sampling time
 #------------------------------
 # Loading Packages
@@ -99,6 +99,10 @@ species.list.exp <- data.frame(
 
 bbs.survey <- read.csv(bbs.data.path)
 guild.mapping <- read.csv(guild.mapping.path)
+
+
+test <- guild.mapping %>%
+  filter(species %in% species.list.exp$species)
 
 # logistic high vs low relative abundance threshold
 logistic.threshold <- 0.5
@@ -505,9 +509,7 @@ summarize_to_year <- function(data) {
   return(expanded_df)
 }
 
-# 6. Function to filter observations to species list
-
-# 8. Function to create scaled totals and relative abundances ####
+# 7. Function and helpers to create scaled totals and relative abundances ####
 create_abundances <- function(data, threshold) {
   data <- data %>%
     create_scaled_total() %>%
@@ -545,13 +547,13 @@ create_relative_and_logistic_abundance <- function(data, threshold) {
   return(data)
 }
 
-# 9. Function to reorder columns ####
+# 8. Function to reorder columns ####
 reorder_columns <- function(data) {
   data %>%
     select(year, spec.code, species, total.count, rel.abundance.total, total.scaled, logistic.id.total, rel.abundance.scaled, logistic.id.scaled, guild, guild2, observers, sampling.effort, effort.multiplier, sampling.time, num.observers, notes, survey.id, period, start.time, end.time, time, date.ymd, doy, day, month)
 }
 
-# 10.Function to filter according to species list ####
+# 9.Function to filter according to species list ####
 filter_bbs <- function(data) {
   data %>%
     #filter(spec.code %in% species.list$spec.code)
@@ -563,28 +565,28 @@ filter_bbs <- function(data) {
 # Main Processing Pipeline
 #------------------------------
 
-bbs.survey.long <- bbs.survey %>%
+bbs.survey.long <- bbs.survey %>% # Creating a tidy long version of the data
   clean_bbs_data() %>%
   clean_times() %>%
   apply_guilds(guild.mapping) %>%
   calculate_sampling_metrics() %>%
   convert_to_long()
 
-bbs.summary <- bbs.survey.long %>%
+bbs.summary <- bbs.survey.long %>% # Summarizing to the year level
   summarize_to_year() %>%
   expand_and_fill() %>%
   apply_guilds(guild.mapping) %>%
   create_abundances(threshold = logistic.threshold) %>%
   reorder_columns()
 
-bbs.clean <- bbs.summary %>%
+bbs.clean <- bbs.summary %>% # Filtering the data to only include species in the species list as specified by Cameron Eckert
   filter_bbs()
 
 # Saving bbs.clean
 output_path <- "data/clean/sem/" # Output path
 write_csv(bbs.clean, paste0(output_path, "bbs_data.csv"))
 
-# Removing unneeded objects
+# Removing unneeded objects to keep clean working directory
 rm(bbs.data.path, guild.mapping.path)
 rm(bbs.survey, bbs.survey.long)
 rm(add_observation_id, adjust_survey_times, apply_guilds, calculate_doy, calculate_sampling_metrics, capitalize_species_code, clean_bbs_data, clean_times, combine_notes, convert_column_names_to_dot, convert_to_long, correct_species_mapping, create_abundances, create_date_string, create_date_time_column, create_indexing_columns, create_relative_and_logistic_abundance, create_scaled_total, expand_and_fill, fill_survey_times, filter_bbs, find_earliest_start_time, find_latest_end_time, format_date_column, recode_period_labels, rename_columns_lowercase, reorder_columns, select_larger_count, special_cases, standardize_and_parse_times, standardize_time, summarize_by_year_period_spec, summarize_to_year)
