@@ -101,9 +101,6 @@ bbs.survey <- read.csv(bbs.data.path)
 guild.mapping <- read.csv(guild.mapping.path)
 
 
-test <- guild.mapping %>%
-  filter(species %in% species.list.exp$species)
-
 # logistic high vs low relative abundance threshold
 logistic.threshold <- 0.5
 
