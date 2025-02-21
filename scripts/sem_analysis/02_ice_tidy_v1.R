@@ -15,7 +15,8 @@ library(lubridate)
 file_path <- "data/raw/ice_cover/cwa01_02_awtt_1968_2024_0402_1126.csv"
 
 # Define the ice cover threshold for drop date
-ice_cover_threshold <- 0.85
+ice_cover_threshold <- 0.35 #0.85 # 0.85 was old value
+
 
 # Creating functions to process ice data
 # Function: Clean column names
@@ -64,6 +65,7 @@ import_ice_data <- function(file_path) {
 }
 
 # Function: Calculate yearly ice statistics
+  # Should find the latest date before the summer minimum when the ice concentration went below the threshold
 calculate_yearly_stats <- function(data, threshold = ice_cover_threshold) {
   stats <- data %>%
     group_by(year) %>%
@@ -72,8 +74,10 @@ calculate_yearly_stats <- function(data, threshold = ice_cover_threshold) {
       min_conc_day = week[which.min(conc)],
       max_conc_prior = max(conc[week < min_conc_day], na.rm = TRUE),
       max_conc_day_prior = max(week[week < min_conc_day & conc == max_conc_prior], na.rm = TRUE),
-      target_conc = min_conc + threshold * (max_conc_prior - min_conc),
-      spring_drop_day = max(week[week < min_conc_day & conc >= target_conc], na.rm = TRUE)
+      # I'm not sure this line actually makes sense right now
+      #target_conc = min_conc + threshold * (max_conc_prior - min_conc),
+      spring_drop_day = max(week[week < min_conc_day & conc >= ice_cover_threshold], na.rm = TRUE)
+      #spring_drop_day = max(week[week < min_conc_day & conc >= target_conc], na.rm = TRUE)
     ) %>%
     ungroup() %>%
     mutate(
@@ -93,7 +97,21 @@ ice_data_yearly <- calculate_yearly_stats(ice_data, ice_cover_threshold)
 output_path <- "data/clean/sem/" # Output path
 write_csv(ice_data_yearly, paste0(output_path, "ice_data.csv"))
 
+library(cowplot)
+yearly_lines <- data.frame(
+  year_start = seq(from = as.Date("1960-01-01"), to = as.Date("2024-01-01"), by = "year")
+)
+
+ggplot(ice_data, aes(x = week, y = conc)) +
+  geom_line(color = "blue", size = 1) +  # Line plot
+  geom_vline(data = ice_data_yearly, aes(xintercept = as.numeric(spring_drop_day)), 
+             color = "red", linetype = "dashed", size = 1) +  # Red vertical lines
+  geom_vline(data = yearly_lines, aes(xintercept = as.numeric(year_start)), 
+             color = "black",  size = 0.5) +
+  scale_x_date(limits = c(as.Date("2020-02-01")-4000, as.Date("2024-05-01"))-4000) +  # Restrict x-axis limits
+  theme_half_open(font_size = 14)
+
 # Removing unneeded workspace objects
-rm(ice_data)
+#rm(ice_data)
 rm(file_path, ice_cover_threshold)
 rm(calculate_yearly_stats, clean_column_names, import_ice_data)
