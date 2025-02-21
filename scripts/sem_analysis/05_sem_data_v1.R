@@ -42,9 +42,8 @@ join_by_year <- function(bbs_data, ice_data, phenology_data, climate_data,
   return(joined_data)
 }
 
-# Example usage
 # Specify the columns to keep
-bbs_cols <- c("year", "spec.code", "species", "guild", "rel.abundance.total", "rel.abundance.scaled", "logistic.id.total")
+bbs_cols <- c("year", "spec.code", "species", "guild", "rel.abundance.total", "rel.abundance.scaled", "logistic.id.total", "total.count")
 
 ice_cols <- c("spring_drop_doy")
 phenology_cols <- c("snowmelt_mean", "budburst_mean")
@@ -60,9 +59,71 @@ final_data <- join_by_year(
   ice_cols = ice_cols,
   phenology_cols = phenology_cols,
   climate_cols = climate_cols
+) 
+
+
+column_mapping <- c(
+  "Tave_sm" = "temp",
+  "budburst_mean" = "budburst",
+  "snowmelt_mean" = "snowmelt",
+  "spring_drop_doy" = "ice.melt",
+  #"rel.abundance.scaled" = "bird.abundance"
+  "total.count" = "bird.abundance"
 )
 
+final_data <- final_data %>%
+  select(
+    year,
+    species,
+    guild,
+    #rel.abundance.scaled,
+    total.count,
+    budburst_mean,
+    snowmelt_mean,
+    spring_drop_doy,
+    Tave_sm
+  ) %>%
+  rename_with(~ ifelse(. %in% names(column_mapping), column_mapping[.], .), everything())
+
+# Filter data to remove NA bird abundances
+scaled_data <- final_data %>%
+  filter(!is.na(bird.abundance))
+
+abundance_scaling <- 1 # remain at intervals of 1 bird increments
+doy_scaling <- 7 # 1 week
+temp_scaling <- 5 # 5 degrees C
+
+scaled_data <- final_data %>%
+  mutate(
+    scaled_bird_abundance = (bird.abundance - mean(bird.abundance, na.rm = TRUE)) / abundance_scaling,
+    scaled_budburst = (budburst - mean(budburst, na.rm = TRUE)) / doy_scaling,
+    scaled_snowmelt = (snowmelt - mean(snowmelt, na.rm = TRUE)) / doy_scaling,
+    scaled_ice_melt = (ice.melt - mean(ice.melt, na.rm = TRUE)) / doy_scaling,
+    scaled_temp = (temp - mean(temp, na.rm = TRUE)) / temp_scaling
+  )
+
+# # Selecting columns to scale
+# cols_to_scale <- c("bird.abundance", "budburst", "snowmelt", "ice.melt", "temp")
+# 
+# # Apply scale() across chosen columns and store result as a dataframe
+# scaled_matrix <- scale(final_data[cols_to_scale])
+# 
+# # Convert to a dataframe
+# scaled_data <- final_data %>%
+#   select(-all_of(cols_to_scale)) %>%
+#   bind_cols(as.data.frame(scaled_matrix))
+# 
+# # Extract means and standard deviations
+# scaling_params <- data.frame(
+#   variable = cols_to_scale,
+#   mean = attr(scaled_matrix, "scaled:center"),
+#   sd = attr(scaled_matrix, "scaled:scale")
+# )
+
 # Saving dataset
-write_csv(final_data, "data/clean/sem/sem_data.csv")
+#write_csv(final_data, "data/clean/sem/sem_data_unscaled.csv")
+write_csv(scaled_data, "data/clean/sem/sem_data.csv")
+write_csv(scaling_params, "data/clean/sem/scaling_params.csv")
 
 rm(bbs_cols, bbs.file, climate_cols, climate.file, directory, ice_cols, ice.file, phenology_cols, phenology.file, join_by_year)
+rm(scaled_matrix)
