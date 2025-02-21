@@ -113,6 +113,9 @@ run_climateNA_sequential(input_file_path, year_inputs, clim_var_list, output_dir
 # Process ClimateNA output files
 climate_data <- process_climateNA_files(output_dir)
 
+# Remove repeated rows
+climate_data <- climate_data[!duplicated(climate_data), ]
+
 # View resulting dataframe
 print(climate_data)
 
