@@ -25,35 +25,7 @@ bbs.data.path <- "data/raw/breeding_bird_survey_QHI_2024/QHI_BBS_survey_data_199
 #guild.mapping.path <- "D:/bird_guild_mapping.csv"
 guild.mapping.path <- "data/raw/bird_guild_mapping.csv"
 
-# hard coded species list, as vector
-species.list <- data.frame(
-  species = c(
-    "Common Eider",
-    "Semipalmated Plover",
-    "Semipalmated Sandpiper",
-    "Baird's Sandpiper",
-    "Red-necked Phalarope",
-    "Glaucous Gull",
-    "Lapland Longspur",
-    "Snow Bunting",
-    "Savannah Sparrow",
-    "Common Redpoll",
-    "Hoary Redpoll"
-  ),
-  spec.code = c(
-    "COEI",
-    "SEPL",
-    "SESA",
-    "BASA",
-    "RNPL",
-    "GLGU",
-    "LALO",
-    "SNBU",
-    "SAVS",
-    "CORE",
-    "HORE"
-  )
-)
+
 # importing species list, as dataframe
 species.list <- read.csv("data/clean/bbs/species_list.csv")
 
@@ -64,13 +36,12 @@ species.list.exp <- data.frame(
     "Semipalmated Plover",
     "Semipalmated Sandpiper",
     "Baird's Sandpiper",
-    "Red-necked Phalarope",
+    #"Red-necked Phalarope",
     "Glaucous Gull",
     "Lapland Longspur",
     "Snow Bunting",
     "Savannah Sparrow",
-    "Common Redpoll",
-    "Hoary Redpoll",
+    "Redpoll",
     "Greater White-fronted Goose",
     "Northern Pintail",
     "Red-throated Loon",
@@ -82,13 +53,12 @@ species.list.exp <- data.frame(
     "SEPL",
     "SESA",
     "BASA",
-    "RNPL",
+    #"RNPL",
     "GLGU",
     "LALO",
     "SNBU",
     "SAVS",
-    "CORE",
-    "HORE",
+    "REDP",
     "GWFG",
     "NOPI",
     "RTLO",
@@ -400,7 +370,26 @@ apply_guilds <- function(data, guild.mapping) {
   return(data)
 }
 
-# 4. Function to calculate sampling effort metric ####
+# 4. Function to merge redpolls to a genus level ####
+join_redpolls <- function(data) {
+  data %>%
+    mutate(
+      species = case_when(
+        species == "Common Redpoll" ~ "Redpoll",
+        species == "Hoary Redpoll" ~ "Redpoll",
+        species == "redpoll sp." ~ "Redpoll",
+        species == "Redpoll sp." ~ "Redpoll",
+        TRUE ~ species
+      ),
+      spec.code = case_when(
+        spec.code == "CORE" ~ "REDP",
+        spec.code == "HORE" ~ "REDP",
+        TRUE ~ spec.code
+      )
+    )
+}
+
+# 5. Function to calculate sampling effort metric ####
 
   # Creating Yearly Relative Abundance Metric, scaled totals, etc.
 # Function to calculate sampling time, effort, and effort multiplier
@@ -431,17 +420,17 @@ calculate_sampling_metrics <- function(data) {
   return(data)
 }
 
-# 5. Function to convert to long ####
+# 6. Function to convert to long ####
 convert_to_long <- function(data) {
   data %>%
     mutate(original.total = total) %>%  # Add the original total as a new column
     uncount(total)  # Uncount the rows based on the 'total' column
 }
 
-# 6. Function to summarize to year level ####
+# 7. Function to summarize to year level ####
 # Helper function: join by year, period, and species
 summarize_by_year_period_spec <- function(data) {
-  summarized_data <- data %>%
+    summarized_data <- data %>%
     group_by(spec.code, year, period) %>%
     summarise(
       total.count = n(),  # Count the total number of observations
@@ -475,8 +464,9 @@ summarize_by_year_period_spec <- function(data) {
 select_larger_count <- function(data) {
   data_with_max <- data %>%
     group_by(spec.code, year) %>%
-    slice_max(total.count, n = 1) %>%  # Select the row with the maximum total_count
-    ungroup()  # Ungroup after selection
+    arrange(desc(total.count), sampling.effort) %>%  # Sort max count first, then min effort
+    slice(1) %>%  # Take the first row (highest count, lowest effort)
+    ungroup()
   
   return(data_with_max)
 }
@@ -489,7 +479,7 @@ summarize_to_year <- function(data) {
   return(summarized_data)
 }
 
-# 7. Function to fill in missing years with 0s #### 
+# 8. Function to fill in missing years with 0s #### 
   expand_and_fill <- function(df) {
   # List of metadata columns
   metadata_cols <- names(df)[!(names(df) %in% c("year", "spec.code", "total.count"))]
@@ -506,7 +496,7 @@ summarize_to_year <- function(data) {
   return(expanded_df)
 }
 
-# 7. Function and helpers to create scaled totals and relative abundances ####
+# 9. Function and helpers to create scaled totals and relative abundances ####
 create_abundances <- function(data, threshold) {
   data <- data %>%
     create_scaled_total() %>%
@@ -544,13 +534,13 @@ create_relative_and_logistic_abundance <- function(data, threshold) {
   return(data)
 }
 
-# 8. Function to reorder columns ####
+# 10. Function to reorder columns ####
 reorder_columns <- function(data) {
   data %>%
     select(year, spec.code, species, total.count, rel.abundance.total, total.scaled, logistic.id.total, rel.abundance.scaled, logistic.id.scaled, guild, guild2, observers, sampling.effort, effort.multiplier, sampling.time, num.observers, notes, survey.id, period, start.time, end.time, time, date.ymd, doy, day, month)
 }
 
-# 9.Function to filter according to species list ####
+# 11.Function to filter according to species list ####
 filter_bbs <- function(data) {
   data %>%
     #filter(spec.code %in% species.list$spec.code)
@@ -565,6 +555,7 @@ filter_bbs <- function(data) {
 bbs.survey.long <- bbs.survey %>% # Creating a tidy long version of the data
   clean_bbs_data() %>%
   clean_times() %>%
+  join_redpolls() %>%
   apply_guilds(guild.mapping) %>%
   calculate_sampling_metrics() %>%
   convert_to_long()
