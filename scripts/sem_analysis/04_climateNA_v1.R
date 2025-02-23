@@ -92,7 +92,6 @@ input_df <- create_input_df(latitude, longitude, elevation)
 # Define file paths
 input_file_path <- "data/raw/climateNA/climateNA_input.csv"
 output_dir <- "data/raw/climateNA/output/"
-station_data_dir <- "data/raw/komakuk_climate_data/"
 
 ##############################
 # ClimateNA Processing
@@ -126,10 +125,16 @@ message("ClimateNA processing script completed successfully.")
 # Komakuk Climate Station
 #########################
 # Bash code to download komakuk daily weather data
+# KOMAKUK BEACH
 # for year in $(seq 1995 2025); do
 # wget --content-disposition "https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=10822&Year=${year}&Month=5&Day=14&timeframe=2&submit= Download+Data";
 # done;
+# KOMAKUK BEACH A
+# for year in $(seq 1985 1993); do
+# wget --content-disposition "https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv&stationID=1568&Year=${year}&Month=5&Day=14&timeframe=2&submit= Download+Data";
+# done;
 
+station_data_dir <- "data/raw/komakuk_climate_data/"
 
 # Function to read, mutate, and combine climate data
 join_climate_data <- function(data_dir) {
