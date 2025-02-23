@@ -1,11 +1,11 @@
 #------------------------------
 # teamshrub_bowman_honours
-# 05_sem_data_v1
+# 05_sem_data_v2
 # By: Elias Bowman
 # Created: 2025-01-18
-# Last Updated: 2025-01-18
+# Last Updated: 2025-02-21
 #
-# Description: This script joins all of the relevant SEM data into a working dataset
+# Description: This script joins all of the relevant SEM data into a working dataset, summarizes to the year and guild level and scales and centers the data for SEM analysis
 #------------------------------
 
 # Load the necessary packages
@@ -72,7 +72,7 @@ column_mapping <- c(
 )
 
 final_data <- final_data %>%
-  select(
+  select( # Select relevant columns
     year,
     species,
     guild,
@@ -83,42 +83,55 @@ final_data <- final_data %>%
     spring_drop_doy,
     Tave_sm
   ) %>%
-  rename_with(~ ifelse(. %in% names(column_mapping), column_mapping[.], .), everything())
+  rename_with(~ ifelse(. %in% names(column_mapping), column_mapping[.], .), everything()) %>% # rename columns to simple modelling names 
+  group_by(year, guild) %>% # group by year and guild
+  summarize( # summarize to single entries per year
+    bird.abundance = sum(bird.abundance, na.rm = TRUE), # sum total observation of a guild in a year
+            budburst = mean(budburst, na.rm = FALSE),
+            snowmelt = mean(snowmelt, na.rm = FALSE),
+            ice.melt = mean(ice.melt, na.rm = FALSE),
+            temp = mean(temp, na.rm = FALSE))
 
-# Filter data to remove NA bird abundances
+# Filter data to remove NA bird abundances or repeated columns
 scaled_data <- final_data %>%
-  filter(!is.na(bird.abundance))
+  filter(!is.na(bird.abundance)) %>% # remove any NA bird abundances
+  .[!duplicated(.), ] # remove duplicated columns
 
-abundance_scaling <- 1 # remain at intervals of 1 bird increments
+    
+# Specifying scaling parameters
+#abundance_scaling <- 1 # remain at intervals of 1 bird increments
 doy_scaling <- 7 # 1 week
 temp_scaling <- 5 # 5 degrees C
 
+# Saving scaling and centering parameters (mean and scale value) to dataframe 
+scaling_params <- data.frame(
+  variable = c(#"bird.abundance", 
+               "budburst", "snowmelt", "ice.melt", "temp"),
+  mean = c(
+    #mean(final_data$bird.abundance, na.rm = TRUE),
+    mean(final_data$budburst, na.rm = TRUE),
+    mean(final_data$snowmelt, na.rm = TRUE),
+    mean(final_data$ice.melt, na.rm = TRUE),
+    mean(final_data$temp, na.rm = TRUE)
+  ),
+  scaling_value = c(
+    #abundance_scaling,
+    doy_scaling,
+    doy_scaling,
+    doy_scaling,
+    temp_scaling
+  )
+)
+
+# Scaing and centering according to specifications
 scaled_data <- final_data %>%
   mutate(
-    scaled_bird_abundance = (bird.abundance - mean(bird.abundance, na.rm = TRUE)) / abundance_scaling,
-    scaled_budburst = (budburst - mean(budburst, na.rm = TRUE)) / doy_scaling,
-    scaled_snowmelt = (snowmelt - mean(snowmelt, na.rm = TRUE)) / doy_scaling,
-    scaled_ice_melt = (ice.melt - mean(ice.melt, na.rm = TRUE)) / doy_scaling,
-    scaled_temp = (temp - mean(temp, na.rm = TRUE)) / temp_scaling
+    #bird.abundance = (bird.abundance - mean(bird.abundance, na.rm = TRUE)) / abundance_scaling,
+    budburst = (budburst - scaling_params$mean[1]) / scaling_params$scaling_value[1],
+    snowmelt = (snowmelt - scaling_params$mean[2]) / scaling_params$scaling_value[2],
+    ice.melt = (ice.melt - scaling_params$mean[3]) / scaling_params$scaling_value[3],
+    temp = (temp - scaling_params$mean[4]) / scaling_params$scaling_value[4]
   )
-
-# # Selecting columns to scale
-# cols_to_scale <- c("bird.abundance", "budburst", "snowmelt", "ice.melt", "temp")
-# 
-# # Apply scale() across chosen columns and store result as a dataframe
-# scaled_matrix <- scale(final_data[cols_to_scale])
-# 
-# # Convert to a dataframe
-# scaled_data <- final_data %>%
-#   select(-all_of(cols_to_scale)) %>%
-#   bind_cols(as.data.frame(scaled_matrix))
-# 
-# # Extract means and standard deviations
-# scaling_params <- data.frame(
-#   variable = cols_to_scale,
-#   mean = attr(scaled_matrix, "scaled:center"),
-#   sd = attr(scaled_matrix, "scaled:scale")
-# )
 
 # Saving dataset
 #write_csv(final_data, "data/clean/sem/sem_data_unscaled.csv")
@@ -126,4 +139,3 @@ write_csv(scaled_data, "data/clean/sem/sem_data.csv")
 write_csv(scaling_params, "data/clean/sem/scaling_params.csv")
 
 rm(bbs_cols, bbs.file, climate_cols, climate.file, directory, ice_cols, ice.file, phenology_cols, phenology.file, join_by_year)
-rm(scaled_matrix)
