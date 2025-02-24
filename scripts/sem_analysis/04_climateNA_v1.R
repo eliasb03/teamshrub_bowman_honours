@@ -114,10 +114,10 @@ message("Output directory: ", output_dir)
 run_climateNA_sequential(input_file_path, year_inputs, clim_var_list, output_dir)
 
 # Process ClimateNA output files
-climate_dataNA <- process_climateNA_files(output_dir)
+climateNA_data <- process_climateNA_files(output_dir)
 
 # Remove repeated rows
-climate_dataNA <- climate_dataNA[!duplicated(climate_dataNA), ]
+climateNA_data <- climateNA_data[!duplicated(climateNA_data), ]
 
 message("ClimateNA processing script completed successfully.")
 
@@ -208,7 +208,7 @@ komakuk_breed_season <- komakuk_data %>%
 # Saving climate data
 #########################
 
-climate_data <- climate_dataNA %>%
+climate_data <- climateNA_data %>%
   left_join(komakuk_breed_season, by = join_by(year)) %>%
   select(-lat, -lon, -elev, -count_mean_temp) %>%
   select(year, everything())
