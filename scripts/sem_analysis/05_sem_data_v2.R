@@ -47,7 +47,7 @@ bbs_cols <- c("year", "spec.code", "species", "guild", "rel.abundance.total", "r
 
 ice_cols <- c("spring_drop_doy")
 phenology_cols <- c("snowmelt_mean", "budburst_mean")
-climate_cols <- c("Tave_sm")
+climate_cols <- c("Tave_sp", "mean_temp_breeding_season")
 
 # Call the function with your datasets
 final_data <- join_by_year(
@@ -63,13 +63,15 @@ final_data <- join_by_year(
 
 
 column_mapping <- c(
-  "Tave_sm" = "temp",
+  "mean_temp_breeding_season" = "breedingtemp",
+  #"Tave_sm" = "regiontemp",
+  "Tave_sp" = "regiontemp",
   "budburst_mean" = "budburst",
   "snowmelt_mean" = "snowmelt",
-  "spring_drop_doy" = "ice.melt",
-  #"rel.abundance.scaled" = "bird.abundance"
+  "spring_drop_doy" = "icemelt",
+  #"rel.abundance.scaled" = "birdabundance"
   #"rel.abundance.total" = "bird.abundance"
-  "total.count" = "bird.abundance"
+  "total.count" = "birdabundance"
 )
 
 final_data <- final_data %>%
@@ -83,7 +85,9 @@ final_data <- final_data %>%
     budburst_mean,
     snowmelt_mean,
     spring_drop_doy,
-    Tave_sm
+    #Tave_sm,
+    Tave_sp,
+    mean_temp_breeding_season
   ) %>%
   rename_with(~ ifelse(. %in% names(column_mapping), column_mapping[.], .), everything()) #%>% # rename columns to simple modelling names 
   # group_by(year, guild) %>% # group by year and guild
@@ -96,7 +100,7 @@ final_data <- final_data %>%
 
 # Filter data to remove NA bird abundances or repeated columns
 scaled_data <- final_data %>%
-  filter(!is.na(bird.abundance)) %>% # remove any NA bird abundances
+  filter(!is.na(birdabundance)) %>% # remove any NA bird abundances
   .[!duplicated(.), ] # remove duplicated columns
 
     
@@ -108,19 +112,21 @@ temp_scaling <- 5 # 5 degrees C
 # Saving scaling and centering parameters (mean and scale value) to dataframe 
 scaling_params <- data.frame(
   variable = c(#"bird.abundance", 
-               "budburst", "snowmelt", "ice.melt", "temp"),
+               "budburst", "snowmelt", "icemelt", "regiontemp", "breedingtemp"),
   mean = c(
     #mean(final_data$bird.abundance, na.rm = TRUE),
     mean(final_data$budburst, na.rm = TRUE),
     mean(final_data$snowmelt, na.rm = TRUE),
-    mean(final_data$ice.melt, na.rm = TRUE),
-    mean(final_data$temp, na.rm = TRUE)
+    mean(final_data$icemelt, na.rm = TRUE),
+    mean(final_data$regiontemp, na.rm = TRUE),
+    mean(final_data$breedingtemp, na.rm = TRUE)
   ),
   scaling_value = c(
     #abundance_scaling,
     doy_scaling,
     doy_scaling,
     doy_scaling,
+    temp_scaling,
     temp_scaling
   )
 )
@@ -131,8 +137,9 @@ scaled_data <- final_data %>%
     #bird.abundance = (bird.abundance - mean(bird.abundance, na.rm = TRUE)) / abundance_scaling,
     budburst = (budburst - scaling_params$mean[1]) / scaling_params$scaling_value[1],
     snowmelt = (snowmelt - scaling_params$mean[2]) / scaling_params$scaling_value[2],
-    ice.melt = (ice.melt - scaling_params$mean[3]) / scaling_params$scaling_value[3],
-    temp = (temp - scaling_params$mean[4]) / scaling_params$scaling_value[4]
+    icemelt = (icemelt - scaling_params$mean[3]) / scaling_params$scaling_value[3],
+    regiontemp = (regiontemp - scaling_params$mean[4]) / scaling_params$scaling_value[4],
+    breedingtemp = (breedingtemp - scaling_params$mean[5]) / scaling_params$scaling_value[5]
   )
 
 # Saving dataset
