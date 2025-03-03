@@ -98,18 +98,56 @@ tomst_data <- merge(tsd_short, tomst.mapping, by = "tomst_num", all.y = TRUE, al
 # Write tomst_data to the data/clean directory
 write_csv(tomst_data, "data/clean/aru/tomst_data.csv")
 
+rm(tms.f, tms.calc, files_table)
+
+
+# Creating Average ARU Temperatures and Snow days in May 15 - June 30th range
 # import tomst_data 
 tomst_data <- read_csv("data/clean/aru/tomst_data.csv")
-
-# Creating simple version to join with ARU data
-tomst_temp <- tomst_data %>%
-  filter(sensor_name == "TMS_T3") %>%
-  mutate(temp = value) %>%
-  select(datetime, temp, aru_name, tomst_num)
 
 tomst_snow <- tomst_data %>%
   filter(sensor_name == "snow") %>%
   mutate(snow_prob = value) %>%
   select(datetime, snow_prob, aru_name, tomst_num)
 
-rm(tms.f, tms.calc, files_table)
+# Creating simple version to join with ARU data
+tomst_temp <- tomst_data %>%
+  filter(sensor_name %in% c("TMS_T3")) %>%
+  mutate(temp = value) %>%
+  left_join(tomst_snow, by = c("datetime", "tomst_num", "aru_name")) %>%
+  select(datetime, temp, snow_prob, aru_name, tomst_num) 
+
+# 15 May - 30 June
+tempavg_daterange <- c(as.Date("2024-05-15"), as.Date("2024-06-30"))
+# 4 AM - 10 PM
+tempavg_timerange <- c(hms("04:00:00"), hms("22:00:00"))
+
+# average temperature for each unique aru_name, between the dates and time range specified in tempavg objects
+temp_avg <- tomst_temp %>%
+  mutate(date = as.Date(datetime),
+         time = hms(format(datetime, "%H:%M:%S"))) %>%  # Extract date and time
+  filter(date >= tempavg_daterange[1], date <= tempavg_daterange[2],
+         time >= tempavg_timerange[1], time <= tempavg_timerange[2]) %>%
+  group_by(aru_name) %>%
+  summarize(
+    avg_temp = mean(temp[snow_prob != 1], na.rm = TRUE),  # Exclude snow_prob == 1 for avg temp
+    snow_melt_days = n_distinct(date[snow_prob == 1]),    # Count unique days where snow_prob == 1
+    non_snow_days = n_distinct(date[snow_prob != 1]),     # Count unique days where snow_prob != 1
+    last_snow_melt_day = as.Date(ifelse(any(snow_prob == 1), max(date[snow_prob == 1], na.rm = TRUE), NA)),  # Handle missing values
+    tomst_num = first(tomst_num)
+  )
+
+library(ggplot2)
+ggplot(temp_avg, aes(x = reorder(aru_name, avg_temp), y = avg_temp)) +
+  geom_point(size = 3, color = "red") +
+  theme_minimal() +
+  labs(title = "Average Temperature by ARU",
+       x = "ARU Name",
+       y = "Average Temperature (°C)") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+# based on this, temp threshold: 4.25
+temp_avg <- temp_avg %>%
+  mutate(temp_binary = as.factor(ifelse(avg_temp >= 4.25, "high", "low")))
+
+# Write temp_avg to the data/clean directory
+write_csv(temp_avg, "data/clean/aru/tomst_averages.csv")
