@@ -91,34 +91,33 @@ final_data <- final_data %>%
   ) %>%
   rename_with(~ ifelse(. %in% names(column_mapping), column_mapping[.], .), everything()) #%>% # rename columns to simple modelling names 
 
-
-
-gap_fill_and_mark <- function(df, columns_to_fill, long_term_means) {
-  # Create a gap_filled column to mark where filling occurred
-  df$gap_filled <- FALSE
-  
-  # Apply gap filling for each specified column
-  df <- df %>%
-    mutate(across(all_of(columns_to_fill), 
-                  ~ ifelse(is.na(.x) & rowSums(is.na(df[columns_to_fill])) < 3, 
-                           long_term_means[[cur_column()]], .x), 
-                  .names = "filled_{.col}")) %>%
-    mutate(gap_filled = if_any(starts_with("filled_"), ~ !is.na(.x) & is.na(get(sub("filled_", "", cur_column()))))) %>%
-    mutate(across(starts_with("filled_"), 
-                  ~ ifelse(is.na(get(sub("filled_", "", cur_column()))), .x, get(sub("filled_", "", cur_column()))),
-                  .names = "{sub('filled_', '', .col)}")) %>%
-    select(-starts_with("filled_"))
-  
-  return(df)
-}
-
-# Apply the function to your data
-cols_to_fill <-c("budburst", "snowmelt", "icemelt", "regiontemp", "breedingtemp")
-long_term_means <- final_data %>%
-  summarise(across(all_of(cols_to_fill), ~mean(.x, na.rm = TRUE)))
-
-final_data <- gap_fill_and_mark(final_data, cols_to_fill, long_term_means)
-
+# # Gap Filling ####
+# gap_fill_and_mark <- function(df, columns_to_fill, long_term_means) {
+#   # Create a gap_filled column to mark where filling occurred
+#   df$gap_filled <- FALSE
+#   
+#   # Apply gap filling for each specified column
+#   df <- df %>%
+#     mutate(across(all_of(columns_to_fill), 
+#                   ~ ifelse(is.na(.x) & rowSums(is.na(df[columns_to_fill])) < 3, 
+#                            long_term_means[[cur_column()]], .x), 
+#                   .names = "filled_{.col}")) %>%
+#     mutate(gap_filled = if_any(starts_with("filled_"), ~ !is.na(.x) & is.na(get(sub("filled_", "", cur_column()))))) %>%
+#     mutate(across(starts_with("filled_"), 
+#                   ~ ifelse(is.na(get(sub("filled_", "", cur_column()))), .x, get(sub("filled_", "", cur_column()))),
+#                   .names = "{sub('filled_', '', .col)}")) %>%
+#     select(-starts_with("filled_"))
+#   
+#   return(df)
+# }
+# 
+# # Apply the function to your data
+# cols_to_fill <-c("budburst", "snowmelt", "icemelt", "regiontemp", "breedingtemp")
+# long_term_means <- final_data %>%
+#   summarise(across(all_of(cols_to_fill), ~mean(.x, na.rm = TRUE)))
+# 
+# final_data <- gap_fill_and_mark(final_data, cols_to_fill, long_term_means)
+#####
 
 # Filter data to remove NA bird abundances or repeated columns
 scaled_data <- final_data %>%
