@@ -123,7 +123,7 @@ tempavg_daterange <- c(as.Date("2024-05-15"), as.Date("2024-06-30"))
 tempavg_timerange <- c(hms("04:00:00"), hms("22:00:00"))
 
 # average temperature for each unique aru_name, between the dates and time range specified in tempavg objects
-temp_avg <- tomst_temp %>%
+tomst_avg <- tomst_temp %>%
   mutate(date = as.Date(datetime),
          time = hms(format(datetime, "%H:%M:%S"))) %>%  # Extract date and time
   filter(date >= tempavg_daterange[1], date <= tempavg_daterange[2],
@@ -138,7 +138,7 @@ temp_avg <- tomst_temp %>%
   )
 
 library(ggplot2)
-ggplot(temp_avg, aes(x = reorder(aru_name, avg_temp), y = avg_temp)) +
+ggplot(tomst_avg, aes(x = reorder(aru_name, avg_temp), y = avg_temp)) +
   geom_point(size = 3, color = "red") +
   theme_minimal() +
   labs(title = "Average Temperature by ARU",
@@ -146,8 +146,9 @@ ggplot(temp_avg, aes(x = reorder(aru_name, avg_temp), y = avg_temp)) +
        y = "Average Temperature (°C)") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 # based on this, temp threshold: 4.25
-temp_avg <- temp_avg %>%
+tomst_avg <- tomst_avg %>%
   mutate(temp_binary = as.factor(ifelse(avg_temp >= 4.25, "high", "low")))
 
 # Write temp_avg to the data/clean directory
-write_csv(temp_avg, "data/clean/aru/tomst_averages.csv")
+write_csv(tomst_avg, "data/clean/aru/tomst_averages.csv")
+tomst_avg <- read_csv("data/clean/aru/tomst_averages.csv")
