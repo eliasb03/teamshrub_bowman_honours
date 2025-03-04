@@ -88,6 +88,9 @@ packrat/lib*/
 # Ignore raw phenology data, pictures, number files, etc.
 **/Phenology_2024/
 
+# Ignore the Ebird Data
+**/ebd_CA-YT_unv_smp_relMay-2024/
+
 # Ignore All Files on HardDrive
 D:/*
 # It is important that we ignore all Breeding Bird Data
