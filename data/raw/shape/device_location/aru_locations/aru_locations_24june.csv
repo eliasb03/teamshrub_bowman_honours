@@ -1,0 +1,88 @@
+﻿
+metadata
+ID,name,desc,time,keywords,minlat,minlon,maxlat,maxlon,
+1,,,2024-10-22T19:58:28Z,,69.568629981949925,-138.91956701874733,69.583961991593242,-138.86054702103138,
+
+author
+ID,name,email,
+
+copyright
+year,license,author,
+
+link
+metadataID,authorID,wptID,rteptID,trkptID,rteID,trkID,text,type,href,
+1,,,,,,,"Garmin International",,http://www.garmin.com,
+
+rte
+ID,name,cmt,desc,src,number,type,IsAutoNamed,DisplayColor,TransportationMode,TripName,Date,DayNumber,
+
+rtept
+ID,rteID,lat,lon,ele,time,magvar,geoidheight,name,cmt,desc,src,sym,type,fix,sat,hdop,vdop,pdop,ageofdgpsdata,dgpsid,DepartureTime,StopDuration,ArrivalTime,CalculationMode,ElevationMode,NamedRoad_Name,NamedRoad_Id,NamedRoad_ProductId,TransportationMode,
+
+wpt
+ID,lat,lon,ele,time,magvar,geoidheight,name,cmt,desc,src,sym,type,fix,sat,hdop,vdop,pdop,ageofdgpsdata,dgpsid,Proximity,Temperature,Depth,DisplayMode,Samples,Expiration,CreationTime,
+1,69.580231038853526,-138.86054702103138,55.564152,2024-06-23T05:12:56Z,,,"ARUQ10_",,,,"Upland Game","user",,,,,,,,,,,SymbolAndName,,,2024-06-23T05:12:56Z,
+2,69.568824023008347,-138.9146969653666,19.584875,2024-06-22T22:39:28Z,,,"ARUQ11B","KENNEL","KENNEL",,"Upland Game","user",,,,,,,,,,,SymbolAndName,,,2024-06-22T22:39:28Z,
+3,69.576093982905149,-138.90458101406693,24.608657999999998,2024-06-24T02:14:47Z,,,"ARUQ12B",,,,"Upland Game","user",,,,,,,,,,,SymbolAndName,,,2024-06-24T02:14:47Z,
+4,69.577593002468348,-138.91272797249258,43.580471000000003,2024-06-24T03:09:54Z,,,"ARUQ13B",,,,"Upland Game","user",,,,,,,,,,,SymbolAndName,,,2024-06-24T03:09:54Z,
+5,69.575529964640737,-138.89049396850169,11.068155000000001,2024-06-22T05:07:42Z,,,"ARUQ14B",""B" - indicates Bird, meaing its not a dual bird pollinator cam
+Slightly different height than the others
+Attached to Camerons Trail Cam near the Crane nest 
+"Blue Throat Land"
+
+Deployed evening 2024-06-21",""B" - indicates Bird, meaing its not a dual bird pollinator cam
+Slightly different height than the others
+Attached to Camerons Trail Cam near the Crane nest 
+"Blue Throat Land"
+
+Deployed evening 2024-06-21",,"Upland Game","user",,,,,,,,,,,SymbolAndName,,,2024-06-22T05:07:42Z,
+6,69.583961991593242,-138.91956701874733,57.068809999999999,2024-06-24T04:47:11Z,,,"ARUQ19B",,,,"Upland Game","user",,,,,,,,,,,SymbolAndName,,,2024-06-24T04:47:11Z,
+7,69.568629981949925,-138.91121998429298,-6.213581,2024-06-22T23:07:59Z,,,"ARUQ1_",,,,"Upland Game","user",,,,,,,,,,,SymbolAndName,,,2024-06-22T23:07:59Z,
+8,69.569839993491769,-138.9028939884156,-5.510114,2024-06-22T23:25:27Z,,,"ARUQ2",,,,"Upland Game","user",,,,,,,,,,,SymbolAndName,,,2024-06-22T23:25:27Z,
+9,69.572680033743382,-138.88518998399377,24.208317000000001,2024-06-23T01:30:06Z,,,"ARUQ3_",,,,"Upland Game","user",,,,,,,,,,,SymbolAndName,,,2024-06-23T01:30:06Z,
+10,69.571612011641264,-138.90335801057518,0.510015,2024-06-22T07:23:24Z,,,"ARUQ4","Dry patch in the flood plain
+Covering a S. Richardsonii
+
+Deployed evening 2024-06-21","Dry patch in the flood plain
+Covering a S. Richardsonii
+
+Deployed evening 2024-06-21",,"Upland Game","user",,,,,,,,,,,SymbolAndName,,,2024-06-22T07:23:24Z,
+11,69.573670020326972,-138.89902004040778,-0.678782,2024-06-22T03:26:37Z,,,"ARUQ5","Near RCMP graves
+Down the hill roughly halfway
+
+Deployed evening 2024-06-21","Near RCMP graves
+Down the hill roughly halfway
+
+Deployed evening 2024-06-21",,"Upland Game","user",,,,,,,,,,,SymbolAndName,,,2024-06-22T03:26:37Z,
+12,69.575409013777971,-138.89678500592709,0.85235,2024-06-22T04:15:02Z,,,"ARUQ6","At the confluence of east and west ice creeks, on middle bank
+Possibility of slight creek noise
+
+Deployed evening 2024-06-21","At the confluence of east and west ice creeks, on middle bank
+Possibility of slight creek noise
+
+Deployed evening 2024-06-21",,"Upland Game","user",,,,,,,,,,,SymbolAndName,,,2024-06-22T04:15:02Z,
+13,69.579687975347042,-138.9100999943912,41.256366999999997,2024-06-24T04:00:24Z,,,"ARUQ7_",,,,"Upland Game","user",,,,,,,,,,,SymbolAndName,,,2024-06-24T04:00:24Z,
+14,69.576369998976588,-138.88716702349484,31.911273999999999,2024-06-22T06:09:07Z,,,"ARUQ8","Higher Ridge above west Ice Creek
+
+Deployed evening 2024-06-21","Higher Ridge above west Ice Creek
+
+Deployed evening 2024-06-21",,"Upland Game","user",,,,,,,,,,,SymbolAndName,,,2024-06-22T06:09:07Z,
+15,69.571757018566132,-138.87788599357009,11.930294,2024-06-23T03:14:13Z,,,"ARUQ9_",,,,"Upland Game","user",,,,,,,,,,,SymbolAndName,,,2024-06-23T03:14:13Z,
+
+Address
+wptID,StreetAddress1,StreetAddress2,City,State,Country,PostalCode,
+
+PhoneNumber
+wptID,Category,value,
+
+Categories
+wptID,Category,
+
+trk
+ID,name,cmt,desc,src,number,type,DisplayColor,
+
+trkseg
+ID,trkID,
+
+trkpt
+ID,trksegID,lat,lon,ele,time,magvar,geoidheight,name,cmt,desc,src,sym,type,fix,sat,hdop,vdop,pdop,ageofdgpsdata,dgpsid,Temperature,Depth,wtemp,hr,cad,

@@ -1,0 +1,742 @@
+"spec.code","species","total.count","guild","guild2","year","date.ymd","observers","sampling.effort","effort.multiplier","survey.id","sampling.time","num.observers"
+"AMGP","American Golden Plover",3,"passerine","passerine",1993,1993-08-13,"Richard Gordon, Marlene Bailey",240,17.75,"13-Aug-93_FALL_1",120,2
+"AMGP","American Golden Plover",1,"passerine","passerine",1998,1998-06-29,"LeeJohn Meyook, Colin Gordon",224,18.55,"29-Jun-98_LATE_2",112,2
+"AMGP","American Golden Plover",3,"passerine","passerine",1999,1999-06-29,"Frank Elanik, Ricky Joe",140,22.75,"29-Jun-99_LATE_2",70,2
+"AMGP","American Golden Plover",1,"passerine","passerine",2000,2000-06-09,"Frank Elanik, Andy Tardif",248,17.35,"9-Jun-00_EARLY_1",124,2
+"AMGP","American Golden Plover",1,"passerine","passerine",2002,2002-06-09,"Ricky Joe, Andy Tardif",102,24.65,"9-Jun-02_EARLY_1",51,2
+"AMPI","American Pipit",1,"passerine","passerine",2007,2007-06-21,"LeeJohn Meyook, Pierre Foisy, Harry Elias, Dion Arey, Cameron Eckert",575,1,"21-Jun-07_LATE-1_2",115,5
+"AMPI","American Pipit",1,"passerine","passerine",2010,2010-06-29,"Edward McLeod, Jeremy Hansen",218,18.85,"29-Jun-10_LATE_2",109,2
+"AMPI","American Pipit",1,"passerine","passerine",2012,2012-06-29,"Edward McLeod, Samuel McLeod",156,21.95,"29-Jun-12_LATE_2",78,2
+"AMPI","American Pipit",1,"passerine","passerine",2013,2013-06-29,"Edward McLeod, Samuel McLeod",150,22.25,"29-Jun-13_LATE_2",75,2
+"AMPI","American Pipit",5,"passerine","passerine",2014,2014-06-29,"Edward McLeod, Deon Arey",176,20.95,"29-Jun-14_LATE_3",88,2
+"AMPI","American Pipit",1,"passerine","passerine",2015,2015-07-01,"Edward McLeod, Paden Lennie",54,27.05,"1-Jul-15_LATE_2",27,2
+"AMPI","American Pipit",2,"passerine","passerine",2016,2016-06-29,"Edward McLeod, Ricky Joe",192,20.15,"29-Jun-16_LATE_2",96,2
+"AMPI","American Pipit",11,"passerine","passerine",2017,2017-06-29,"Edward McLeod, Ricky Joe",150,22.25,"29-Jun-17_LATE_2",75,2
+"AMPI","American Pipit",2,"passerine","passerine",2020,2020-06-29,"Samuel McLeod, Shane Goesen",68,26.35,"29-Jun-20_LATE_2",34,2
+"AMPI","American Pipit",3,"passerine","passerine",2022,2022-06-26,"Samuel McLeod, Desmond Rogers, Cameron Eckert",333,13.1,"26-Jun-22_LATE_2",111,3
+"AMPI","American Pipit",1,"passerine","passerine",2023,2023-06-27,"Jeremy Hansen, Keegan Arey, Cameron Eckert",102,24.65,"27-Jun-23_LATE_2",34,3
+"AMRO","American Robin",1,"passerine","passerine",1998,1998-06-29,"LeeJohn Meyook, Colin Gordon",224,18.55,"29-Jun-98_LATE_2",112,2
+"AMRO","American Robin",1,"passerine","passerine",2013,2013-06-29,"Edward McLeod, Samuel McLeod",150,22.25,"29-Jun-13_LATE_2",75,2
+"AMRO","American Robin",1,"passerine","passerine",2021,2021-06-29,"Samuel McLeod, Keegan Arey",198,19.85,"29-Jun-21_LATE_2",99,2
+"AMWI","American Wigeon",3,"waterbird","duck",1992,1992-06-28,"LeeJohn Meyook",66,26.45,"28-Jun-92_LATE_1",66,1
+"AMWI","American Wigeon",12,"waterbird","duck",2000,2000-06-29,"Ricky Joe, Pierre Foisy",172,21.15,"29-Jun-00_LATE_2",86,2
+"AMWI","American Wigeon",2,"waterbird","duck",2001,2001-06-09,"Frank Elanik, Ricky Joe",132,23.15,"9-Jun-01_EARLY_1",66,2
+"AMWI","American Wigeon",4,"waterbird","duck",2002,2002-06-09,"Ricky Joe, Andy Tardif",102,24.65,"9-Jun-02_EARLY_1",51,2
+"AMWI","American Wigeon",23,"waterbird","duck",2006,2006-06-30,"LeeJohn Meyook, Deon Arey",152,22.15,"30-Jun-06_LATE_2",76,2
+"AMWI","American Wigeon",4,"waterbird","duck",2007,2007-06-30,"Pierre Foisy, Colin Gordon",154,22.05,"30-Jun-07_LATE_3",77,2
+"AMWI","American Wigeon",3,"waterbird","duck",2011,2011-06-09,"LeeJohn Meyook, Samuel McLeod",184,20.55,"9-Jun-11_EARLY_1",92,2
+"AMWI","American Wigeon",2,"waterbird","duck",2012,2012-06-29,"Edward McLeod, Samuel McLeod",156,21.95,"29-Jun-12_LATE_2",78,2
+"AMWI","American Wigeon",18,"waterbird","duck",2015,2015-06-09,"Edward McLeod, Paden Lennie",224,18.55,"9-Jun-15_EARLY_1",112,2
+"AMWI","American Wigeon",2,"waterbird","duck",2019,2019-06-09,"Shaen Goesen, Dannie Gordon, Cameron Eckert",270,16.25,"9-Jun-19_EARLY_1",90,3
+"AMWI","American Wigeon",3,"waterbird","duck",2022,2022-06-26,"Samuel McLeod, Desmond Rogers, Cameron Eckert",333,13.1,"26-Jun-22_LATE_2",111,3
+"AMWI","American Wigeon",3,"waterbird","duck",2023,2023-06-12,"Samuel McLead, Alan Kogiak, Cameron Eckert",117,23.9,"12-Jun-23_EARLY_1",39,3
+"AMWI","American Wigeon",7,"waterbird","duck",2024,2024-06-15,"Gina Slevinsky, Cameron Eckert",334,13.05,"15-Jun-24_EARLY_1",167,2
+"ATSP","American Tree Sparrow",1,"passerine","passerine",2022,2022-06-26,"Samuel McLeod, Desmond Rogers, Cameron Eckert",333,13.1,"26-Jun-22_LATE_2",111,3
+"ATSP","American Tree Sparrow",1,"passerine","passerine",2023,2023-06-27,"Jeremy Hansen, Keegan Arey, Cameron Eckert",102,24.65,"27-Jun-23_LATE_2",34,3
+"BASA","Baird's Sandpiper",3,"shorebird","shorebird",1991,1991-06-20,"LeeJohn Meyook",92,25.15,"20-Jun-91_LATE_2",92,1
+"BASA","Baird's Sandpiper",2,"shorebird","shorebird",1992,1992-06-28,"LeeJohn Meyook",66,26.45,"28-Jun-92_LATE_1",66,1
+"BASA","Baird's Sandpiper",5,"shorebird","shorebird",1993,1993-08-13,"Richard Gordon, Marlene Bailey",240,17.75,"13-Aug-93_FALL_1",120,2
+"BASA","Baird's Sandpiper",5,"shorebird","shorebird",1995,1995-06-03,"LeeJohn Meyook, Colin Gordon",204,19.55,"3-Jun-95_EARLY_1",102,2
+"BASA","Baird's Sandpiper",4,"shorebird","shorebird",1996,1996-06-09,"LeeJohn Meyook, Richard Gordon",190,20.25,"9-Jun-96_EARLY_2",95,2
+"BASA","Baird's Sandpiper",14,"shorebird","shorebird",1998,1998-06-06,"LeeJohn Meyook, Frank Elanik",158,21.85,"6-Jun-98_EARLY_1",79,2
+"BASA","Baird's Sandpiper",1,"shorebird","shorebird",2003,2003-06-09,"Colin Gordon, Andy Tardif",408,9.35,"9-Jun-03_EARLY_1",204,2
+"BASA","Baird's Sandpiper",1,"shorebird","shorebird",2003,2003-06-29,"Andy Tardif, LeeJohn Meyook",104,24.55,"29-Jun-03_LATE_2",52,2
+"BASA","Baird's Sandpiper",2,"shorebird","shorebird",2004,2004-06-09,"LeeJohn Meyook, Leonard",132,23.15,"9-Jun-04_EARLY_1",66,2
+"BASA","Baird's Sandpiper",4,"shorebird","shorebird",2005,2005-06-29,"Pierre Foisy, Jonas Meyook",142,22.65,"29-Jun-05_LATE_2",71,2
+"BASA","Baird's Sandpiper",10,"shorebird","shorebird",2007,2007-06-21,"LeeJohn Meyook, Pierre Foisy, Harry Elias, Dion Arey, Cameron Eckert",575,1,"21-Jun-07_LATE-1_2",115,5
+"BASA","Baird's Sandpiper",1,"shorebird","shorebird",2008,2008-06-29,"LeeJohn Meyook, Colin Gordon",162,21.65,"29-Jun-08_LATE_1",81,2
+"BASA","Baird's Sandpiper",4,"shorebird","shorebird",2009,2009-06-29,"Pierre Foisy, Frank Doyle",132,23.15,"29-Jun-09_LATE_2",66,2
+"BASA","Baird's Sandpiper",6,"shorebird","shorebird",2010,2010-06-09,"LeeJohn Meyook",66,26.45,"9-Jun-10_EARLY_1",66,1
+"BASA","Baird's Sandpiper",1,"shorebird","shorebird",2011,2011-06-09,"LeeJohn Meyook, Samuel McLeod",184,20.55,"9-Jun-11_EARLY_1",92,2
+"BASA","Baird's Sandpiper",10,"shorebird","shorebird",2012,2012-06-29,"Edward McLeod, Samuel McLeod",156,21.95,"29-Jun-12_LATE_2",78,2
+"BASA","Baird's Sandpiper",3,"shorebird","shorebird",2013,2013-06-29,"Edward McLeod, Samuel McLeod",150,22.25,"29-Jun-13_LATE_2",75,2
+"BASA","Baird's Sandpiper",1,"shorebird","shorebird",2014,2014-06-09,"Edward McLeod, Andrew",238,17.85,"9-Jun-14_EARLY_1",119,2
+"BASA","Baird's Sandpiper",1,"shorebird","shorebird",2014,2014-06-29,"Edward McLeod, Deon Arey",176,20.95,"29-Jun-14_LATE_3",88,2
+"BASA","Baird's Sandpiper",3,"shorebird","shorebird",2015,2015-07-01,"Edward McLeod, Paden Lennie",54,27.05,"1-Jul-15_LATE_2",27,2
+"BASA","Baird's Sandpiper",2,"shorebird","shorebird",2018,2018-06-18,"Cameron Eckert",228,18.35,"14-Jun-18_EARLY_1",228,1
+"BBPL","Black-bellied Plover",1,"shorebird","shorebird",2021,2021-06-09,"Shaen Goesen, Dannie Gordon",420,8.75,"9-Jun-21_EARLY_1",210,2
+"BBSA","Buff-breasted Sandpiper",4,"shorebird","shorebird",2007,2007-06-21,"LeeJohn Meyook, Pierre Foisy, Harry Elias, Dion Arey, Cameron Eckert",575,1,"21-Jun-07_LATE-1_2",115,5
+"BIRD","bird spp.",1,"na","other",1994,1994-06-03,"Frank Elanik, Richard Gordon",148,22.35,"3-Jun-94_EARLY_1",74,2
+"BIRD","bird spp.",5,"na","other",2001,2001-06-09,"Frank Elanik, Ricky Joe",132,23.15,"9-Jun-01_EARLY_1",66,2
+"BIRD","bird spp.",3,"na","other",2009,2009-06-09,"LeeJohn Meyook, Samuel McLeod",170,21.25,"9-Jun-09_EARLY_1",85,2
+"BIRD","bird spp.",2,"na","other",2015,2015-07-01,"Edward McLeod, Paden Lennie",54,27.05,"1-Jul-15_LATE_2",27,2
+"BIRD","bird spp.",4,"na","other",2018,2018-06-29,"Samuel McLeod, Dannie Gordon",196,19.95,"29-Jun-18_LATE_2",98,2
+"BLGU","Black Guillemot",33,"waterbird","other",1990,1990-06-12,"LeeJohn Meyook, Colin Gordon",132,23.15,"12-Jun-90_EARLY_1",66,2
+"BLGU","Black Guillemot",37,"waterbird","other",1991,1991-06-20,"LeeJohn Meyook",92,25.15,"20-Jun-91_LATE_2",92,1
+"BLGU","Black Guillemot",1,"waterbird","other",1995,1995-06-03,"LeeJohn Meyook, Colin Gordon",204,19.55,"3-Jun-95_EARLY_1",102,2
+"BLGU","Black Guillemot",2,"waterbird","other",1996,1996-06-09,"LeeJohn Meyook, Richard Gordon",190,20.25,"9-Jun-96_EARLY_2",95,2
+"BLGU","Black Guillemot",17,"waterbird","other",1997,1997-06-30,"Colin Gordon, Richard Gordon",264,16.55,"30-Jun-97_LATE_2",132,2
+"BLGU","Black Guillemot",5,"waterbird","other",1998,1998-06-06,"LeeJohn Meyook, Frank Elanik",158,21.85,"6-Jun-98_EARLY_1",79,2
+"BLGU","Black Guillemot",15,"waterbird","other",1999,1999-06-29,"Frank Elanik, Ricky Joe",140,22.75,"29-Jun-99_LATE_2",70,2
+"BLGU","Black Guillemot",6,"waterbird","other",2000,2000-06-29,"Ricky Joe, Pierre Foisy",172,21.15,"29-Jun-00_LATE_2",86,2
+"BLGU","Black Guillemot",25,"waterbird","other",2001,2001-06-29,"Frank Elanik, Ricky Joe",128,23.35,"29-Jun-01_LATE_2",64,2
+"BLGU","Black Guillemot",4,"waterbird","other",2004,2004-06-29,"LeeJohn Meyook, Leonard",150,22.25,"29-Jun-04_LATE_2",75,2
+"BLGU","Black Guillemot",3,"waterbird","other",2005,2005-06-29,"Pierre Foisy, Jonas Meyook",142,22.65,"29-Jun-05_LATE_2",71,2
+"BLGU","Black Guillemot",26,"waterbird","other",2006,2006-06-30,"LeeJohn Meyook, Deon Arey",152,22.15,"30-Jun-06_LATE_2",76,2
+"BLGU","Black Guillemot",1,"waterbird","other",2008,2008-06-29,"LeeJohn Meyook, Colin Gordon",162,21.65,"29-Jun-08_LATE_1",81,2
+"BLGU","Black Guillemot",2,"waterbird","other",2009,2009-06-29,"Pierre Foisy, Frank Doyle",132,23.15,"29-Jun-09_LATE_2",66,2
+"BLGU","Black Guillemot",29,"waterbird","other",2010,2010-06-29,"Edward McLeod, Jeremy Hansen",218,18.85,"29-Jun-10_LATE_2",109,2
+"BLGU","Black Guillemot",7,"waterbird","other",2012,2012-06-29,"Edward McLeod, Samuel McLeod",156,21.95,"29-Jun-12_LATE_2",78,2
+"BLGU","Black Guillemot",5,"waterbird","other",2014,2014-06-29,"Edward McLeod, Deon Arey",176,20.95,"29-Jun-14_LATE_3",88,2
+"BLGU","Black Guillemot",2,"waterbird","other",2015,2015-07-01,"Edward McLeod, Paden Lennie",54,27.05,"1-Jul-15_LATE_2",27,2
+"BLGU","Black Guillemot",6,"waterbird","other",2016,2016-06-29,"Edward McLeod, Ricky Joe",192,20.15,"29-Jun-16_LATE_2",96,2
+"BLGU","Black Guillemot",13,"waterbird","other",2018,2018-06-29,"Samuel McLeod, Dannie Gordon",196,19.95,"29-Jun-18_LATE_2",98,2
+"BLGU","Black Guillemot",2,"waterbird","other",2021,2021-06-29,"Samuel McLeod, Keegan Arey",198,19.85,"29-Jun-21_LATE_2",99,2
+"BLGU","Black Guillemot",1,"waterbird","other",2022,2022-06-26,"Samuel McLeod, Desmond Rogers, Cameron Eckert",333,13.1,"26-Jun-22_LATE_2",111,3
+"BLGU","Black Guillemot",2,"waterbird","other",2023,2023-06-27,"Jeremy Hansen, Keegan Arey, Cameron Eckert",102,24.65,"27-Jun-23_LATE_2",34,3
+"BLUE","Bluethroat",1,"passerine","passerine",2023,2023-06-27,"Jeremy Hansen, Keegan Arey, Cameron Eckert",102,24.65,"27-Jun-23_LATE_2",34,3
+"BRAN","Brant",3,"waterbird","duck",1990,1990-06-12,"LeeJohn Meyook, Colin Gordon",132,23.15,"12-Jun-90_EARLY_1",66,2
+"BRAN","Brant",2,"waterbird","duck",1998,1998-06-06,"LeeJohn Meyook, Frank Elanik",158,21.85,"6-Jun-98_EARLY_1",79,2
+"BRAN","Brant",3,"waterbird","duck",2005,2005-06-08,"Pierre Foisy, Jonas Meyook",130,23.25,"8-Jun-05_EARLY_1",65,2
+"BRAN","Brant",3,"waterbird","duck",2011,2011-06-09,"LeeJohn Meyook, Samuel McLeod",184,20.55,"9-Jun-11_EARLY_1",92,2
+"BRAN","Brant",7,"waterbird","duck",2018,2018-06-29,"Samuel McLeod, Dannie Gordon",196,19.95,"29-Jun-18_LATE_2",98,2
+"BRAN","Brant",1,"waterbird","duck",2019,2019-06-09,"Shaen Goesen, Dannie Gordon, Cameron Eckert",270,16.25,"9-Jun-19_EARLY_1",90,3
+"BRAN","Brant",4,"waterbird","duck",2021,2021-06-09,"Shaen Goesen, Dannie Gordon",420,8.75,"9-Jun-21_EARLY_1",210,2
+"CAGO","Canada Goose",2,"waterbird","duck",1996,1996-06-09,"LeeJohn Meyook, Richard Gordon",190,20.25,"9-Jun-96_EARLY_2",95,2
+"CAGO","Canada Goose",2,"waterbird","duck",1997,1997-06-10,"Frank Elanik, LeeJohn Meyook",136,22.95,"10-Jun-97_EARLY_1",68,2
+"CAGO","Canada Goose",8,"waterbird","duck",2000,2000-06-09,"Frank Elanik, Andy Tardif",248,17.35,"9-Jun-00_EARLY_1",124,2
+"CAGO","Canada Goose",4,"waterbird","duck",2001,2001-06-29,"Frank Elanik, Ricky Joe",128,23.35,"29-Jun-01_LATE_2",64,2
+"CAGO","Canada Goose",1,"waterbird","duck",2002,2002-06-09,"Ricky Joe, Andy Tardif",102,24.65,"9-Jun-02_EARLY_1",51,2
+"CAGO","Canada Goose",2,"waterbird","duck",2006,2006-06-09,"Pierre Foisy, Albert Rufus",138,22.85,"9-Jun-06_EARLY_1",69,2
+"CAGO","Canada Goose",4,"waterbird","duck",2011,2011-06-09,"LeeJohn Meyook, Samuel McLeod",184,20.55,"9-Jun-11_EARLY_1",92,2
+"CAGO","Canada Goose",13,"waterbird","duck",2018,2018-06-29,"Samuel McLeod, Dannie Gordon",196,19.95,"29-Jun-18_LATE_2",98,2
+"CAGO","Canada Goose",4,"waterbird","duck",2020,2020-06-29,"Samuel McLeod, Shane Goesen",68,26.35,"29-Jun-20_LATE_2",34,2
+"CAGO","Canada Goose",10,"waterbird","duck",2023,2023-06-27,"Jeremy Hansen, Keegan Arey, Cameron Eckert",102,24.65,"27-Jun-23_LATE_2",34,3
+"CANV","Canvasback",8,"waterbird","duck",1995,1995-06-03,"LeeJohn Meyook, Colin Gordon",204,19.55,"3-Jun-95_EARLY_1",102,2
+"CANV","Canvasback",2,"waterbird","duck",2021,2021-06-09,"Shaen Goesen, Dannie Gordon",420,8.75,"9-Jun-21_EARLY_1",210,2
+"CLSW","Cliff Swallow",3,"passerine","passerine",1990,1990-06-19,"Frank Elanik",51,27.2,"19-Jun-90_LATE_2",51,1
+"COEI","Common Eider",25,"waterbird","duck",1990,1990-06-12,"LeeJohn Meyook, Colin Gordon",132,23.15,"12-Jun-90_EARLY_1",66,2
+"COEI","Common Eider",24,"waterbird","duck",1991,1991-06-20,"LeeJohn Meyook",92,25.15,"20-Jun-91_LATE_2",92,1
+"COEI","Common Eider",13,"waterbird","duck",1992,1992-06-28,"LeeJohn Meyook",66,26.45,"28-Jun-92_LATE_1",66,1
+"COEI","Common Eider",10,"waterbird","duck",1995,1995-06-03,"LeeJohn Meyook, Colin Gordon",204,19.55,"3-Jun-95_EARLY_1",102,2
+"COEI","Common Eider",6,"waterbird","duck",1996,1996-06-09,"LeeJohn Meyook, Richard Gordon",190,20.25,"9-Jun-96_EARLY_2",95,2
+"COEI","Common Eider",30,"waterbird","duck",1997,1997-06-30,"Colin Gordon, Richard Gordon",264,16.55,"30-Jun-97_LATE_2",132,2
+"COEI","Common Eider",19,"waterbird","duck",1998,1998-06-06,"LeeJohn Meyook, Frank Elanik",158,21.85,"6-Jun-98_EARLY_1",79,2
+"COEI","Common Eider",15,"waterbird","duck",1999,1999-06-29,"Frank Elanik, Ricky Joe",140,22.75,"29-Jun-99_LATE_2",70,2
+"COEI","Common Eider",23,"waterbird","duck",2000,2000-06-29,"Ricky Joe, Pierre Foisy",172,21.15,"29-Jun-00_LATE_2",86,2
+"COEI","Common Eider",8,"waterbird","duck",2001,2001-06-29,"Frank Elanik, Ricky Joe",128,23.35,"29-Jun-01_LATE_2",64,2
+"COEI","Common Eider",30,"waterbird","duck",2002,2002-06-09,"Ricky Joe, Andy Tardif",102,24.65,"9-Jun-02_EARLY_1",51,2
+"COEI","Common Eider",6,"waterbird","duck",2003,2003-06-09,"Colin Gordon, Andy Tardif",408,9.35,"9-Jun-03_EARLY_1",204,2
+"COEI","Common Eider",45,"waterbird","duck",2004,2004-06-29,"LeeJohn Meyook, Leonard",150,22.25,"29-Jun-04_LATE_2",75,2
+"COEI","Common Eider",6,"waterbird","duck",2005,2005-06-29,"Pierre Foisy, Jonas Meyook",142,22.65,"29-Jun-05_LATE_2",71,2
+"COEI","Common Eider",36,"waterbird","duck",2006,2006-06-30,"LeeJohn Meyook, Deon Arey",152,22.15,"30-Jun-06_LATE_2",76,2
+"COEI","Common Eider",57,"waterbird","duck",2007,2007-06-21,"LeeJohn Meyook, Pierre Foisy, Harry Elias, Dion Arey, Cameron Eckert",575,1,"21-Jun-07_LATE-1_2",115,5
+"COEI","Common Eider",3,"waterbird","duck",2008,2008-06-29,"LeeJohn Meyook, Colin Gordon",162,21.65,"29-Jun-08_LATE_1",81,2
+"COEI","Common Eider",32,"waterbird","duck",2009,2009-06-09,"LeeJohn Meyook, Samuel McLeod",170,21.25,"9-Jun-09_EARLY_1",85,2
+"COEI","Common Eider",13,"waterbird","duck",2010,2010-06-29,"Edward McLeod, Jeremy Hansen",218,18.85,"29-Jun-10_LATE_2",109,2
+"COEI","Common Eider",36,"waterbird","duck",2011,2011-06-09,"LeeJohn Meyook, Samuel McLeod",184,20.55,"9-Jun-11_EARLY_1",92,2
+"COEI","Common Eider",39,"waterbird","duck",2012,2012-06-09,"Edward McLeod, Samuel McLeod, Cameron Eckert",231,18.2,"9-Jun-12_EARLY_1",77,3
+"COEI","Common Eider",10,"waterbird","duck",2013,2013-06-29,"Edward McLeod, Samuel McLeod",150,22.25,"29-Jun-13_LATE_2",75,2
+"COEI","Common Eider",19,"waterbird","duck",2014,2014-06-09,"Edward McLeod, Andrew",238,17.85,"9-Jun-14_EARLY_1",119,2
+"COEI","Common Eider",3,"waterbird","duck",2015,2015-07-01,"Edward McLeod, Paden Lennie",54,27.05,"1-Jul-15_LATE_2",27,2
+"COEI","Common Eider",17,"waterbird","duck",2016,2016-06-09,"Samuel McLeod, Deon Arey, Cameron Eckert",234,18.05,"9-Jun-16_EARLY_1",78,3
+"COEI","Common Eider",41,"waterbird","duck",2017,2017-06-29,"Edward McLeod, Ricky Joe",150,22.25,"29-Jun-17_LATE_2",75,2
+"COEI","Common Eider",19,"waterbird","duck",2018,2018-06-18,"Cameron Eckert",228,18.35,"14-Jun-18_EARLY_1",228,1
+"COEI","Common Eider",19,"waterbird","duck",2019,2019-06-09,"Shaen Goesen, Dannie Gordon, Cameron Eckert",270,16.25,"9-Jun-19_EARLY_1",90,3
+"COEI","Common Eider",18,"waterbird","duck",2020,2020-06-29,"Samuel McLeod, Shane Goesen",68,26.35,"29-Jun-20_LATE_2",34,2
+"COEI","Common Eider",15,"waterbird","duck",2021,2021-06-29,"Samuel McLeod, Keegan Arey",198,19.85,"29-Jun-21_LATE_2",99,2
+"COEI","Common Eider",24,"waterbird","duck",2022,2022-06-26,"Samuel McLeod, Desmond Rogers, Cameron Eckert",333,13.1,"26-Jun-22_LATE_2",111,3
+"COEI","Common Eider",14,"waterbird","duck",2023,2023-06-12,"Samuel McLead, Alan Kogiak, Cameron Eckert",117,23.9,"12-Jun-23_EARLY_1",39,3
+"COEI","Common Eider",15,"waterbird","duck",2024,2024-06-15,"Gina Slevinsky, Cameron Eckert",334,13.05,"15-Jun-24_EARLY_1",167,2
+"COGO","Common Goldeneye",6,"waterbird","duck",1996,1996-07-01,"LeeJohn Meyook, Richard Gordon",190,20.25,"1-Jul-96_LATE_3",95,2
+"COLO","Common Loon",1,"waterbird","duck",1990,1990-06-12,"LeeJohn Meyook, Colin Gordon",132,23.15,"12-Jun-90_EARLY_1",66,2
+"COLO","Common Loon",1,"waterbird","duck",1998,1998-06-06,"LeeJohn Meyook, Frank Elanik",158,21.85,"6-Jun-98_EARLY_1",79,2
+"COLO","Common Loon",3,"waterbird","duck",2000,2000-06-29,"Ricky Joe, Pierre Foisy",172,21.15,"29-Jun-00_LATE_2",86,2
+"COLO","Common Loon",1,"waterbird","duck",2014,2014-06-29,"Edward McLeod, Deon Arey",176,20.95,"29-Jun-14_LATE_3",88,2
+"COLO","Common Loon",2,"waterbird","duck",2016,2016-06-29,"Edward McLeod, Ricky Joe",192,20.15,"29-Jun-16_LATE_2",96,2
+"COME","Common Merganser",1,"waterbird","duck",1998,1998-06-06,"LeeJohn Meyook, Frank Elanik",158,21.85,"6-Jun-98_EARLY_1",79,2
+"COME","Common Merganser",23,"waterbird","duck",1999,1999-06-29,"Frank Elanik, Ricky Joe",140,22.75,"29-Jun-99_LATE_2",70,2
+"COME","Common Merganser",2,"waterbird","duck",2013,2013-06-09,"Edward McLeod, Samuel McLeod, Cameron Eckert",255,17,"9-Jun-23_EARLY_1",85,3
+"COME","Common Merganser",11,"waterbird","duck",2015,2015-06-09,"Edward McLeod, Paden Lennie",224,18.55,"9-Jun-15_EARLY_1",112,2
+"COME","Common Merganser",4,"waterbird","duck",2021,2021-06-29,"Samuel McLeod, Keegan Arey",198,19.85,"29-Jun-21_LATE_2",99,2
+"CORA","Common Raven",1,NA,"other",1990,1990-06-22,"Victor Allen",85,25.5,"22-Jun-90_LATE_3",85,1
+"CORA","Common Raven",1,NA,"other",2013,2013-06-09,"Edward McLeod, Samuel McLeod, Cameron Eckert",255,17,"9-Jun-23_EARLY_1",85,3
+"CORA","Common Raven",2,NA,"other",2016,2016-06-09,"Samuel McLeod, Deon Arey, Cameron Eckert",234,18.05,"9-Jun-16_EARLY_1",78,3
+"CORA","Common Raven",3,NA,"other",2023,2023-06-12,"Samuel McLead, Alan Kogiak, Cameron Eckert",117,23.9,"12-Jun-23_EARLY_1",39,3
+"CORE","Common Redpoll",2,"passerine","passerine",1994,1994-06-03,"Frank Elanik, Richard Gordon",148,22.35,"3-Jun-94_EARLY_1",74,2
+"CORE","Common Redpoll",5,"passerine","passerine",1998,1998-06-06,"LeeJohn Meyook, Frank Elanik",158,21.85,"6-Jun-98_EARLY_1",79,2
+"CORE","Common Redpoll",2,"passerine","passerine",1999,1999-06-29,"Frank Elanik, Ricky Joe",140,22.75,"29-Jun-99_LATE_2",70,2
+"CORE","Common Redpoll",5,"passerine","passerine",2000,2000-06-09,"Frank Elanik, Andy Tardif",248,17.35,"9-Jun-00_EARLY_1",124,2
+"CORE","Common Redpoll",12,"passerine","passerine",2001,2001-06-29,"Frank Elanik, Ricky Joe",128,23.35,"29-Jun-01_LATE_2",64,2
+"CORE","Common Redpoll",2,"passerine","passerine",2004,2004-06-29,"LeeJohn Meyook, Leonard",150,22.25,"29-Jun-04_LATE_2",75,2
+"CORE","Common Redpoll",2,"passerine","passerine",2005,2005-06-29,"Pierre Foisy, Jonas Meyook",142,22.65,"29-Jun-05_LATE_2",71,2
+"CORE","Common Redpoll",11,"passerine","passerine",2007,2007-06-21,"LeeJohn Meyook, Pierre Foisy, Harry Elias, Dion Arey, Cameron Eckert",575,1,"21-Jun-07_LATE-1_2",115,5
+"CORE","Common Redpoll",2,"passerine","passerine",2008,2008-06-29,"LeeJohn Meyook, Colin Gordon",162,21.65,"29-Jun-08_LATE_1",81,2
+"CORE","Common Redpoll",2,"passerine","passerine",2013,2013-06-09,"Edward McLeod, Samuel McLeod, Cameron Eckert",255,17,"9-Jun-23_EARLY_1",85,3
+"CORE","Common Redpoll",2,"passerine","passerine",2013,2013-06-29,"Edward McLeod, Samuel McLeod",150,22.25,"29-Jun-13_LATE_2",75,2
+"CORE","Common Redpoll",12,"passerine","passerine",2015,2015-06-09,"Edward McLeod, Paden Lennie",224,18.55,"9-Jun-15_EARLY_1",112,2
+"CORE","Common Redpoll",7,"passerine","passerine",2016,2016-06-09,"Samuel McLeod, Deon Arey, Cameron Eckert",234,18.05,"9-Jun-16_EARLY_1",78,3
+"CORE","Common Redpoll",4,"passerine","passerine",2017,2017-06-29,"Edward McLeod, Ricky Joe",150,22.25,"29-Jun-17_LATE_2",75,2
+"CORE","Common Redpoll",4,"passerine","passerine",2021,2021-06-29,"Samuel McLeod, Keegan Arey",198,19.85,"29-Jun-21_LATE_2",99,2
+"CORE","Common Redpoll",4,"passerine","passerine",2022,2022-06-26,"Samuel McLeod, Desmond Rogers, Cameron Eckert",333,13.1,"26-Jun-22_LATE_2",111,3
+"CORE","Common Redpoll",6,"passerine","passerine",2023,2023-06-12,"Samuel McLead, Alan Kogiak, Cameron Eckert",117,23.9,"12-Jun-23_EARLY_1",39,3
+"CORE","Common Redpoll",6,"passerine","passerine",2023,2023-06-27,"Jeremy Hansen, Keegan Arey, Cameron Eckert",102,24.65,"27-Jun-23_LATE_2",34,3
+"CORE","Common Redpoll",2,"passerine","passerine",2024,2024-06-15,"Gina Slevinsky, Cameron Eckert",334,13.05,"15-Jun-24_EARLY_1",167,2
+"DUCK","duck sp.",1,"waterbird","duck",1999,1999-06-09,"Liz Gordon, Andy Tardif",214,19.05,"9-Jun-99_EARLY_1",107,2
+"DUCK","duck sp.",5,"waterbird","duck",2000,2000-06-09,"Frank Elanik, Andy Tardif",248,17.35,"9-Jun-00_EARLY_1",124,2
+"EYWA","Eastern Yellow Wagtail",2,"waterbird","duck",2024,2024-06-15,"Gina Slevinsky, Cameron Eckert",334,13.05,"15-Jun-24_EARLY_1",167,2
+"GADW","Gadwall",1,"waterbird","duck",2013,2013-06-09,"Edward McLeod, Samuel McLeod, Cameron Eckert",255,17,"9-Jun-23_EARLY_1",85,3
+"GADW","Gadwall",1,"waterbird","duck",2023,2023-06-12,"Samuel McLead, Alan Kogiak, Cameron Eckert",117,23.9,"12-Jun-23_EARLY_1",39,3
+"GCTH","Gray-cheeked Thrush",1,"passerine","passerine",2016,2016-06-29,"Edward McLeod, Ricky Joe",192,20.15,"29-Jun-16_LATE_2",96,2
+"GLGU","Glaucous Gull",2,"waterbird","gull",1990,1990-06-12,"LeeJohn Meyook, Colin Gordon",132,23.15,"12-Jun-90_EARLY_1",66,2
+"GLGU","Glaucous Gull",4,"waterbird","gull",1991,1991-06-20,"LeeJohn Meyook",92,25.15,"20-Jun-91_LATE_2",92,1
+"GLGU","Glaucous Gull",5,"waterbird","gull",1992,1992-06-28,"LeeJohn Meyook",66,26.45,"28-Jun-92_LATE_1",66,1
+"GLGU","Glaucous Gull",2,"waterbird","gull",1993,1993-08-13,"Richard Gordon, Marlene Bailey",240,17.75,"13-Aug-93_FALL_1",120,2
+"GLGU","Glaucous Gull",1,"waterbird","gull",1994,1994-06-03,"Frank Elanik, Richard Gordon",148,22.35,"3-Jun-94_EARLY_1",74,2
+"GLGU","Glaucous Gull",4,"waterbird","gull",1995,1995-06-03,"LeeJohn Meyook, Colin Gordon",204,19.55,"3-Jun-95_EARLY_1",102,2
+"GLGU","Glaucous Gull",5,"waterbird","gull",1996,1996-06-09,"LeeJohn Meyook, Richard Gordon",190,20.25,"9-Jun-96_EARLY_2",95,2
+"GLGU","Glaucous Gull",5,"waterbird","gull",1996,1996-07-01,"LeeJohn Meyook, Richard Gordon",190,20.25,"1-Jul-96_LATE_3",95,2
+"GLGU","Glaucous Gull",11,"waterbird","gull",1997,1997-06-30,"Colin Gordon, Richard Gordon",264,16.55,"30-Jun-97_LATE_2",132,2
+"GLGU","Glaucous Gull",13,"waterbird","gull",1998,1998-06-06,"LeeJohn Meyook, Frank Elanik",158,21.85,"6-Jun-98_EARLY_1",79,2
+"GLGU","Glaucous Gull",6,"waterbird","gull",1999,1999-06-09,"Liz Gordon, Andy Tardif",214,19.05,"9-Jun-99_EARLY_1",107,2
+"GLGU","Glaucous Gull",4,"waterbird","gull",2000,2000-06-09,"Frank Elanik, Andy Tardif",248,17.35,"9-Jun-00_EARLY_1",124,2
+"GLGU","Glaucous Gull",7,"waterbird","gull",2001,2001-06-29,"Frank Elanik, Ricky Joe",128,23.35,"29-Jun-01_LATE_2",64,2
+"GLGU","Glaucous Gull",4,"waterbird","gull",2002,2002-06-09,"Ricky Joe, Andy Tardif",102,24.65,"9-Jun-02_EARLY_1",51,2
+"GLGU","Glaucous Gull",3,"waterbird","gull",2003,2003-06-09,"Colin Gordon, Andy Tardif",408,9.35,"9-Jun-03_EARLY_1",204,2
+"GLGU","Glaucous Gull",5,"waterbird","gull",2004,2004-06-29,"LeeJohn Meyook, Leonard",150,22.25,"29-Jun-04_LATE_2",75,2
+"GLGU","Glaucous Gull",9,"waterbird","gull",2005,2005-06-29,"Pierre Foisy, Jonas Meyook",142,22.65,"29-Jun-05_LATE_2",71,2
+"GLGU","Glaucous Gull",4,"waterbird","gull",2006,2006-06-30,"LeeJohn Meyook, Deon Arey",152,22.15,"30-Jun-06_LATE_2",76,2
+"GLGU","Glaucous Gull",4,"waterbird","gull",2007,2007-06-09,"LeeJohn Meyook, Deon Arey",152,22.15,"9-Jun-07_EARLY_1",76,2
+"GLGU","Glaucous Gull",4,"waterbird","gull",2010,2010-06-29,"Edward McLeod, Jeremy Hansen",218,18.85,"29-Jun-10_LATE_2",109,2
+"GLGU","Glaucous Gull",7,"waterbird","gull",2011,2011-06-09,"LeeJohn Meyook, Samuel McLeod",184,20.55,"9-Jun-11_EARLY_1",92,2
+"GLGU","Glaucous Gull",4,"waterbird","gull",2012,2012-06-09,"Edward McLeod, Samuel McLeod, Cameron Eckert",231,18.2,"9-Jun-12_EARLY_1",77,3
+"GLGU","Glaucous Gull",1,"waterbird","gull",2013,2013-06-09,"Edward McLeod, Samuel McLeod, Cameron Eckert",255,17,"9-Jun-23_EARLY_1",85,3
+"GLGU","Glaucous Gull",9,"waterbird","gull",2014,2014-06-29,"Edward McLeod, Deon Arey",176,20.95,"29-Jun-14_LATE_3",88,2
+"GLGU","Glaucous Gull",3,"waterbird","gull",2015,2015-06-09,"Edward McLeod, Paden Lennie",224,18.55,"9-Jun-15_EARLY_1",112,2
+"GLGU","Glaucous Gull",3,"waterbird","gull",2015,2015-07-01,"Edward McLeod, Paden Lennie",54,27.05,"1-Jul-15_LATE_2",27,2
+"GLGU","Glaucous Gull",8,"waterbird","gull",2016,2016-06-09,"Samuel McLeod, Deon Arey, Cameron Eckert",234,18.05,"9-Jun-16_EARLY_1",78,3
+"GLGU","Glaucous Gull",2,"waterbird","gull",2017,2017-06-10,"Samuel McLeod, Shane Goesen, Cameron Eckert",279,15.8,"10-Jun-17_EARLY_1",93,3
+"GLGU","Glaucous Gull",4,"waterbird","gull",2018,2018-06-29,"Samuel McLeod, Dannie Gordon",196,19.95,"29-Jun-18_LATE_2",98,2
+"GLGU","Glaucous Gull",3,"waterbird","gull",2019,2019-06-09,"Shaen Goesen, Dannie Gordon, Cameron Eckert",270,16.25,"9-Jun-19_EARLY_1",90,3
+"GLGU","Glaucous Gull",3,"waterbird","gull",2020,2020-06-29,"Samuel McLeod, Shane Goesen",68,26.35,"29-Jun-20_LATE_2",34,2
+"GLGU","Glaucous Gull",5,"waterbird","gull",2021,2021-06-09,"Shaen Goesen, Dannie Gordon",420,8.75,"9-Jun-21_EARLY_1",210,2
+"GLGU","Glaucous Gull",2,"waterbird","gull",2022,2022-06-26,"Samuel McLeod, Desmond Rogers, Cameron Eckert",333,13.1,"26-Jun-22_LATE_2",111,3
+"GLGU","Glaucous Gull",1,"waterbird","gull",2023,2023-06-27,"Jeremy Hansen, Keegan Arey, Cameron Eckert",102,24.65,"27-Jun-23_LATE_2",34,3
+"GLGU","Glaucous Gull",2,"waterbird","gull",2024,2024-06-15,"Gina Slevinsky, Cameron Eckert",334,13.05,"15-Jun-24_EARLY_1",167,2
+"GOEA","Golden Eagle",1,"birdofprey","hawk",2004,2004-06-09,"LeeJohn Meyook, Leonard",132,23.15,"9-Jun-04_EARLY_1",66,2
+"GULL","gull sp.",2,"waterbird","gull",1990,1990-06-22,"Victor Allen",85,25.5,"22-Jun-90_LATE_3",85,1
+"GULL","gull sp.",2,"waterbird","gull",1993,1993-08-13,"Richard Gordon, Marlene Bailey",240,17.75,"13-Aug-93_FALL_1",120,2
+"GULL","gull sp.",1,"waterbird","gull",2017,2017-06-29,"Edward McLeod, Ricky Joe",150,22.25,"29-Jun-17_LATE_2",75,2
+"GWFG","Greater White-fronted Goose",2,"waterbird","duck",1994,1994-06-03,"Frank Elanik, Richard Gordon",148,22.35,"3-Jun-94_EARLY_1",74,2
+"GWFG","Greater White-fronted Goose",5,"waterbird","duck",1997,1997-06-10,"Frank Elanik, LeeJohn Meyook",136,22.95,"10-Jun-97_EARLY_1",68,2
+"GWFG","Greater White-fronted Goose",3,"waterbird","duck",1999,1999-06-29,"Frank Elanik, Ricky Joe",140,22.75,"29-Jun-99_LATE_2",70,2
+"GWFG","Greater White-fronted Goose",3,"waterbird","duck",2000,2000-06-09,"Frank Elanik, Andy Tardif",248,17.35,"9-Jun-00_EARLY_1",124,2
+"GWFG","Greater White-fronted Goose",1,"waterbird","duck",2002,2002-06-09,"Ricky Joe, Andy Tardif",102,24.65,"9-Jun-02_EARLY_1",51,2
+"GWFG","Greater White-fronted Goose",2,"waterbird","duck",2003,2003-06-29,"Andy Tardif, LeeJohn Meyook",104,24.55,"29-Jun-03_LATE_2",52,2
+"GWFG","Greater White-fronted Goose",5,"waterbird","duck",2006,2006-06-09,"Pierre Foisy, Albert Rufus",138,22.85,"9-Jun-06_EARLY_1",69,2
+"GWFG","Greater White-fronted Goose",2,"waterbird","duck",2007,2007-06-21,"LeeJohn Meyook, Pierre Foisy, Harry Elias, Dion Arey, Cameron Eckert",575,1,"21-Jun-07_LATE-1_2",115,5
+"GWFG","Greater White-fronted Goose",3,"waterbird","duck",2009,2009-06-09,"LeeJohn Meyook, Samuel McLeod",170,21.25,"9-Jun-09_EARLY_1",85,2
+"GWFG","Greater White-fronted Goose",8,"waterbird","duck",2011,2011-06-09,"LeeJohn Meyook, Samuel McLeod",184,20.55,"9-Jun-11_EARLY_1",92,2
+"GWFG","Greater White-fronted Goose",4,"waterbird","duck",2012,2012-06-09,"Edward McLeod, Samuel McLeod, Cameron Eckert",231,18.2,"9-Jun-12_EARLY_1",77,3
+"GWFG","Greater White-fronted Goose",1,"waterbird","duck",2013,2013-06-09,"Edward McLeod, Samuel McLeod, Cameron Eckert",255,17,"9-Jun-23_EARLY_1",85,3
+"GWFG","Greater White-fronted Goose",11,"waterbird","duck",2014,2014-06-29,"Edward McLeod, Deon Arey",176,20.95,"29-Jun-14_LATE_3",88,2
+"GWFG","Greater White-fronted Goose",1,"waterbird","duck",2015,2015-06-09,"Edward McLeod, Paden Lennie",224,18.55,"9-Jun-15_EARLY_1",112,2
+"GWFG","Greater White-fronted Goose",14,"waterbird","duck",2016,2016-06-09,"Samuel McLeod, Deon Arey, Cameron Eckert",234,18.05,"9-Jun-16_EARLY_1",78,3
+"GWFG","Greater White-fronted Goose",7,"waterbird","duck",2018,2018-06-29,"Samuel McLeod, Dannie Gordon",196,19.95,"29-Jun-18_LATE_2",98,2
+"GWFG","Greater White-fronted Goose",9,"waterbird","duck",2019,2019-06-09,"Shaen Goesen, Dannie Gordon, Cameron Eckert",270,16.25,"9-Jun-19_EARLY_1",90,3
+"GWFG","Greater White-fronted Goose",11,"waterbird","duck",2021,2021-06-09,"Shaen Goesen, Dannie Gordon",420,8.75,"9-Jun-21_EARLY_1",210,2
+"GWFG","Greater White-fronted Goose",9,"waterbird","duck",2022,2022-06-09,"Jeremy Hansen, Keegan Arey, Cameron Eckert",270,16.25,"9-Jun-22_EARLY_1",90,3
+"GWFG","Greater White-fronted Goose",3,"waterbird","duck",2023,2023-06-27,"Jeremy Hansen, Keegan Arey, Cameron Eckert",102,24.65,"27-Jun-23_LATE_2",34,3
+"GWFG","Greater White-fronted Goose",6,"waterbird","duck",2024,2024-06-15,"Gina Slevinsky, Cameron Eckert",334,13.05,"15-Jun-24_EARLY_1",167,2
+"GWTE","Green-winged Teal",2,"waterbird","duck",1992,1992-06-28,"LeeJohn Meyook",66,26.45,"28-Jun-92_LATE_1",66,1
+"GWTE","Green-winged Teal",2,"waterbird","duck",1994,1994-06-03,"Frank Elanik, Richard Gordon",148,22.35,"3-Jun-94_EARLY_1",74,2
+"GWTE","Green-winged Teal",12,"waterbird","duck",1995,1995-06-03,"LeeJohn Meyook, Colin Gordon",204,19.55,"3-Jun-95_EARLY_1",102,2
+"GWTE","Green-winged Teal",4,"waterbird","duck",1996,1996-06-09,"LeeJohn Meyook, Richard Gordon",190,20.25,"9-Jun-96_EARLY_2",95,2
+"GWTE","Green-winged Teal",1,"waterbird","duck",1997,1997-06-10,"Frank Elanik, LeeJohn Meyook",136,22.95,"10-Jun-97_EARLY_1",68,2
+"GWTE","Green-winged Teal",2,"waterbird","duck",1999,1999-06-09,"Liz Gordon, Andy Tardif",214,19.05,"9-Jun-99_EARLY_1",107,2
+"GWTE","Green-winged Teal",6,"waterbird","duck",2000,2000-06-09,"Frank Elanik, Andy Tardif",248,17.35,"9-Jun-00_EARLY_1",124,2
+"GWTE","Green-winged Teal",1,"waterbird","duck",2002,2002-06-09,"Ricky Joe, Andy Tardif",102,24.65,"9-Jun-02_EARLY_1",51,2
+"GWTE","Green-winged Teal",3,"waterbird","duck",2007,2007-06-09,"LeeJohn Meyook, Deon Arey",152,22.15,"9-Jun-07_EARLY_1",76,2
+"GWTE","Green-winged Teal",1,"waterbird","duck",2009,2009-06-09,"LeeJohn Meyook, Samuel McLeod",170,21.25,"9-Jun-09_EARLY_1",85,2
+"GWTE","Green-winged Teal",1,"waterbird","duck",2014,2014-06-09,"Edward McLeod, Andrew",238,17.85,"9-Jun-14_EARLY_1",119,2
+"GWTE","Green-winged Teal",8,"waterbird","duck",2015,2015-06-09,"Edward McLeod, Paden Lennie",224,18.55,"9-Jun-15_EARLY_1",112,2
+"GWTE","Green-winged Teal",9,"waterbird","duck",2016,2016-06-09,"Samuel McLeod, Deon Arey, Cameron Eckert",234,18.05,"9-Jun-16_EARLY_1",78,3
+"GWTE","Green-winged Teal",1,"waterbird","duck",2017,2017-06-10,"Samuel McLeod, Shane Goesen, Cameron Eckert",279,15.8,"10-Jun-17_EARLY_1",93,3
+"GWTE","Green-winged Teal",5,"waterbird","duck",2018,2018-06-18,"Cameron Eckert",228,18.35,"14-Jun-18_EARLY_1",228,1
+"GWTE","Green-winged Teal",1,"waterbird","duck",2022,2022-06-09,"Jeremy Hansen, Keegan Arey, Cameron Eckert",270,16.25,"9-Jun-22_EARLY_1",90,3
+"GWTE","Green-winged Teal",2,"waterbird","duck",2023,2023-06-12,"Samuel McLead, Alan Kogiak, Cameron Eckert",117,23.9,"12-Jun-23_EARLY_1",39,3
+"GWTE","Green-winged Teal",2,"waterbird","duck",2024,2024-06-15,"Gina Slevinsky, Cameron Eckert",334,13.05,"15-Jun-24_EARLY_1",167,2
+"HASP","Harris's Sparrow",1,"passerine","passerine",2017,2017-06-10,"Samuel McLeod, Shane Goesen, Cameron Eckert",279,15.8,"10-Jun-17_EARLY_1",93,3
+"HASP","Harris's Sparrow",1,"passerine","passerine",2019,2019-06-09,"Shaen Goesen, Dannie Gordon, Cameron Eckert",270,16.25,"9-Jun-19_EARLY_1",90,3
+"HERG","Herring Gull",3,"waterbird","gull",1990,1990-06-25,"Victor Allen",90,25.25,"25-Jun-90_LATE_3",90,1
+"HERG","Herring Gull",1,"waterbird","gull",2007,2007-06-21,"LeeJohn Meyook, Pierre Foisy, Harry Elias, Dion Arey, Cameron Eckert",575,1,"21-Jun-07_LATE-1_2",115,5
+"HERG","Herring Gull",1,"waterbird","gull",2024,2024-06-15,"Gina Slevinsky, Cameron Eckert",334,13.05,"15-Jun-24_EARLY_1",167,2
+"HOLA","Horned Lark",2,"passerine","passerine",2021,2021-06-09,"Shaen Goesen, Dannie Gordon",420,8.75,"9-Jun-21_EARLY_1",210,2
+"HORE","Hoary Redpoll",4,"passerine","passerine",1990,1990-06-19,"Frank Elanik",51,27.2,"19-Jun-90_LATE_2",51,1
+"HORE","Hoary Redpoll",4,"passerine","passerine",1991,1991-06-20,"LeeJohn Meyook",92,25.15,"20-Jun-91_LATE_2",92,1
+"HORE","Hoary Redpoll",4,"passerine","passerine",1992,1992-06-28,"LeeJohn Meyook",20,28.75,"29-Jun-92_LATE_1",20,1
+"HORE","Hoary Redpoll",1,"passerine","passerine",1993,1993-08-13,"Richard Gordon, Marlene Bailey",240,17.75,"13-Aug-93_FALL_1",120,2
+"HORE","Hoary Redpoll",8,"passerine","passerine",1996,1996-06-09,"LeeJohn Meyook, Richard Gordon",190,20.25,"9-Jun-96_EARLY_2",95,2
+"HORE","Hoary Redpoll",1,"passerine","passerine",1998,1998-06-29,"LeeJohn Meyook, Colin Gordon",224,18.55,"29-Jun-98_LATE_2",112,2
+"HORE","Hoary Redpoll",2,"passerine","passerine",2004,2004-06-09,"LeeJohn Meyook, Leonard",132,23.15,"9-Jun-04_EARLY_1",66,2
+"HORE","Hoary Redpoll",4,"passerine","passerine",2007,2007-06-09,"LeeJohn Meyook, Deon Arey",152,22.15,"9-Jun-07_EARLY_1",76,2
+"HORE","Hoary Redpoll",2,"passerine","passerine",2008,2008-06-29,"LeeJohn Meyook, Colin Gordon",162,21.65,"29-Jun-08_LATE_1",81,2
+"HORE","Hoary Redpoll",8,"passerine","passerine",2009,2009-06-29,"Pierre Foisy, Frank Doyle",132,23.15,"29-Jun-09_LATE_2",66,2
+"HORE","Hoary Redpoll",2,"passerine","passerine",2014,2014-06-09,"Edward McLeod, Andrew",238,17.85,"9-Jun-14_EARLY_1",119,2
+"HORE","Hoary Redpoll",1,"passerine","passerine",2016,2016-06-29,"Edward McLeod, Ricky Joe",192,20.15,"29-Jun-16_LATE_2",96,2
+"HORE","Hoary Redpoll",5,"passerine","passerine",2022,2022-06-26,"Samuel McLeod, Desmond Rogers, Cameron Eckert",333,13.1,"26-Jun-22_LATE_2",111,3
+"HORE","Hoary Redpoll",2,"passerine","passerine",2023,2023-06-12,"Samuel McLead, Alan Kogiak, Cameron Eckert",117,23.9,"12-Jun-23_EARLY_1",39,3
+"IVGU","Ivory Gull",1,"waterbird","gull",1999,1999-06-09,"Liz Gordon, Andy Tardif",214,19.05,"9-Jun-99_EARLY_1",107,2
+"KIEI","King Eider",1,"waterbird","duck",2012,2012-06-09,"Edward McLeod, Samuel McLeod, Cameron Eckert",231,18.2,"9-Jun-12_EARLY_1",77,3
+"LALO","Lapland Longspur",32,"passerine","passerine",1990,1990-06-19,"Frank Elanik",51,27.2,"19-Jun-90_LATE_2",51,1
+"LALO","Lapland Longspur",38,"passerine","passerine",1991,1991-06-20,"LeeJohn Meyook",92,25.15,"20-Jun-91_LATE_2",92,1
+"LALO","Lapland Longspur",26,"passerine","passerine",1992,1992-06-28,"LeeJohn Meyook",20,28.75,"29-Jun-92_LATE_1",20,1
+"LALO","Lapland Longspur",8,"passerine","passerine",1993,1993-08-13,"Richard Gordon, Marlene Bailey",240,17.75,"13-Aug-93_FALL_1",120,2
+"LALO","Lapland Longspur",22,"passerine","passerine",1994,1994-06-03,"Frank Elanik, Richard Gordon",148,22.35,"3-Jun-94_EARLY_1",74,2
+"LALO","Lapland Longspur",12,"passerine","passerine",1995,1995-06-03,"LeeJohn Meyook, Colin Gordon",204,19.55,"3-Jun-95_EARLY_1",102,2
+"LALO","Lapland Longspur",18,"passerine","passerine",1996,1996-06-09,"LeeJohn Meyook, Richard Gordon",190,20.25,"9-Jun-96_EARLY_2",95,2
+"LALO","Lapland Longspur",9,"passerine","passerine",1997,1997-06-10,"Frank Elanik, LeeJohn Meyook",136,22.95,"10-Jun-97_EARLY_1",68,2
+"LALO","Lapland Longspur",9,"passerine","passerine",1997,1997-06-30,"Colin Gordon, Richard Gordon",264,16.55,"30-Jun-97_LATE_2",132,2
+"LALO","Lapland Longspur",15,"passerine","passerine",1998,1998-06-29,"LeeJohn Meyook, Colin Gordon",224,18.55,"29-Jun-98_LATE_2",112,2
+"LALO","Lapland Longspur",8,"passerine","passerine",1999,1999-06-09,"Liz Gordon, Andy Tardif",214,19.05,"9-Jun-99_EARLY_1",107,2
+"LALO","Lapland Longspur",14,"passerine","passerine",2000,2000-06-29,"Ricky Joe, Pierre Foisy",172,21.15,"29-Jun-00_LATE_2",86,2
+"LALO","Lapland Longspur",11,"passerine","passerine",2001,2001-06-09,"Frank Elanik, Ricky Joe",132,23.15,"9-Jun-01_EARLY_1",66,2
+"LALO","Lapland Longspur",10,"passerine","passerine",2002,2002-06-09,"Ricky Joe, Andy Tardif",102,24.65,"9-Jun-02_EARLY_1",51,2
+"LALO","Lapland Longspur",17,"passerine","passerine",2003,2003-06-29,"Andy Tardif, LeeJohn Meyook",104,24.55,"29-Jun-03_LATE_2",52,2
+"LALO","Lapland Longspur",25,"passerine","passerine",2004,2004-06-29,"LeeJohn Meyook, Leonard",150,22.25,"29-Jun-04_LATE_2",75,2
+"LALO","Lapland Longspur",8,"passerine","passerine",2005,2005-06-08,"Pierre Foisy, Jonas Meyook",130,23.25,"8-Jun-05_EARLY_1",65,2
+"LALO","Lapland Longspur",9,"passerine","passerine",2006,2006-06-09,"Pierre Foisy, Albert Rufus",138,22.85,"9-Jun-06_EARLY_1",69,2
+"LALO","Lapland Longspur",36,"passerine","passerine",2007,2007-06-21,"LeeJohn Meyook, Pierre Foisy, Harry Elias, Dion Arey, Cameron Eckert",575,1,"21-Jun-07_LATE-1_2",115,5
+"LALO","Lapland Longspur",12,"passerine","passerine",2008,2008-06-29,"LeeJohn Meyook, Colin Gordon",162,21.65,"29-Jun-08_LATE_1",81,2
+"LALO","Lapland Longspur",15,"passerine","passerine",2009,2009-06-09,"LeeJohn Meyook, Samuel McLeod",170,21.25,"9-Jun-09_EARLY_1",85,2
+"LALO","Lapland Longspur",38,"passerine","passerine",2010,2010-06-09,"LeeJohn Meyook",66,26.45,"9-Jun-10_EARLY_1",66,1
+"LALO","Lapland Longspur",15,"passerine","passerine",2011,2011-06-09,"LeeJohn Meyook, Samuel McLeod",184,20.55,"9-Jun-11_EARLY_1",92,2
+"LALO","Lapland Longspur",22,"passerine","passerine",2012,2012-06-29,"Edward McLeod, Samuel McLeod",156,21.95,"29-Jun-12_LATE_2",78,2
+"LALO","Lapland Longspur",25,"passerine","passerine",2013,2013-06-09,"Edward McLeod, Samuel McLeod, Cameron Eckert",255,17,"9-Jun-23_EARLY_1",85,3
+"LALO","Lapland Longspur",27,"passerine","passerine",2014,2014-06-09,"Edward McLeod, Andrew",238,17.85,"9-Jun-14_EARLY_1",119,2
+"LALO","Lapland Longspur",8,"passerine","passerine",2015,2015-06-09,"Edward McLeod, Paden Lennie",224,18.55,"9-Jun-15_EARLY_1",112,2
+"LALO","Lapland Longspur",10,"passerine","passerine",2016,2016-06-09,"Samuel McLeod, Deon Arey, Cameron Eckert",234,18.05,"9-Jun-16_EARLY_1",78,3
+"LALO","Lapland Longspur",10,"passerine","passerine",2016,2016-06-29,"Edward McLeod, Ricky Joe",192,20.15,"29-Jun-16_LATE_2",96,2
+"LALO","Lapland Longspur",10,"passerine","passerine",2017,2017-06-10,"Samuel McLeod, Shane Goesen, Cameron Eckert",279,15.8,"10-Jun-17_EARLY_1",93,3
+"LALO","Lapland Longspur",10,"passerine","passerine",2018,2018-06-29,"Samuel McLeod, Dannie Gordon",196,19.95,"29-Jun-18_LATE_2",98,2
+"LALO","Lapland Longspur",11,"passerine","passerine",2019,2019-06-29,"Edward McLeod, Samuel McLeod",164,21.55,"29-Jun-19_LATE_2",82,2
+"LALO","Lapland Longspur",3,"passerine","passerine",2020,2020-06-29,"Samuel McLeod, Shane Goesen",68,26.35,"29-Jun-20_LATE_2",34,2
+"LALO","Lapland Longspur",7,"passerine","passerine",2021,2021-06-09,"Shaen Goesen, Dannie Gordon",420,8.75,"9-Jun-21_EARLY_1",210,2
+"LALO","Lapland Longspur",11,"passerine","passerine",2022,2022-06-26,"Samuel McLeod, Desmond Rogers, Cameron Eckert",333,13.1,"26-Jun-22_LATE_2",111,3
+"LALO","Lapland Longspur",11,"passerine","passerine",2023,2023-06-12,"Samuel McLead, Alan Kogiak, Cameron Eckert",117,23.9,"12-Jun-23_EARLY_1",39,3
+"LALO","Lapland Longspur",14,"passerine","passerine",2024,2024-06-15,"Gina Slevinsky, Cameron Eckert",334,13.05,"15-Jun-24_EARLY_1",167,2
+"LBDO","Long-billed Dowitcher",1,"shorebird","shorebird",1997,1997-06-30,"Colin Gordon, Richard Gordon",264,16.55,"30-Jun-97_LATE_2",132,2
+"LBDO","Long-billed Dowitcher",1,"shorebird","shorebird",2000,2000-06-29,"Ricky Joe, Pierre Foisy",172,21.15,"29-Jun-00_LATE_2",86,2
+"LESA","Least Sandpiper",1,"shorebird","shorebird",2004,2004-06-29,"LeeJohn Meyook, Leonard",150,22.25,"29-Jun-04_LATE_2",75,2
+"LESA","Least Sandpiper",2,"shorebird","shorebird",2007,2007-06-21,"LeeJohn Meyook, Pierre Foisy, Harry Elias, Dion Arey, Cameron Eckert",575,1,"21-Jun-07_LATE-1_2",115,5
+"LESA","Least Sandpiper",1,"shorebird","shorebird",2009,2009-06-29,"Pierre Foisy, Frank Doyle",132,23.15,"29-Jun-09_LATE_2",66,2
+"LESA","Least Sandpiper",1,"shorebird","shorebird",2018,2018-06-18,"Cameron Eckert",228,18.35,"14-Jun-18_EARLY_1",228,1
+"LESA","Least Sandpiper",2,"shorebird","shorebird",2022,2022-06-09,"Jeremy Hansen, Keegan Arey, Cameron Eckert",270,16.25,"9-Jun-22_EARLY_1",90,3
+"LESA","Least Sandpiper",2,"shorebird","shorebird",2024,2024-06-15,"Gina Slevinsky, Cameron Eckert",334,13.05,"15-Jun-24_EARLY_1",167,2
+"LESC","Lesser Scaup",1,"waterbird","duck",1990,1990-06-19,"Frank Elanik",51,27.2,"19-Jun-90_LATE_2",51,1
+"LESC","Lesser Scaup",10,"waterbird","duck",1999,1999-06-29,"Frank Elanik, Ricky Joe",140,22.75,"29-Jun-99_LATE_2",70,2
+"LEYE","Lesser Yellowlegs",5,"shorebird","shorebird",1990,1990-06-19,"Frank Elanik",51,27.2,"19-Jun-90_LATE_2",51,1
+"LEYE","Lesser Yellowlegs",1,"shorebird","shorebird",2000,2000-06-09,"Frank Elanik, Andy Tardif",248,17.35,"9-Jun-00_EARLY_1",124,2
+"LEYE","Lesser Yellowlegs",2,"shorebird","shorebird",2001,2001-06-09,"Frank Elanik, Ricky Joe",132,23.15,"9-Jun-01_EARLY_1",66,2
+"LOON","loon sp.",1,"waterbird","duck",2007,2007-06-09,"LeeJohn Meyook, Deon Arey",152,22.15,"9-Jun-07_EARLY_1",76,2
+"LTDU","Long-tailed Duck",8,"waterbird","duck",1992,1992-06-28,"LeeJohn Meyook",66,26.45,"28-Jun-92_LATE_1",66,1
+"LTDU","Long-tailed Duck",15,"waterbird","duck",1993,1993-08-13,"Richard Gordon, Marlene Bailey",240,17.75,"13-Aug-93_FALL_1",120,2
+"LTDU","Long-tailed Duck",1,"waterbird","duck",1995,1995-06-03,"LeeJohn Meyook, Colin Gordon",204,19.55,"3-Jun-95_EARLY_1",102,2
+"LTDU","Long-tailed Duck",50,"waterbird","duck",1996,1996-07-01,"LeeJohn Meyook, Richard Gordon",190,20.25,"1-Jul-96_LATE_3",95,2
+"LTDU","Long-tailed Duck",1,"waterbird","duck",1998,1998-06-29,"LeeJohn Meyook, Colin Gordon",224,18.55,"29-Jun-98_LATE_2",112,2
+"LTDU","Long-tailed Duck",4,"waterbird","duck",1999,1999-06-29,"Frank Elanik, Ricky Joe",140,22.75,"29-Jun-99_LATE_2",70,2
+"LTDU","Long-tailed Duck",2,"waterbird","duck",2000,2000-06-29,"Ricky Joe, Pierre Foisy",172,21.15,"29-Jun-00_LATE_2",86,2
+"LTDU","Long-tailed Duck",1,"waterbird","duck",2004,2004-06-09,"LeeJohn Meyook, Leonard",132,23.15,"9-Jun-04_EARLY_1",66,2
+"LTDU","Long-tailed Duck",7,"waterbird","duck",2005,2005-06-29,"Pierre Foisy, Jonas Meyook",142,22.65,"29-Jun-05_LATE_2",71,2
+"LTDU","Long-tailed Duck",5,"waterbird","duck",2006,2006-06-09,"Pierre Foisy, Albert Rufus",138,22.85,"9-Jun-06_EARLY_1",69,2
+"LTDU","Long-tailed Duck",5,"waterbird","duck",2007,2007-06-21,"LeeJohn Meyook, Pierre Foisy, Harry Elias, Dion Arey, Cameron Eckert",575,1,"21-Jun-07_LATE-1_2",115,5
+"LTDU","Long-tailed Duck",2,"waterbird","duck",2009,2009-06-09,"LeeJohn Meyook, Samuel McLeod",170,21.25,"9-Jun-09_EARLY_1",85,2
+"LTDU","Long-tailed Duck",10,"waterbird","duck",2013,2013-06-29,"Edward McLeod, Samuel McLeod",150,22.25,"29-Jun-13_LATE_2",75,2
+"LTDU","Long-tailed Duck",1,"waterbird","duck",2014,2014-06-09,"Edward McLeod, Andrew",238,17.85,"9-Jun-14_EARLY_1",119,2
+"LTDU","Long-tailed Duck",25,"waterbird","duck",2015,2015-07-01,"Edward McLeod, Paden Lennie",54,27.05,"1-Jul-15_LATE_2",27,2
+"LTDU","Long-tailed Duck",125,"waterbird","duck",2016,2016-06-29,"Edward McLeod, Ricky Joe",192,20.15,"29-Jun-16_LATE_2",96,2
+"LTDU","Long-tailed Duck",116,"waterbird","duck",2017,2017-06-29,"Edward McLeod, Ricky Joe",150,22.25,"29-Jun-17_LATE_2",75,2
+"LTDU","Long-tailed Duck",4,"waterbird","duck",2021,2021-06-29,"Samuel McLeod, Keegan Arey",198,19.85,"29-Jun-21_LATE_2",99,2
+"LTDU","Long-tailed Duck",10,"waterbird","duck",2022,2022-06-26,"Samuel McLeod, Desmond Rogers, Cameron Eckert",333,13.1,"26-Jun-22_LATE_2",111,3
+"LTDU","Long-tailed Duck",1,"waterbird","duck",2023,2023-06-12,"Samuel McLead, Alan Kogiak, Cameron Eckert",117,23.9,"12-Jun-23_EARLY_1",39,3
+"LTJA","Long-tailed Jaeger",1,"birdofprey","gull",1990,1990-06-12,"LeeJohn Meyook, Colin Gordon",132,23.15,"12-Jun-90_EARLY_1",66,2
+"LTJA","Long-tailed Jaeger",5,"birdofprey","gull",1992,1992-06-28,"LeeJohn Meyook",66,26.45,"28-Jun-92_LATE_1",66,1
+"LTJA","Long-tailed Jaeger",3,"birdofprey","gull",1993,1993-08-13,"Richard Gordon, Marlene Bailey",240,17.75,"13-Aug-93_FALL_1",120,2
+"LTJA","Long-tailed Jaeger",4,"birdofprey","gull",1996,1996-07-01,"LeeJohn Meyook, Richard Gordon",190,20.25,"1-Jul-96_LATE_3",95,2
+"LTJA","Long-tailed Jaeger",6,"birdofprey","gull",1997,1997-06-30,"Colin Gordon, Richard Gordon",264,16.55,"30-Jun-97_LATE_2",132,2
+"LTJA","Long-tailed Jaeger",7,"birdofprey","gull",1998,1998-06-29,"LeeJohn Meyook, Colin Gordon",224,18.55,"29-Jun-98_LATE_2",112,2
+"LTJA","Long-tailed Jaeger",3,"birdofprey","gull",1999,1999-06-29,"Frank Elanik, Ricky Joe",140,22.75,"29-Jun-99_LATE_2",70,2
+"LTJA","Long-tailed Jaeger",2,"birdofprey","gull",2000,2000-06-09,"Frank Elanik, Andy Tardif",248,17.35,"9-Jun-00_EARLY_1",124,2
+"LTJA","Long-tailed Jaeger",2,"birdofprey","gull",2001,2001-06-09,"Frank Elanik, Ricky Joe",132,23.15,"9-Jun-01_EARLY_1",66,2
+"LTJA","Long-tailed Jaeger",4,"birdofprey","gull",2003,2003-06-09,"Colin Gordon, Andy Tardif",408,9.35,"9-Jun-03_EARLY_1",204,2
+"LTJA","Long-tailed Jaeger",2,"birdofprey","gull",2004,2004-06-09,"LeeJohn Meyook, Leonard",132,23.15,"9-Jun-04_EARLY_1",66,2
+"LTJA","Long-tailed Jaeger",8,"birdofprey","gull",2006,2006-06-09,"Pierre Foisy, Albert Rufus",138,22.85,"9-Jun-06_EARLY_1",69,2
+"LTJA","Long-tailed Jaeger",1,"birdofprey","gull",2007,2007-06-09,"LeeJohn Meyook, Deon Arey",152,22.15,"9-Jun-07_EARLY_1",76,2
+"LTJA","Long-tailed Jaeger",1,"birdofprey","gull",2010,2010-06-09,"LeeJohn Meyook",66,26.45,"9-Jun-10_EARLY_1",66,1
+"LTJA","Long-tailed Jaeger",2,"birdofprey","gull",2014,2014-06-09,"Edward McLeod, Andrew",238,17.85,"9-Jun-14_EARLY_1",119,2
+"MALL","Mallard",3,"waterbird","duck",1996,1996-07-01,"LeeJohn Meyook, Richard Gordon",190,20.25,"1-Jul-96_LATE_3",95,2
+"MALL","Mallard",2,"waterbird","duck",1997,1997-06-10,"Frank Elanik, LeeJohn Meyook",136,22.95,"10-Jun-97_EARLY_1",68,2
+"MALL","Mallard",5,"waterbird","duck",2000,2000-06-09,"Frank Elanik, Andy Tardif",248,17.35,"9-Jun-00_EARLY_1",124,2
+"MALL","Mallard",2,"waterbird","duck",2001,2001-06-09,"Frank Elanik, Ricky Joe",132,23.15,"9-Jun-01_EARLY_1",66,2
+"MALL","Mallard",1,"waterbird","duck",2013,2013-06-09,"Edward McLeod, Samuel McLeod, Cameron Eckert",255,17,"9-Jun-23_EARLY_1",85,3
+"MALL","Mallard",1,"waterbird","duck",2019,2019-06-09,"Shaen Goesen, Dannie Gordon, Cameron Eckert",270,16.25,"9-Jun-19_EARLY_1",90,3
+"MALL","Mallard",1,"waterbird","duck",2019,2019-06-29,"Edward McLeod, Samuel McLeod",164,21.55,"29-Jun-19_LATE_2",82,2
+"MEGU","Mew Gull",1,"waterbird","gull",2001,2001-06-29,"Frank Elanik, Ricky Joe",128,23.35,"29-Jun-01_LATE_2",64,2
+"MOBL","Mountain Bluebird",1,"passerine","passerine",2023,2023-06-12,"Samuel McLead, Alan Kogiak, Cameron Eckert",117,23.9,"12-Jun-23_EARLY_1",39,3
+"MOBL","Mountain Bluebird",1,"passerine","passerine",2023,2023-06-27,"Jeremy Hansen, Keegan Arey, Cameron Eckert",102,24.65,"27-Jun-23_LATE_2",34,3
+"NOHA","Northern Harrier",1,"birdofprey","hawk",1993,1993-08-13,"Richard Gordon, Marlene Bailey",240,17.75,"13-Aug-93_FALL_1",120,2
+"NOHA","Northern Harrier",1,"birdofprey","hawk",1997,1997-06-10,"Frank Elanik, LeeJohn Meyook",136,22.95,"10-Jun-97_EARLY_1",68,2
+"NOHA","Northern Harrier",1,"birdofprey","hawk",1999,1999-06-09,"Liz Gordon, Andy Tardif",214,19.05,"9-Jun-99_EARLY_1",107,2
+"NOHA","Northern Harrier",1,"birdofprey","hawk",2000,2000-06-09,"Frank Elanik, Andy Tardif",248,17.35,"9-Jun-00_EARLY_1",124,2
+"NOHA","Northern Harrier",3,"birdofprey","hawk",2013,2013-06-09,"Edward McLeod, Samuel McLeod, Cameron Eckert",255,17,"9-Jun-23_EARLY_1",85,3
+"NOHA","Northern Harrier",2,"birdofprey","hawk",2014,2014-06-09,"Edward McLeod, Andrew",238,17.85,"9-Jun-14_EARLY_1",119,2
+"NOHA","Northern Harrier",2,"birdofprey","hawk",2015,2015-06-09,"Edward McLeod, Paden Lennie",224,18.55,"9-Jun-15_EARLY_1",112,2
+"NOHA","Northern Harrier",1,"birdofprey","hawk",2018,2018-06-18,"Cameron Eckert",228,18.35,"14-Jun-18_EARLY_1",228,1
+"NOHA","Northern Harrier",2,"birdofprey","hawk",2019,2019-06-29,"Edward McLeod, Samuel McLeod",164,21.55,"29-Jun-19_LATE_2",82,2
+"NOHA","Northern Harrier",1,"birdofprey","hawk",2022,2022-06-26,"Samuel McLeod, Desmond Rogers, Cameron Eckert",333,13.1,"26-Jun-22_LATE_2",111,3
+"NOHA","Northern Harrier",1,"birdofprey","hawk",2024,2024-06-15,"Gina Slevinsky, Cameron Eckert",334,13.05,"15-Jun-24_EARLY_1",167,2
+"NOPI","Northern Pintail",2,"waterbird","duck",1990,1990-06-12,"LeeJohn Meyook, Colin Gordon",132,23.15,"12-Jun-90_EARLY_1",66,2
+"NOPI","Northern Pintail",2,"waterbird","duck",1991,1991-06-20,"LeeJohn Meyook",92,25.15,"20-Jun-91_LATE_2",92,1
+"NOPI","Northern Pintail",2,"waterbird","duck",1992,1992-06-28,"LeeJohn Meyook",66,26.45,"28-Jun-92_LATE_1",66,1
+"NOPI","Northern Pintail",7,"waterbird","duck",1994,1994-06-03,"Frank Elanik, Richard Gordon",148,22.35,"3-Jun-94_EARLY_1",74,2
+"NOPI","Northern Pintail",2,"waterbird","duck",1995,1995-06-03,"LeeJohn Meyook, Colin Gordon",204,19.55,"3-Jun-95_EARLY_1",102,2
+"NOPI","Northern Pintail",14,"waterbird","duck",1996,1996-07-01,"LeeJohn Meyook, Richard Gordon",190,20.25,"1-Jul-96_LATE_3",95,2
+"NOPI","Northern Pintail",7,"waterbird","duck",1997,1997-06-10,"Frank Elanik, LeeJohn Meyook",136,22.95,"10-Jun-97_EARLY_1",68,2
+"NOPI","Northern Pintail",19,"waterbird","duck",1998,1998-06-06,"LeeJohn Meyook, Frank Elanik",158,21.85,"6-Jun-98_EARLY_1",79,2
+"NOPI","Northern Pintail",29,"waterbird","duck",1999,1999-06-09,"Liz Gordon, Andy Tardif",214,19.05,"9-Jun-99_EARLY_1",107,2
+"NOPI","Northern Pintail",51,"waterbird","duck",2000,2000-06-09,"Frank Elanik, Andy Tardif",248,17.35,"9-Jun-00_EARLY_1",124,2
+"NOPI","Northern Pintail",16,"waterbird","duck",2001,2001-06-09,"Frank Elanik, Ricky Joe",132,23.15,"9-Jun-01_EARLY_1",66,2
+"NOPI","Northern Pintail",7,"waterbird","duck",2002,2002-06-09,"Ricky Joe, Andy Tardif",102,24.65,"9-Jun-02_EARLY_1",51,2
+"NOPI","Northern Pintail",12,"waterbird","duck",2003,2003-06-09,"Colin Gordon, Andy Tardif",408,9.35,"9-Jun-03_EARLY_1",204,2
+"NOPI","Northern Pintail",10,"waterbird","duck",2004,2004-06-29,"LeeJohn Meyook, Leonard",150,22.25,"29-Jun-04_LATE_2",75,2
+"NOPI","Northern Pintail",3,"waterbird","duck",2006,2006-06-09,"Pierre Foisy, Albert Rufus",138,22.85,"9-Jun-06_EARLY_1",69,2
+"NOPI","Northern Pintail",24,"waterbird","duck",2007,2007-06-21,"LeeJohn Meyook, Pierre Foisy, Harry Elias, Dion Arey, Cameron Eckert",575,1,"21-Jun-07_LATE-1_2",115,5
+"NOPI","Northern Pintail",2,"waterbird","duck",2008,2008-06-29,"LeeJohn Meyook, Colin Gordon",162,21.65,"29-Jun-08_LATE_1",81,2
+"NOPI","Northern Pintail",4,"waterbird","duck",2009,2009-06-09,"LeeJohn Meyook, Samuel McLeod",170,21.25,"9-Jun-09_EARLY_1",85,2
+"NOPI","Northern Pintail",4,"waterbird","duck",2012,2012-06-09,"Edward McLeod, Samuel McLeod, Cameron Eckert",231,18.2,"9-Jun-12_EARLY_1",77,3
+"NOPI","Northern Pintail",16,"waterbird","duck",2013,2013-06-09,"Edward McLeod, Samuel McLeod, Cameron Eckert",255,17,"9-Jun-23_EARLY_1",85,3
+"NOPI","Northern Pintail",21,"waterbird","duck",2014,2014-06-09,"Edward McLeod, Andrew",238,17.85,"9-Jun-14_EARLY_1",119,2
+"NOPI","Northern Pintail",18,"waterbird","duck",2015,2015-07-01,"Edward McLeod, Paden Lennie",54,27.05,"1-Jul-15_LATE_2",27,2
+"NOPI","Northern Pintail",9,"waterbird","duck",2016,2016-06-29,"Edward McLeod, Ricky Joe",192,20.15,"29-Jun-16_LATE_2",96,2
+"NOPI","Northern Pintail",6,"waterbird","duck",2017,2017-06-10,"Samuel McLeod, Shane Goesen, Cameron Eckert",279,15.8,"10-Jun-17_EARLY_1",93,3
+"NOPI","Northern Pintail",20,"waterbird","duck",2018,2018-06-29,"Samuel McLeod, Dannie Gordon",196,19.95,"29-Jun-18_LATE_2",98,2
+"NOPI","Northern Pintail",6,"waterbird","duck",2019,2019-06-09,"Shaen Goesen, Dannie Gordon, Cameron Eckert",270,16.25,"9-Jun-19_EARLY_1",90,3
+"NOPI","Northern Pintail",3,"waterbird","duck",2020,2020-06-29,"Samuel McLeod, Shane Goesen",68,26.35,"29-Jun-20_LATE_2",34,2
+"NOPI","Northern Pintail",7,"waterbird","duck",2021,2021-06-29,"Samuel McLeod, Keegan Arey",198,19.85,"29-Jun-21_LATE_2",99,2
+"NOPI","Northern Pintail",12,"waterbird","duck",2022,2022-06-26,"Samuel McLeod, Desmond Rogers, Cameron Eckert",333,13.1,"26-Jun-22_LATE_2",111,3
+"NOPI","Northern Pintail",11,"waterbird","duck",2023,2023-06-12,"Samuel McLead, Alan Kogiak, Cameron Eckert",117,23.9,"12-Jun-23_EARLY_1",39,3
+"NOPI","Northern Pintail",19,"waterbird","duck",2024,2024-06-15,"Gina Slevinsky, Cameron Eckert",334,13.05,"15-Jun-24_EARLY_1",167,2
+"NOWA","Northern Waterthrush",1,"passerine","passerine",2016,2016-06-29,"Edward McLeod, Ricky Joe",192,20.15,"29-Jun-16_LATE_2",96,2
+"NSHO","Northern Shoveler",2,"waterbird","duck",1991,1991-06-20,"LeeJohn Meyook",92,25.15,"20-Jun-91_LATE_2",92,1
+"NSHO","Northern Shoveler",4,"waterbird","duck",1995,1995-06-03,"LeeJohn Meyook, Colin Gordon",204,19.55,"3-Jun-95_EARLY_1",102,2
+"NSHO","Northern Shoveler",2,"waterbird","duck",1997,1997-06-10,"Frank Elanik, LeeJohn Meyook",136,22.95,"10-Jun-97_EARLY_1",68,2
+"NSHO","Northern Shoveler",8,"waterbird","duck",2002,2002-06-09,"Ricky Joe, Andy Tardif",102,24.65,"9-Jun-02_EARLY_1",51,2
+"NSHO","Northern Shoveler",2,"waterbird","duck",2009,2009-06-09,"LeeJohn Meyook, Samuel McLeod",170,21.25,"9-Jun-09_EARLY_1",85,2
+"NSHO","Northern Shoveler",1,"waterbird","duck",2011,2011-06-09,"LeeJohn Meyook, Samuel McLeod",184,20.55,"9-Jun-11_EARLY_1",92,2
+"NSHO","Northern Shoveler",4,"waterbird","duck",2016,2016-06-09,"Samuel McLeod, Deon Arey, Cameron Eckert",234,18.05,"9-Jun-16_EARLY_1",78,3
+"NSHO","Northern Shoveler",1,"waterbird","duck",2018,2018-06-18,"Cameron Eckert",228,18.35,"14-Jun-18_EARLY_1",228,1
+"NSHO","Northern Shoveler",4,"waterbird","duck",2021,2021-06-09,"Shaen Goesen, Dannie Gordon",420,8.75,"9-Jun-21_EARLY_1",210,2
+"NSHO","Northern Shoveler",6,"waterbird","duck",2022,2022-06-09,"Jeremy Hansen, Keegan Arey, Cameron Eckert",270,16.25,"9-Jun-22_EARLY_1",90,3
+"OSPR","Osprey",1,"birdofprey","hawk",2002,2002-06-09,"Ricky Joe, Andy Tardif",102,24.65,"9-Jun-02_EARLY_1",51,2
+"PALO","Pacific Loon ",2,"waterbird","duck",1991,1991-06-20,"LeeJohn Meyook",92,25.15,"20-Jun-91_LATE_2",92,1
+"PALO","Pacific Loon ",2,"waterbird","duck",1999,1999-06-29,"Frank Elanik, Ricky Joe",140,22.75,"29-Jun-99_LATE_2",70,2
+"PALO","Pacific Loon ",1,"waterbird","duck",2015,2015-07-01,"Edward McLeod, Paden Lennie",54,27.05,"1-Jul-15_LATE_2",27,2
+"PALO","Pacific Loon ",2,"waterbird","duck",2016,2016-06-29,"Edward McLeod, Ricky Joe",192,20.15,"29-Jun-16_LATE_2",96,2
+"PASS","passerine sp.",1,"passerine","passerine",1996,1996-07-01,"LeeJohn Meyook, Richard Gordon",190,20.25,"1-Jul-96_LATE_3",95,2
+"PASS","passerine sp.",3,"passerine","passerine",2000,2000-06-09,"Frank Elanik, Andy Tardif",248,17.35,"9-Jun-00_EARLY_1",124,2
+"PASS","passerine sp.",2,"passerine","passerine",2003,2003-06-09,"Colin Gordon, Andy Tardif",408,9.35,"9-Jun-03_EARLY_1",204,2
+"PASS","passerine sp.",1,"passerine","passerine",2004,2004-06-29,"LeeJohn Meyook, Leonard",150,22.25,"29-Jun-04_LATE_2",75,2
+"PASS","passerine sp.",13,"passerine","passerine",2009,2009-06-09,"LeeJohn Meyook, Samuel McLeod",170,21.25,"9-Jun-09_EARLY_1",85,2
+"PASS","passerine sp.",2,"passerine","passerine",2010,2010-06-09,"LeeJohn Meyook",66,26.45,"9-Jun-10_EARLY_1",66,1
+"PEFA","Peregrine Falcon",1,"birdofprey","falcon",2003,2003-06-29,"Andy Tardif, LeeJohn Meyook",104,24.55,"29-Jun-03_LATE_2",52,2
+"PEFA","Peregrine Falcon",1,"birdofprey","falcon",2016,2016-06-09,"Samuel McLeod, Deon Arey, Cameron Eckert",234,18.05,"9-Jun-16_EARLY_1",78,3
+"PEFA","Peregrine Falcon",1,"birdofprey","falcon",2018,2018-06-29,"Samuel McLeod, Dannie Gordon",196,19.95,"29-Jun-18_LATE_2",98,2
+"PESA","Pectoral Sandpiper",4,"shorebird","shorebird",1993,1993-08-13,"Richard Gordon, Marlene Bailey",240,17.75,"13-Aug-93_FALL_1",120,2
+"PESA","Pectoral Sandpiper",1,"shorebird","shorebird",2007,2007-06-30,"Pierre Foisy, Colin Gordon",154,22.05,"30-Jun-07_LATE_3",77,2
+"PESA","Pectoral Sandpiper",1,"shorebird","shorebird",2018,2018-06-18,"Cameron Eckert",228,18.35,"14-Jun-18_EARLY_1",228,1
+"PESA","Pectoral Sandpiper",1,"shorebird","shorebird",2024,2024-06-15,"Gina Slevinsky, Cameron Eckert",334,13.05,"15-Jun-24_EARLY_1",167,2
+"PHAL","phalarope sp.",24,"shorebird","shorebird",1993,1993-08-13,"Richard Gordon, Marlene Bailey",240,17.75,"13-Aug-93_FALL_1",120,2
+"PHAL","phalarope sp.",2,"shorebird","shorebird",1995,1995-06-03,"LeeJohn Meyook, Colin Gordon",204,19.55,"3-Jun-95_EARLY_1",102,2
+"POJA","Pomarine Jaeger",1,"birdofprey","gull",1990,1990-06-25,"Victor Allen",90,25.25,"25-Jun-90_LATE_3",90,1
+"POJA","Pomarine Jaeger",4,"birdofprey","gull",1995,1995-06-03,"LeeJohn Meyook, Colin Gordon",204,19.55,"3-Jun-95_EARLY_1",102,2
+"POJA","Pomarine Jaeger",4,"birdofprey","gull",1997,1997-06-10,"Frank Elanik, LeeJohn Meyook",136,22.95,"10-Jun-97_EARLY_1",68,2
+"POJA","Pomarine Jaeger",3,"birdofprey","gull",2024,2024-06-15,"Gina Slevinsky, Cameron Eckert",334,13.05,"15-Jun-24_EARLY_1",167,2
+"PTAR","ptarmigan sp.",6,NA,"other",1990,1990-06-12,"LeeJohn Meyook, Colin Gordon",132,23.15,"12-Jun-90_EARLY_1",66,2
+"PTAR","ptarmigan sp.",7,NA,"other",1993,1993-08-13,"Richard Gordon, Marlene Bailey",240,17.75,"13-Aug-93_FALL_1",120,2
+"PTAR","ptarmigan sp.",1,NA,"other",1996,1996-06-09,"LeeJohn Meyook, Richard Gordon",190,20.25,"9-Jun-96_EARLY_2",95,2
+"PTAR","ptarmigan sp.",3,NA,"other",1997,1997-06-10,"Frank Elanik, LeeJohn Meyook",136,22.95,"10-Jun-97_EARLY_1",68,2
+"PTAR","ptarmigan sp.",2,NA,"other",1998,1998-06-06,"LeeJohn Meyook, Frank Elanik",158,21.85,"6-Jun-98_EARLY_1",79,2
+"RBME","Red-breasted Merganser",1,"waterbird","duck",1996,1996-07-01,"LeeJohn Meyook, Richard Gordon",190,20.25,"1-Jul-96_LATE_3",95,2
+"RBME","Red-breasted Merganser",1,"waterbird","duck",2007,2007-06-30,"Pierre Foisy, Colin Gordon",154,22.05,"30-Jun-07_LATE_3",77,2
+"RBME","Red-breasted Merganser",6,"waterbird","duck",2016,2016-06-09,"Samuel McLeod, Deon Arey, Cameron Eckert",234,18.05,"9-Jun-16_EARLY_1",78,3
+"RBME","Red-breasted Merganser",2,"waterbird","duck",2018,2018-06-18,"Cameron Eckert",228,18.35,"14-Jun-18_EARLY_1",228,1
+"RBME","Red-breasted Merganser",1,"waterbird","duck",2019,2019-06-29,"Edward McLeod, Samuel McLeod",164,21.55,"29-Jun-19_LATE_2",82,2
+"REDP","redpoll sp.",1,"passerine","passerine",1997,1997-06-10,"Frank Elanik, LeeJohn Meyook",136,22.95,"10-Jun-97_EARLY_1",68,2
+"REDP","redpoll sp.",1,"passerine","passerine",2007,2007-06-21,"LeeJohn Meyook, Pierre Foisy, Harry Elias, Dion Arey, Cameron Eckert",575,1,"21-Jun-07_LATE-1_2",115,5
+"REDP","redpoll sp.",12,"passerine","passerine",2009,2009-06-29,"Pierre Foisy, Frank Doyle",132,23.15,"29-Jun-09_LATE_2",66,2
+"REDP","redpoll sp.",7,"passerine","passerine",2010,2010-06-09,"LeeJohn Meyook",66,26.45,"9-Jun-10_EARLY_1",66,1
+"REDP","redpoll sp.",13,"passerine","passerine",2012,2012-06-29,"Edward McLeod, Samuel McLeod",156,21.95,"29-Jun-12_LATE_2",78,2
+"REDP","redpoll sp.",1,"passerine","passerine",2022,2022-06-09,"Jeremy Hansen, Keegan Arey, Cameron Eckert",270,16.25,"9-Jun-22_EARLY_1",90,3
+"RLHA","Rough-legged Hawk",1,"birdofprey","hawk",1993,1993-08-13,"Richard Gordon, Marlene Bailey",240,17.75,"13-Aug-93_FALL_1",120,2
+"RLHA","Rough-legged Hawk",1,"birdofprey","hawk",1994,1994-06-03,"Frank Elanik, Richard Gordon",148,22.35,"3-Jun-94_EARLY_1",74,2
+"RLHA","Rough-legged Hawk",1,"birdofprey","hawk",1995,1995-06-03,"LeeJohn Meyook, Colin Gordon",204,19.55,"3-Jun-95_EARLY_1",102,2
+"RLHA","Rough-legged Hawk",1,"birdofprey","hawk",1996,1996-07-01,"LeeJohn Meyook, Richard Gordon",190,20.25,"1-Jul-96_LATE_3",95,2
+"RLHA","Rough-legged Hawk",1,"birdofprey","hawk",1997,1997-06-30,"Colin Gordon, Richard Gordon",264,16.55,"30-Jun-97_LATE_2",132,2
+"RLHA","Rough-legged Hawk",1,"birdofprey","hawk",1998,1998-06-06,"LeeJohn Meyook, Frank Elanik",158,21.85,"6-Jun-98_EARLY_1",79,2
+"RLHA","Rough-legged Hawk",2,"birdofprey","hawk",1999,1999-06-09,"Liz Gordon, Andy Tardif",214,19.05,"9-Jun-99_EARLY_1",107,2
+"RLHA","Rough-legged Hawk",1,"birdofprey","hawk",2003,2003-06-09,"Colin Gordon, Andy Tardif",408,9.35,"9-Jun-03_EARLY_1",204,2
+"RLHA","Rough-legged Hawk",1,"birdofprey","hawk",2011,2011-06-09,"LeeJohn Meyook, Samuel McLeod",184,20.55,"9-Jun-11_EARLY_1",92,2
+"RLHA","Rough-legged Hawk",1,"birdofprey","hawk",2014,2014-06-09,"Edward McLeod, Andrew",238,17.85,"9-Jun-14_EARLY_1",119,2
+"RLHA","Rough-legged Hawk",2,"birdofprey","hawk",2019,2019-06-09,"Shaen Goesen, Dannie Gordon, Cameron Eckert",270,16.25,"9-Jun-19_EARLY_1",90,3
+"RLHA","Rough-legged Hawk",1,"birdofprey","hawk",2021,2021-06-29,"Samuel McLeod, Keegan Arey",198,19.85,"29-Jun-21_LATE_2",99,2
+"RNPL","Red-necked Phalarope",6,"shorebird","shorebird",1990,1990-06-12,"LeeJohn Meyook, Colin Gordon",132,23.15,"12-Jun-90_EARLY_1",66,2
+"RNPL","Red-necked Phalarope",8,"shorebird","shorebird",1991,1991-06-20,"LeeJohn Meyook",92,25.15,"20-Jun-91_LATE_2",92,1
+"RNPL","Red-necked Phalarope",3,"shorebird","shorebird",1992,1992-06-28,"LeeJohn Meyook",20,28.75,"29-Jun-92_LATE_1",20,1
+"RNPL","Red-necked Phalarope",3,"shorebird","shorebird",1994,1994-06-03,"Frank Elanik, Richard Gordon",148,22.35,"3-Jun-94_EARLY_1",74,2
+"RNPL","Red-necked Phalarope",9,"shorebird","shorebird",1996,1996-06-09,"LeeJohn Meyook, Richard Gordon",190,20.25,"9-Jun-96_EARLY_2",95,2
+"RNPL","Red-necked Phalarope",5,"shorebird","shorebird",1997,1997-06-10,"Frank Elanik, LeeJohn Meyook",136,22.95,"10-Jun-97_EARLY_1",68,2
+"RNPL","Red-necked Phalarope",2,"shorebird","shorebird",1999,1999-06-09,"Liz Gordon, Andy Tardif",214,19.05,"9-Jun-99_EARLY_1",107,2
+"RNPL","Red-necked Phalarope",4,"shorebird","shorebird",2022,2022-06-09,"Jeremy Hansen, Keegan Arey, Cameron Eckert",270,16.25,"9-Jun-22_EARLY_1",90,3
+"RNPL","Red-necked Phalarope",1,"shorebird","shorebird",2024,2024-06-15,"Gina Slevinsky, Cameron Eckert",334,13.05,"15-Jun-24_EARLY_1",167,2
+"RTLO","Red-throated Loon",4,"waterbird","duck",1993,1993-08-13,"Richard Gordon, Marlene Bailey",240,17.75,"13-Aug-93_FALL_1",120,2
+"RTLO","Red-throated Loon",2,"waterbird","duck",1996,1996-06-09,"LeeJohn Meyook, Richard Gordon",190,20.25,"9-Jun-96_EARLY_2",95,2
+"RTLO","Red-throated Loon",4,"waterbird","duck",1997,1997-06-30,"Colin Gordon, Richard Gordon",264,16.55,"30-Jun-97_LATE_2",132,2
+"RTLO","Red-throated Loon",2,"waterbird","duck",1998,1998-06-06,"LeeJohn Meyook, Frank Elanik",158,21.85,"6-Jun-98_EARLY_1",79,2
+"RTLO","Red-throated Loon",3,"waterbird","duck",1999,1999-06-09,"Liz Gordon, Andy Tardif",214,19.05,"9-Jun-99_EARLY_1",107,2
+"RTLO","Red-throated Loon",1,"waterbird","duck",2001,2001-06-09,"Frank Elanik, Ricky Joe",132,23.15,"9-Jun-01_EARLY_1",66,2
+"RTLO","Red-throated Loon",2,"waterbird","duck",2003,2003-06-09,"Colin Gordon, Andy Tardif",408,9.35,"9-Jun-03_EARLY_1",204,2
+"RTLO","Red-throated Loon",2,"waterbird","duck",2003,2003-06-29,"Andy Tardif, LeeJohn Meyook",104,24.55,"29-Jun-03_LATE_2",52,2
+"RTLO","Red-throated Loon",1,"waterbird","duck",2005,2005-06-08,"Pierre Foisy, Jonas Meyook",130,23.25,"8-Jun-05_EARLY_1",65,2
+"RTLO","Red-throated Loon",1,"waterbird","duck",2006,2006-06-09,"Pierre Foisy, Albert Rufus",138,22.85,"9-Jun-06_EARLY_1",69,2
+"RTLO","Red-throated Loon",1,"waterbird","duck",2006,2006-06-30,"LeeJohn Meyook, Deon Arey",152,22.15,"30-Jun-06_LATE_2",76,2
+"RTLO","Red-throated Loon",2,"waterbird","duck",2007,2007-06-21,"LeeJohn Meyook, Pierre Foisy, Harry Elias, Dion Arey, Cameron Eckert",575,1,"21-Jun-07_LATE-1_2",115,5
+"RTLO","Red-throated Loon",3,"waterbird","duck",2008,2008-06-29,"LeeJohn Meyook, Colin Gordon",162,21.65,"29-Jun-08_LATE_1",81,2
+"RTLO","Red-throated Loon",4,"waterbird","duck",2009,2009-06-09,"LeeJohn Meyook, Samuel McLeod",170,21.25,"9-Jun-09_EARLY_1",85,2
+"RTLO","Red-throated Loon",3,"waterbird","duck",2011,2011-06-09,"LeeJohn Meyook, Samuel McLeod",184,20.55,"9-Jun-11_EARLY_1",92,2
+"RTLO","Red-throated Loon",2,"waterbird","duck",2013,2013-06-29,"Edward McLeod, Samuel McLeod",150,22.25,"29-Jun-13_LATE_2",75,2
+"RTLO","Red-throated Loon",1,"waterbird","duck",2014,2014-06-29,"Edward McLeod, Deon Arey",176,20.95,"29-Jun-14_LATE_3",88,2
+"RTLO","Red-throated Loon",1,"waterbird","duck",2015,2015-06-09,"Edward McLeod, Paden Lennie",224,18.55,"9-Jun-15_EARLY_1",112,2
+"RTLO","Red-throated Loon",1,"waterbird","duck",2015,2015-07-01,"Edward McLeod, Paden Lennie",54,27.05,"1-Jul-15_LATE_2",27,2
+"RTLO","Red-throated Loon",4,"waterbird","duck",2016,2016-06-29,"Edward McLeod, Ricky Joe",192,20.15,"29-Jun-16_LATE_2",96,2
+"RTLO","Red-throated Loon",2,"waterbird","duck",2017,2017-06-10,"Samuel McLeod, Shane Goesen, Cameron Eckert",279,15.8,"10-Jun-17_EARLY_1",93,3
+"RTLO","Red-throated Loon",1,"waterbird","duck",2019,2019-06-09,"Shaen Goesen, Dannie Gordon, Cameron Eckert",270,16.25,"9-Jun-19_EARLY_1",90,3
+"RTLO","Red-throated Loon",10,"waterbird","duck",2022,2022-06-26,"Samuel McLeod, Desmond Rogers, Cameron Eckert",333,13.1,"26-Jun-22_LATE_2",111,3
+"RUTU","Ruddy Turnstone",3,"shorebird","shorebird",1990,1990-06-25,"Victor Allen",90,25.25,"25-Jun-90_LATE_3",90,1
+"RWBL","Red-winged Blackbird",1,"passerine","passerine",1997,1997-06-10,"Frank Elanik, LeeJohn Meyook",136,22.95,"10-Jun-97_EARLY_1",68,2
+"RWBL","Red-winged Blackbird",1,"passerine","passerine",1997,1997-06-30,"Colin Gordon, Richard Gordon",264,16.55,"30-Jun-97_LATE_2",132,2
+"RWBL","Red-winged Blackbird",1,"passerine","passerine",2007,2007-06-09,"LeeJohn Meyook, Deon Arey",152,22.15,"9-Jun-07_EARLY_1",76,2
+"RWBL","Red-winged Blackbird",1,"passerine","passerine",2007,2007-06-21,"LeeJohn Meyook, Pierre Foisy, Harry Elias, Dion Arey, Cameron Eckert",575,1,"21-Jun-07_LATE-1_2",115,5
+"SACR","Sandhill Crane",2,"na","other",1995,1995-06-03,"LeeJohn Meyook, Colin Gordon",204,19.55,"3-Jun-95_EARLY_1",102,2
+"SACR","Sandhill Crane",4,"na","other",1997,1997-06-10,"Frank Elanik, LeeJohn Meyook",136,22.95,"10-Jun-97_EARLY_1",68,2
+"SACR","Sandhill Crane",1,"na","other",1999,1999-06-09,"Liz Gordon, Andy Tardif",214,19.05,"9-Jun-99_EARLY_1",107,2
+"SACR","Sandhill Crane",3,"na","other",2006,2006-06-09,"Pierre Foisy, Albert Rufus",138,22.85,"9-Jun-06_EARLY_1",69,2
+"SACR","Sandhill Crane",1,"na","other",2011,2011-06-09,"LeeJohn Meyook, Samuel McLeod",184,20.55,"9-Jun-11_EARLY_1",92,2
+"SACR","Sandhill Crane",1,"na","other",2016,2016-06-09,"Samuel McLeod, Deon Arey, Cameron Eckert",234,18.05,"9-Jun-16_EARLY_1",78,3
+"SACR","Sandhill Crane",1,"na","other",2019,2019-06-09,"Shaen Goesen, Dannie Gordon, Cameron Eckert",270,16.25,"9-Jun-19_EARLY_1",90,3
+"SACR","Sandhill Crane",1,"na","other",2019,2019-06-29,"Edward McLeod, Samuel McLeod",164,21.55,"29-Jun-19_LATE_2",82,2
+"SACR","Sandhill Crane",1,"na","other",2021,2021-06-09,"Shaen Goesen, Dannie Gordon",420,8.75,"9-Jun-21_EARLY_1",210,2
+"SAND","Sanderling",1,"shorebird","shorebird",1993,1993-08-13,"Richard Gordon, Marlene Bailey",240,17.75,"13-Aug-93_FALL_1",120,2
+"SAND","Sanderling",1,"shorebird","shorebird",2013,2013-06-09,"Edward McLeod, Samuel McLeod, Cameron Eckert",255,17,"9-Jun-23_EARLY_1",85,3
+"SAPH","Say's Phoebe",1,"passerine","passerine",2016,2016-06-29,"Edward McLeod, Ricky Joe",192,20.15,"29-Jun-16_LATE_2",96,2
+"SAVS","Savannah Sparrow",9,"passerine","passerine",1991,1991-06-20,"LeeJohn Meyook",92,25.15,"20-Jun-91_LATE_2",92,1
+"SAVS","Savannah Sparrow",1,"passerine","passerine",1992,1992-06-28,"LeeJohn Meyook",66,26.45,"28-Jun-92_LATE_1",66,1
+"SAVS","Savannah Sparrow",3,"passerine","passerine",1995,1995-06-03,"LeeJohn Meyook, Colin Gordon",204,19.55,"3-Jun-95_EARLY_1",102,2
+"SAVS","Savannah Sparrow",2,"passerine","passerine",1997,1997-06-30,"Colin Gordon, Richard Gordon",264,16.55,"30-Jun-97_LATE_2",132,2
+"SAVS","Savannah Sparrow",9,"passerine","passerine",1998,1998-06-29,"LeeJohn Meyook, Colin Gordon",224,18.55,"29-Jun-98_LATE_2",112,2
+"SAVS","Savannah Sparrow",2,"passerine","passerine",1999,1999-06-09,"Liz Gordon, Andy Tardif",214,19.05,"9-Jun-99_EARLY_1",107,2
+"SAVS","Savannah Sparrow",2,"passerine","passerine",2000,2000-06-29,"Ricky Joe, Pierre Foisy",172,21.15,"29-Jun-00_LATE_2",86,2
+"SAVS","Savannah Sparrow",2,"passerine","passerine",2001,2001-06-29,"Frank Elanik, Ricky Joe",128,23.35,"29-Jun-01_LATE_2",64,2
+"SAVS","Savannah Sparrow",1,"passerine","passerine",2002,2002-06-09,"Ricky Joe, Andy Tardif",102,24.65,"9-Jun-02_EARLY_1",51,2
+"SAVS","Savannah Sparrow",3,"passerine","passerine",2003,2003-06-09,"Colin Gordon, Andy Tardif",408,9.35,"9-Jun-03_EARLY_1",204,2
+"SAVS","Savannah Sparrow",9,"passerine","passerine",2004,2004-06-09,"LeeJohn Meyook, Leonard",132,23.15,"9-Jun-04_EARLY_1",66,2
+"SAVS","Savannah Sparrow",19,"passerine","passerine",2007,2007-06-21,"LeeJohn Meyook, Pierre Foisy, Harry Elias, Dion Arey, Cameron Eckert",575,1,"21-Jun-07_LATE-1_2",115,5
+"SAVS","Savannah Sparrow",10,"passerine","passerine",2008,2008-06-29,"LeeJohn Meyook, Colin Gordon",162,21.65,"29-Jun-08_LATE_1",81,2
+"SAVS","Savannah Sparrow",11,"passerine","passerine",2009,2009-06-29,"Pierre Foisy, Frank Doyle",132,23.15,"29-Jun-09_LATE_2",66,2
+"SAVS","Savannah Sparrow",1,"passerine","passerine",2010,2010-06-29,"Edward McLeod, Jeremy Hansen",218,18.85,"29-Jun-10_LATE_2",109,2
+"SAVS","Savannah Sparrow",13,"passerine","passerine",2011,2011-06-09,"LeeJohn Meyook, Samuel McLeod",184,20.55,"9-Jun-11_EARLY_1",92,2
+"SAVS","Savannah Sparrow",18,"passerine","passerine",2012,2012-06-29,"Edward McLeod, Samuel McLeod",156,21.95,"29-Jun-12_LATE_2",78,2
+"SAVS","Savannah Sparrow",5,"passerine","passerine",2013,2013-06-29,"Edward McLeod, Samuel McLeod",150,22.25,"29-Jun-13_LATE_2",75,2
+"SAVS","Savannah Sparrow",6,"passerine","passerine",2014,2014-06-09,"Edward McLeod, Andrew",238,17.85,"9-Jun-14_EARLY_1",119,2
+"SAVS","Savannah Sparrow",6,"passerine","passerine",2014,2014-06-29,"Edward McLeod, Deon Arey",176,20.95,"29-Jun-14_LATE_3",88,2
+"SAVS","Savannah Sparrow",6,"passerine","passerine",2015,2015-07-01,"Edward McLeod, Paden Lennie",54,27.05,"1-Jul-15_LATE_2",27,2
+"SAVS","Savannah Sparrow",6,"passerine","passerine",2016,2016-06-29,"Edward McLeod, Ricky Joe",192,20.15,"29-Jun-16_LATE_2",96,2
+"SAVS","Savannah Sparrow",8,"passerine","passerine",2017,2017-06-29,"Edward McLeod, Ricky Joe",150,22.25,"29-Jun-17_LATE_2",75,2
+"SAVS","Savannah Sparrow",13,"passerine","passerine",2018,2018-06-18,"Cameron Eckert",228,18.35,"14-Jun-18_EARLY_1",228,1
+"SAVS","Savannah Sparrow",8,"passerine","passerine",2019,2019-06-29,"Edward McLeod, Samuel McLeod",164,21.55,"29-Jun-19_LATE_2",82,2
+"SAVS","Savannah Sparrow",6,"passerine","passerine",2020,2020-06-29,"Samuel McLeod, Shane Goesen",68,26.35,"29-Jun-20_LATE_2",34,2
+"SAVS","Savannah Sparrow",6,"passerine","passerine",2021,2021-06-29,"Samuel McLeod, Keegan Arey",198,19.85,"29-Jun-21_LATE_2",99,2
+"SAVS","Savannah Sparrow",1,"passerine","passerine",2022,2022-06-09,"Jeremy Hansen, Keegan Arey, Cameron Eckert",270,16.25,"9-Jun-22_EARLY_1",90,3
+"SAVS","Savannah Sparrow",1,"passerine","passerine",2022,2022-06-26,"Samuel McLeod, Desmond Rogers, Cameron Eckert",333,13.1,"26-Jun-22_LATE_2",111,3
+"SAVS","Savannah Sparrow",3,"passerine","passerine",2023,2023-06-27,"Jeremy Hansen, Keegan Arey, Cameron Eckert",102,24.65,"27-Jun-23_LATE_2",34,3
+"SAVS","Savannah Sparrow",7,"passerine","passerine",2024,2024-06-15,"Gina Slevinsky, Cameron Eckert",334,13.05,"15-Jun-24_EARLY_1",167,2
+"SEOW","Short-eared Owl",1,"birdofprey","owl",1995,1995-06-03,"LeeJohn Meyook, Colin Gordon",204,19.55,"3-Jun-95_EARLY_1",102,2
+"SEOW","Short-eared Owl",3,"birdofprey","owl",1997,1997-06-30,"Colin Gordon, Richard Gordon",264,16.55,"30-Jun-97_LATE_2",132,2
+"SEOW","Short-eared Owl",3,"birdofprey","owl",1999,1999-06-09,"Liz Gordon, Andy Tardif",214,19.05,"9-Jun-99_EARLY_1",107,2
+"SEOW","Short-eared Owl",1,"birdofprey","owl",2001,2001-06-09,"Frank Elanik, Ricky Joe",132,23.15,"9-Jun-01_EARLY_1",66,2
+"SEOW","Short-eared Owl",2,"birdofprey","owl",2007,2007-06-21,"LeeJohn Meyook, Pierre Foisy, Harry Elias, Dion Arey, Cameron Eckert",575,1,"21-Jun-07_LATE-1_2",115,5
+"SEOW","Short-eared Owl",3,"birdofprey","owl",2010,2010-06-09,"LeeJohn Meyook",66,26.45,"9-Jun-10_EARLY_1",66,1
+"SEOW","Short-eared Owl",3,"birdofprey","owl",2010,2010-06-29,"Edward McLeod, Jeremy Hansen",218,18.85,"29-Jun-10_LATE_2",109,2
+"SEOW","Short-eared Owl",1,"birdofprey","owl",2013,2013-06-09,"Edward McLeod, Samuel McLeod, Cameron Eckert",255,17,"9-Jun-23_EARLY_1",85,3
+"SEOW","Short-eared Owl",2,"birdofprey","owl",2018,2018-06-18,"Cameron Eckert",228,18.35,"14-Jun-18_EARLY_1",228,1
+"SEPL","Semipalmated Plover",27,"shorebird","shorebird",1990,1990-06-19,"Frank Elanik",51,27.2,"19-Jun-90_LATE_2",51,1
+"SEPL","Semipalmated Plover",4,"shorebird","shorebird",1992,1992-06-28,"LeeJohn Meyook",20,28.75,"29-Jun-92_LATE_1",20,1
+"SEPL","Semipalmated Plover",29,"shorebird","shorebird",1993,1993-08-13,"Richard Gordon, Marlene Bailey",240,17.75,"13-Aug-93_FALL_1",120,2
+"SEPL","Semipalmated Plover",17,"shorebird","shorebird",1994,1994-06-03,"Frank Elanik, Richard Gordon",148,22.35,"3-Jun-94_EARLY_1",74,2
+"SEPL","Semipalmated Plover",3,"shorebird","shorebird",1998,1998-06-06,"LeeJohn Meyook, Frank Elanik",158,21.85,"6-Jun-98_EARLY_1",79,2
+"SEPL","Semipalmated Plover",4,"shorebird","shorebird",1999,1999-06-29,"Frank Elanik, Ricky Joe",140,22.75,"29-Jun-99_LATE_2",70,2
+"SEPL","Semipalmated Plover",1,"shorebird","shorebird",2000,2000-06-09,"Frank Elanik, Andy Tardif",248,17.35,"9-Jun-00_EARLY_1",124,2
+"SEPL","Semipalmated Plover",3,"shorebird","shorebird",2001,2001-06-29,"Frank Elanik, Ricky Joe",128,23.35,"29-Jun-01_LATE_2",64,2
+"SEPL","Semipalmated Plover",3,"shorebird","shorebird",2003,2003-06-09,"Colin Gordon, Andy Tardif",408,9.35,"9-Jun-03_EARLY_1",204,2
+"SEPL","Semipalmated Plover",6,"shorebird","shorebird",2004,2004-06-09,"LeeJohn Meyook, Leonard",132,23.15,"9-Jun-04_EARLY_1",66,2
+"SEPL","Semipalmated Plover",4,"shorebird","shorebird",2005,2005-06-29,"Pierre Foisy, Jonas Meyook",142,22.65,"29-Jun-05_LATE_2",71,2
+"SEPL","Semipalmated Plover",5,"shorebird","shorebird",2006,2006-06-30,"LeeJohn Meyook, Deon Arey",152,22.15,"30-Jun-06_LATE_2",76,2
+"SEPL","Semipalmated Plover",14,"shorebird","shorebird",2007,2007-06-21,"LeeJohn Meyook, Pierre Foisy, Harry Elias, Dion Arey, Cameron Eckert",575,1,"21-Jun-07_LATE-1_2",115,5
+"SEPL","Semipalmated Plover",1,"shorebird","shorebird",2008,2008-06-29,"LeeJohn Meyook, Colin Gordon",162,21.65,"29-Jun-08_LATE_1",81,2
+"SEPL","Semipalmated Plover",5,"shorebird","shorebird",2009,2009-06-29,"Pierre Foisy, Frank Doyle",132,23.15,"29-Jun-09_LATE_2",66,2
+"SEPL","Semipalmated Plover",6,"shorebird","shorebird",2010,2010-06-09,"LeeJohn Meyook",66,26.45,"9-Jun-10_EARLY_1",66,1
+"SEPL","Semipalmated Plover",6,"shorebird","shorebird",2012,2012-06-09,"Edward McLeod, Samuel McLeod, Cameron Eckert",231,18.2,"9-Jun-12_EARLY_1",77,3
+"SEPL","Semipalmated Plover",10,"shorebird","shorebird",2013,2013-06-09,"Edward McLeod, Samuel McLeod, Cameron Eckert",255,17,"9-Jun-23_EARLY_1",85,3
+"SEPL","Semipalmated Plover",4,"shorebird","shorebird",2014,2014-06-09,"Edward McLeod, Andrew",238,17.85,"9-Jun-14_EARLY_1",119,2
+"SEPL","Semipalmated Plover",4,"shorebird","shorebird",2014,2014-06-29,"Edward McLeod, Deon Arey",176,20.95,"29-Jun-14_LATE_3",88,2
+"SEPL","Semipalmated Plover",3,"shorebird","shorebird",2015,2015-06-09,"Edward McLeod, Paden Lennie",224,18.55,"9-Jun-15_EARLY_1",112,2
+"SEPL","Semipalmated Plover",7,"shorebird","shorebird",2016,2016-06-09,"Samuel McLeod, Deon Arey, Cameron Eckert",234,18.05,"9-Jun-16_EARLY_1",78,3
+"SEPL","Semipalmated Plover",7,"shorebird","shorebird",2016,2016-06-29,"Edward McLeod, Ricky Joe",192,20.15,"29-Jun-16_LATE_2",96,2
+"SEPL","Semipalmated Plover",8,"shorebird","shorebird",2017,2017-06-29,"Edward McLeod, Ricky Joe",150,22.25,"29-Jun-17_LATE_2",75,2
+"SEPL","Semipalmated Plover",6,"shorebird","shorebird",2018,2018-06-18,"Cameron Eckert",228,18.35,"14-Jun-18_EARLY_1",228,1
+"SEPL","Semipalmated Plover",6,"shorebird","shorebird",2018,2018-06-29,"Samuel McLeod, Dannie Gordon",196,19.95,"29-Jun-18_LATE_2",98,2
+"SEPL","Semipalmated Plover",15,"shorebird","shorebird",2019,2019-06-29,"Edward McLeod, Samuel McLeod",164,21.55,"29-Jun-19_LATE_2",82,2
+"SEPL","Semipalmated Plover",8,"shorebird","shorebird",2020,2020-06-29,"Samuel McLeod, Shane Goesen",68,26.35,"29-Jun-20_LATE_2",34,2
+"SEPL","Semipalmated Plover",8,"shorebird","shorebird",2021,2021-06-29,"Samuel McLeod, Keegan Arey",198,19.85,"29-Jun-21_LATE_2",99,2
+"SEPL","Semipalmated Plover",8,"shorebird","shorebird",2022,2022-06-26,"Samuel McLeod, Desmond Rogers, Cameron Eckert",333,13.1,"26-Jun-22_LATE_2",111,3
+"SEPL","Semipalmated Plover",14,"shorebird","shorebird",2023,2023-06-27,"Jeremy Hansen, Keegan Arey, Cameron Eckert",102,24.65,"27-Jun-23_LATE_2",34,3
+"SEPL","Semipalmated Plover",11,"shorebird","shorebird",2024,2024-06-15,"Gina Slevinsky, Cameron Eckert",334,13.05,"15-Jun-24_EARLY_1",167,2
+"SESA","Semipalmated Sandpiper",15,"shorebird","shorebird",1990,1990-06-12,"LeeJohn Meyook, Colin Gordon",132,23.15,"12-Jun-90_EARLY_1",66,2
+"SESA","Semipalmated Sandpiper",10,"shorebird","shorebird",1991,1991-06-20,"LeeJohn Meyook",92,25.15,"20-Jun-91_LATE_2",92,1
+"SESA","Semipalmated Sandpiper",38,"shorebird","shorebird",1992,1992-06-28,"LeeJohn Meyook",20,28.75,"29-Jun-92_LATE_1",20,1
+"SESA","Semipalmated Sandpiper",21,"shorebird","shorebird",1994,1994-06-03,"Frank Elanik, Richard Gordon",148,22.35,"3-Jun-94_EARLY_1",74,2
+"SESA","Semipalmated Sandpiper",12,"shorebird","shorebird",1996,1996-06-09,"LeeJohn Meyook, Richard Gordon",190,20.25,"9-Jun-96_EARLY_2",95,2
+"SESA","Semipalmated Sandpiper",25,"shorebird","shorebird",1997,1997-06-30,"Colin Gordon, Richard Gordon",264,16.55,"30-Jun-97_LATE_2",132,2
+"SESA","Semipalmated Sandpiper",8,"shorebird","shorebird",1998,1998-06-29,"LeeJohn Meyook, Colin Gordon",224,18.55,"29-Jun-98_LATE_2",112,2
+"SESA","Semipalmated Sandpiper",9,"shorebird","shorebird",1999,1999-06-29,"Frank Elanik, Ricky Joe",140,22.75,"29-Jun-99_LATE_2",70,2
+"SESA","Semipalmated Sandpiper",5,"shorebird","shorebird",2000,2000-06-09,"Frank Elanik, Andy Tardif",248,17.35,"9-Jun-00_EARLY_1",124,2
+"SESA","Semipalmated Sandpiper",5,"shorebird","shorebird",2000,2000-06-29,"Ricky Joe, Pierre Foisy",172,21.15,"29-Jun-00_LATE_2",86,2
+"SESA","Semipalmated Sandpiper",8,"shorebird","shorebird",2001,2001-06-09,"Frank Elanik, Ricky Joe",132,23.15,"9-Jun-01_EARLY_1",66,2
+"SESA","Semipalmated Sandpiper",1,"shorebird","shorebird",2003,2003-06-09,"Colin Gordon, Andy Tardif",408,9.35,"9-Jun-03_EARLY_1",204,2
+"SESA","Semipalmated Sandpiper",3,"shorebird","shorebird",2004,2004-06-09,"LeeJohn Meyook, Leonard",132,23.15,"9-Jun-04_EARLY_1",66,2
+"SESA","Semipalmated Sandpiper",1,"shorebird","shorebird",2005,2005-06-08,"Pierre Foisy, Jonas Meyook",130,23.25,"8-Jun-05_EARLY_1",65,2
+"SESA","Semipalmated Sandpiper",1,"shorebird","shorebird",2005,2005-06-29,"Pierre Foisy, Jonas Meyook",142,22.65,"29-Jun-05_LATE_2",71,2
+"SESA","Semipalmated Sandpiper",2,"shorebird","shorebird",2006,2006-06-30,"LeeJohn Meyook, Deon Arey",152,22.15,"30-Jun-06_LATE_2",76,2
+"SESA","Semipalmated Sandpiper",6,"shorebird","shorebird",2007,2007-06-09,"LeeJohn Meyook, Deon Arey",152,22.15,"9-Jun-07_EARLY_1",76,2
+"SESA","Semipalmated Sandpiper",6,"shorebird","shorebird",2007,2007-06-21,"LeeJohn Meyook, Pierre Foisy, Harry Elias, Dion Arey, Cameron Eckert",575,1,"21-Jun-07_LATE-1_2",115,5
+"SESA","Semipalmated Sandpiper",3,"shorebird","shorebird",2008,2008-06-29,"LeeJohn Meyook, Colin Gordon",162,21.65,"29-Jun-08_LATE_1",81,2
+"SESA","Semipalmated Sandpiper",7,"shorebird","shorebird",2009,2009-06-09,"LeeJohn Meyook, Samuel McLeod",170,21.25,"9-Jun-09_EARLY_1",85,2
+"SESA","Semipalmated Sandpiper",4,"shorebird","shorebird",2010,2010-06-09,"LeeJohn Meyook",66,26.45,"9-Jun-10_EARLY_1",66,1
+"SESA","Semipalmated Sandpiper",8,"shorebird","shorebird",2011,2011-06-09,"LeeJohn Meyook, Samuel McLeod",184,20.55,"9-Jun-11_EARLY_1",92,2
+"SESA","Semipalmated Sandpiper",7,"shorebird","shorebird",2012,2012-06-29,"Edward McLeod, Samuel McLeod",156,21.95,"29-Jun-12_LATE_2",78,2
+"SESA","Semipalmated Sandpiper",18,"shorebird","shorebird",2013,2013-06-09,"Edward McLeod, Samuel McLeod, Cameron Eckert",255,17,"9-Jun-23_EARLY_1",85,3
+"SESA","Semipalmated Sandpiper",12,"shorebird","shorebird",2014,2014-06-09,"Edward McLeod, Andrew",238,17.85,"9-Jun-14_EARLY_1",119,2
+"SESA","Semipalmated Sandpiper",7,"shorebird","shorebird",2015,2015-06-09,"Edward McLeod, Paden Lennie",224,18.55,"9-Jun-15_EARLY_1",112,2
+"SESA","Semipalmated Sandpiper",6,"shorebird","shorebird",2016,2016-06-09,"Samuel McLeod, Deon Arey, Cameron Eckert",234,18.05,"9-Jun-16_EARLY_1",78,3
+"SESA","Semipalmated Sandpiper",3,"shorebird","shorebird",2017,2017-06-10,"Samuel McLeod, Shane Goesen, Cameron Eckert",279,15.8,"10-Jun-17_EARLY_1",93,3
+"SESA","Semipalmated Sandpiper",3,"shorebird","shorebird",2017,2017-06-29,"Edward McLeod, Ricky Joe",150,22.25,"29-Jun-17_LATE_2",75,2
+"SESA","Semipalmated Sandpiper",9,"shorebird","shorebird",2018,2018-06-18,"Cameron Eckert",228,18.35,"14-Jun-18_EARLY_1",228,1
+"SESA","Semipalmated Sandpiper",6,"shorebird","shorebird",2019,2019-06-09,"Shaen Goesen, Dannie Gordon, Cameron Eckert",270,16.25,"9-Jun-19_EARLY_1",90,3
+"SESA","Semipalmated Sandpiper",6,"shorebird","shorebird",2019,2019-06-29,"Edward McLeod, Samuel McLeod",164,21.55,"29-Jun-19_LATE_2",82,2
+"SESA","Semipalmated Sandpiper",3,"shorebird","shorebird",2020,2020-06-29,"Samuel McLeod, Shane Goesen",68,26.35,"29-Jun-20_LATE_2",34,2
+"SESA","Semipalmated Sandpiper",22,"shorebird","shorebird",2021,2021-06-09,"Shaen Goesen, Dannie Gordon",420,8.75,"9-Jun-21_EARLY_1",210,2
+"SESA","Semipalmated Sandpiper",5,"shorebird","shorebird",2022,2022-06-09,"Jeremy Hansen, Keegan Arey, Cameron Eckert",270,16.25,"9-Jun-22_EARLY_1",90,3
+"SESA","Semipalmated Sandpiper",8,"shorebird","shorebird",2023,2023-06-12,"Samuel McLead, Alan Kogiak, Cameron Eckert",117,23.9,"12-Jun-23_EARLY_1",39,3
+"SESA","Semipalmated Sandpiper",9,"shorebird","shorebird",2024,2024-06-15,"Gina Slevinsky, Cameron Eckert",334,13.05,"15-Jun-24_EARLY_1",167,2
+"SHORE","shorebird sp.",45,"shorebird","shorebird",1993,1993-08-13,"Richard Gordon, Marlene Bailey",240,17.75,"13-Aug-93_FALL_1",120,2
+"SHORE","shorebird sp.",16,"shorebird","shorebird",1995,1995-06-03,"LeeJohn Meyook, Colin Gordon",204,19.55,"3-Jun-95_EARLY_1",102,2
+"SHORE","shorebird sp.",5,"shorebird","shorebird",2001,2001-06-09,"Frank Elanik, Ricky Joe",132,23.15,"9-Jun-01_EARLY_1",66,2
+"SHORE","shorebird sp.",4,"shorebird","shorebird",2009,2009-06-09,"LeeJohn Meyook, Samuel McLeod",170,21.25,"9-Jun-09_EARLY_1",85,2
+"SHORE","shorebird sp.",1,"shorebird","shorebird",2023,2023-06-27,"Jeremy Hansen, Keegan Arey, Cameron Eckert",102,24.65,"27-Jun-23_LATE_2",34,3
+"SMLO","Smith's longspur",2,"passerine","passerine",1991,1991-06-20,"LeeJohn Meyook",92,25.15,"20-Jun-91_LATE_2",92,1
+"SNBU","Snow Bunting",6,"passerine","passerine",1990,1990-06-19,"Frank Elanik",51,27.2,"19-Jun-90_LATE_2",51,1
+"SNBU","Snow Bunting",3,"passerine","passerine",1991,1991-06-20,"LeeJohn Meyook",92,25.15,"20-Jun-91_LATE_2",92,1
+"SNBU","Snow Bunting",2,"passerine","passerine",1992,1992-06-28,"LeeJohn Meyook",20,28.75,"29-Jun-92_LATE_1",20,1
+"SNBU","Snow Bunting",10,"passerine","passerine",1993,1993-08-13,"Richard Gordon, Marlene Bailey",240,17.75,"13-Aug-93_FALL_1",120,2
+"SNBU","Snow Bunting",6,"passerine","passerine",1994,1994-06-03,"Frank Elanik, Richard Gordon",148,22.35,"3-Jun-94_EARLY_1",74,2
+"SNBU","Snow Bunting",2,"passerine","passerine",1995,1995-06-03,"LeeJohn Meyook, Colin Gordon",204,19.55,"3-Jun-95_EARLY_1",102,2
+"SNBU","Snow Bunting",5,"passerine","passerine",1996,1996-07-01,"LeeJohn Meyook, Richard Gordon",190,20.25,"1-Jul-96_LATE_3",95,2
+"SNBU","Snow Bunting",8,"passerine","passerine",1997,1997-06-30,"Colin Gordon, Richard Gordon",264,16.55,"30-Jun-97_LATE_2",132,2
+"SNBU","Snow Bunting",8,"passerine","passerine",1998,1998-06-06,"LeeJohn Meyook, Frank Elanik",158,21.85,"6-Jun-98_EARLY_1",79,2
+"SNBU","Snow Bunting",6,"passerine","passerine",1999,1999-06-09,"Liz Gordon, Andy Tardif",214,19.05,"9-Jun-99_EARLY_1",107,2
+"SNBU","Snow Bunting",6,"passerine","passerine",2000,2000-06-29,"Ricky Joe, Pierre Foisy",172,21.15,"29-Jun-00_LATE_2",86,2
+"SNBU","Snow Bunting",6,"passerine","passerine",2001,2001-06-09,"Frank Elanik, Ricky Joe",132,23.15,"9-Jun-01_EARLY_1",66,2
+"SNBU","Snow Bunting",1,"passerine","passerine",2002,2002-06-09,"Ricky Joe, Andy Tardif",102,24.65,"9-Jun-02_EARLY_1",51,2
+"SNBU","Snow Bunting",5,"passerine","passerine",2003,2003-06-09,"Colin Gordon, Andy Tardif",408,9.35,"9-Jun-03_EARLY_1",204,2
+"SNBU","Snow Bunting",3,"passerine","passerine",2004,2004-06-29,"LeeJohn Meyook, Leonard",150,22.25,"29-Jun-04_LATE_2",75,2
+"SNBU","Snow Bunting",3,"passerine","passerine",2005,2005-06-08,"Pierre Foisy, Jonas Meyook",130,23.25,"8-Jun-05_EARLY_1",65,2
+"SNBU","Snow Bunting",6,"passerine","passerine",2006,2006-06-30,"LeeJohn Meyook, Deon Arey",152,22.15,"30-Jun-06_LATE_2",76,2
+"SNBU","Snow Bunting",16,"passerine","passerine",2007,2007-06-21,"LeeJohn Meyook, Pierre Foisy, Harry Elias, Dion Arey, Cameron Eckert",575,1,"21-Jun-07_LATE-1_2",115,5
+"SNBU","Snow Bunting",7,"passerine","passerine",2008,2008-06-29,"LeeJohn Meyook, Colin Gordon",162,21.65,"29-Jun-08_LATE_1",81,2
+"SNBU","Snow Bunting",7,"passerine","passerine",2009,2009-06-29,"Pierre Foisy, Frank Doyle",132,23.15,"29-Jun-09_LATE_2",66,2
+"SNBU","Snow Bunting",8,"passerine","passerine",2010,2010-06-09,"LeeJohn Meyook",66,26.45,"9-Jun-10_EARLY_1",66,1
+"SNBU","Snow Bunting",4,"passerine","passerine",2012,2012-06-29,"Edward McLeod, Samuel McLeod",156,21.95,"29-Jun-12_LATE_2",78,2
+"SNBU","Snow Bunting",3,"passerine","passerine",2013,2013-06-29,"Edward McLeod, Samuel McLeod",150,22.25,"29-Jun-13_LATE_2",75,2
+"SNBU","Snow Bunting",2,"passerine","passerine",2014,2014-06-09,"Edward McLeod, Andrew",238,17.85,"9-Jun-14_EARLY_1",119,2
+"SNBU","Snow Bunting",2,"passerine","passerine",2014,2014-06-29,"Edward McLeod, Deon Arey",176,20.95,"29-Jun-14_LATE_3",88,2
+"SNBU","Snow Bunting",3,"passerine","passerine",2016,2016-06-09,"Samuel McLeod, Deon Arey, Cameron Eckert",234,18.05,"9-Jun-16_EARLY_1",78,3
+"SNBU","Snow Bunting",2,"passerine","passerine",2017,2017-06-10,"Samuel McLeod, Shane Goesen, Cameron Eckert",279,15.8,"10-Jun-17_EARLY_1",93,3
+"SNBU","Snow Bunting",6,"passerine","passerine",2018,2018-06-29,"Samuel McLeod, Dannie Gordon",196,19.95,"29-Jun-18_LATE_2",98,2
+"SNBU","Snow Bunting",6,"passerine","passerine",2019,2019-06-29,"Edward McLeod, Samuel McLeod",164,21.55,"29-Jun-19_LATE_2",82,2
+"SNBU","Snow Bunting",2,"passerine","passerine",2020,2020-06-29,"Samuel McLeod, Shane Goesen",68,26.35,"29-Jun-20_LATE_2",34,2
+"SNBU","Snow Bunting",14,"passerine","passerine",2021,2021-06-09,"Shaen Goesen, Dannie Gordon",420,8.75,"9-Jun-21_EARLY_1",210,2
+"SNBU","Snow Bunting",6,"passerine","passerine",2022,2022-06-26,"Samuel McLeod, Desmond Rogers, Cameron Eckert",333,13.1,"26-Jun-22_LATE_2",111,3
+"SNBU","Snow Bunting",5,"passerine","passerine",2023,2023-06-27,"Jeremy Hansen, Keegan Arey, Cameron Eckert",102,24.65,"27-Jun-23_LATE_2",34,3
+"SNBU","Snow Bunting",9,"passerine","passerine",2024,2024-06-15,"Gina Slevinsky, Cameron Eckert",334,13.05,"15-Jun-24_EARLY_1",167,2
+"SNGO","Snow Goose",1,"waterbird","duck",2001,2001-06-09,"Frank Elanik, Ricky Joe",132,23.15,"9-Jun-01_EARLY_1",66,2
+"SNGO","Snow Goose",1,"waterbird","duck",2022,2022-06-09,"Jeremy Hansen, Keegan Arey, Cameron Eckert",270,16.25,"9-Jun-22_EARLY_1",90,3
+"SNOW","Snowy Owl",1,"birdofprey","owl",1999,1999-06-29,"Frank Elanik, Ricky Joe",140,22.75,"29-Jun-99_LATE_2",70,2
+"SNOW","Snowy Owl",1,"birdofprey","owl",2001,2001-06-29,"Frank Elanik, Ricky Joe",128,23.35,"29-Jun-01_LATE_2",64,2
+"SNOW","Snowy Owl",2,"birdofprey","owl",2019,2019-06-29,"Edward McLeod, Samuel McLeod",42,27.65,"29-Jun-19_LATE_1",21,2
+"SOSP","Song Sparrow",27,"passerine","passerine",1993,1993-08-13,"Richard Gordon, Marlene Bailey",240,17.75,"13-Aug-93_FALL_1",120,2
+"SPSA","Spotted Sandpiper",1,"shorebird","shorebird",2023,2023-06-27,"Jeremy Hansen, Keegan Arey, Cameron Eckert",102,24.65,"27-Jun-23_LATE_2",34,3
+"STSA","Stilt Sandpiper",1,"shorebird","shorebird",2024,2024-06-15,"Gina Slevinsky, Cameron Eckert",334,13.05,"15-Jun-24_EARLY_1",167,2
+"SUSC","Surf Scoter",34,"waterbird","duck",1992,1992-06-28,"LeeJohn Meyook",66,26.45,"28-Jun-92_LATE_1",66,1
+"SUSC","Surf Scoter",100,"waterbird","duck",1997,1997-06-30,"Colin Gordon, Richard Gordon",264,16.55,"30-Jun-97_LATE_2",132,2
+"SUSC","Surf Scoter",100,"waterbird","duck",1999,1999-06-29,"Frank Elanik, Ricky Joe",140,22.75,"29-Jun-99_LATE_2",70,2
+"SUSC","Surf Scoter",11,"waterbird","duck",2001,2001-06-29,"Frank Elanik, Ricky Joe",128,23.35,"29-Jun-01_LATE_2",64,2
+"SUSC","Surf Scoter",1,"waterbird","duck",2005,2005-06-29,"Pierre Foisy, Jonas Meyook",142,22.65,"29-Jun-05_LATE_2",71,2
+"SUSC","Surf Scoter",2,"waterbird","duck",2006,2006-06-30,"LeeJohn Meyook, Deon Arey",152,22.15,"30-Jun-06_LATE_2",76,2
+"SUSC","Surf Scoter",12,"waterbird","duck",2007,2007-06-30,"Pierre Foisy, Colin Gordon",154,22.05,"30-Jun-07_LATE_3",77,2
+"SUSC","Surf Scoter",3,"waterbird","duck",2013,2013-06-29,"Edward McLeod, Samuel McLeod",150,22.25,"29-Jun-13_LATE_2",75,2
+"SUSC","Surf Scoter",4,"waterbird","duck",2020,2020-06-29,"Samuel McLeod, Shane Goesen",68,26.35,"29-Jun-20_LATE_2",34,2
+"SUSC","Surf Scoter",5,"waterbird","duck",2022,2022-06-26,"Samuel McLeod, Desmond Rogers, Cameron Eckert",333,13.1,"26-Jun-22_LATE_2",111,3
+"SUSC","Surf Scoter",1,"waterbird","duck",2023,2023-06-27,"Jeremy Hansen, Keegan Arey, Cameron Eckert",102,24.65,"27-Jun-23_LATE_2",34,3
+"TUSW","Tundra Swan",4,"waterbird","duck",1991,1991-06-20,"LeeJohn Meyook",92,25.15,"20-Jun-91_LATE_2",92,1
+"TUSW","Tundra Swan",2,"waterbird","duck",1997,1997-06-30,"Colin Gordon, Richard Gordon",264,16.55,"30-Jun-97_LATE_2",132,2
+"TUSW","Tundra Swan",2,"waterbird","duck",1999,1999-06-29,"Frank Elanik, Ricky Joe",140,22.75,"29-Jun-99_LATE_2",70,2
+"TUSW","Tundra Swan",3,"waterbird","duck",2001,2001-06-29,"Frank Elanik, Ricky Joe",128,23.35,"29-Jun-01_LATE_2",64,2
+"TUSW","Tundra Swan",1,"waterbird","duck",2003,2003-06-29,"Andy Tardif, LeeJohn Meyook",104,24.55,"29-Jun-03_LATE_2",52,2
+"TUSW","Tundra Swan",2,"waterbird","duck",2004,2004-06-29,"LeeJohn Meyook, Leonard",150,22.25,"29-Jun-04_LATE_2",75,2
+"TUSW","Tundra Swan",2,"waterbird","duck",2006,2006-06-09,"Pierre Foisy, Albert Rufus",138,22.85,"9-Jun-06_EARLY_1",69,2
+"TUSW","Tundra Swan",2,"waterbird","duck",2006,2006-06-30,"LeeJohn Meyook, Deon Arey",152,22.15,"30-Jun-06_LATE_2",76,2
+"TUSW","Tundra Swan",2,"waterbird","duck",2007,2007-06-30,"Pierre Foisy, Colin Gordon",154,22.05,"30-Jun-07_LATE_3",77,2
+"TUSW","Tundra Swan",2,"waterbird","duck",2008,2008-06-29,"LeeJohn Meyook, Colin Gordon",162,21.65,"29-Jun-08_LATE_1",81,2
+"TUSW","Tundra Swan",2,"waterbird","duck",2010,2010-06-29,"Edward McLeod, Jeremy Hansen",218,18.85,"29-Jun-10_LATE_2",109,2
+"TUSW","Tundra Swan",1,"waterbird","duck",2012,2012-06-29,"Edward McLeod, Samuel McLeod",156,21.95,"29-Jun-12_LATE_2",78,2
+"TUSW","Tundra Swan",4,"waterbird","duck",2013,2013-06-29,"Edward McLeod, Samuel McLeod",150,22.25,"29-Jun-13_LATE_2",75,2
+"TUSW","Tundra Swan",2,"waterbird","duck",2014,2014-06-29,"Edward McLeod, Deon Arey",176,20.95,"29-Jun-14_LATE_3",88,2
+"WCSP","White-crowned Sparrow",1,"passerine","passerine",1993,1993-08-13,"Richard Gordon, Marlene Bailey",240,17.75,"13-Aug-93_FALL_1",120,2
+"WCSP","White-crowned Sparrow",3,"passerine","passerine",2009,2009-06-29,"Pierre Foisy, Frank Doyle",132,23.15,"29-Jun-09_LATE_2",66,2
+"WCSP","White-crowned Sparrow",4,"passerine","passerine",2010,2010-06-09,"LeeJohn Meyook",66,26.45,"9-Jun-10_EARLY_1",66,1
+"WCSP","White-crowned Sparrow",3,"passerine","passerine",2012,2012-06-09,"Edward McLeod, Samuel McLeod, Cameron Eckert",231,18.2,"9-Jun-12_EARLY_1",77,3
+"WCSP","White-crowned Sparrow",2,"passerine","passerine",2014,2014-06-29,"Edward McLeod, Deon Arey",176,20.95,"29-Jun-14_LATE_3",88,2
+"WCSP","White-crowned Sparrow",1,"passerine","passerine",2017,2017-06-10,"Samuel McLeod, Shane Goesen, Cameron Eckert",279,15.8,"10-Jun-17_EARLY_1",93,3
+"WCSP","White-crowned Sparrow",2,"passerine","passerine",2020,2020-06-29,"Samuel McLeod, Shane Goesen",68,26.35,"29-Jun-20_LATE_2",34,2
+"WCSP","White-crowned Sparrow",1,"passerine","passerine",2022,2022-06-26,"Samuel McLeod, Desmond Rogers, Cameron Eckert",333,13.1,"26-Jun-22_LATE_2",111,3
+"WESA","Western Sandpiper",7,"shorebird","shorebird",1990,1990-06-25,"Victor Allen",90,25.25,"25-Jun-90_LATE_3",90,1
+"WHIM","Whimbrel",1,"shorebird","shorebird",1996,1996-06-09,"LeeJohn Meyook, Richard Gordon",190,20.25,"9-Jun-96_EARLY_2",95,2
+"WISN","Wilson's Snipe",16,"shorebird","shorebird",1993,1993-08-13,"Richard Gordon, Marlene Bailey",240,17.75,"13-Aug-93_FALL_1",120,2
+"WISN","Wilson's Snipe",1,"shorebird","shorebird",2002,2002-06-09,"Ricky Joe, Andy Tardif",102,24.65,"9-Jun-02_EARLY_1",51,2
+"WRSA","White-rumped Sandpiper",1,"waterbird","duck",2012,2012-06-09,"Edward McLeod, Samuel McLeod, Cameron Eckert",231,18.2,"9-Jun-12_EARLY_1",77,3
+"WRSA","White-rumped Sandpiper",1,"waterbird","duck",2018,2018-06-18,"Cameron Eckert",228,18.35,"14-Jun-18_EARLY_1",228,1
+"WRSA","White-rumped Sandpiper",2,"waterbird","duck",2019,2019-06-09,"Shaen Goesen, Dannie Gordon, Cameron Eckert",270,16.25,"9-Jun-19_EARLY_1",90,3
+"WRSA","White-rumped Sandpiper",1,"waterbird","duck",2024,2024-06-15,"Gina Slevinsky, Cameron Eckert",334,13.05,"15-Jun-24_EARLY_1",167,2
+"WWSC","White-winged Scoter",32,"waterbird","duck",1996,1996-07-01,"LeeJohn Meyook, Richard Gordon",190,20.25,"1-Jul-96_LATE_3",95,2
+"WWSC","White-winged Scoter",7,"waterbird","duck",1998,1998-06-29,"LeeJohn Meyook, Colin Gordon",224,18.55,"29-Jun-98_LATE_2",112,2
+"WWSC","White-winged Scoter",7,"waterbird","duck",2000,2000-06-29,"Ricky Joe, Pierre Foisy",172,21.15,"29-Jun-00_LATE_2",86,2
+"WWSC","White-winged Scoter",10,"waterbird","duck",2001,2001-06-29,"Frank Elanik, Ricky Joe",128,23.35,"29-Jun-01_LATE_2",64,2
+"WWSC","White-winged Scoter",12,"waterbird","duck",2007,2007-06-21,"LeeJohn Meyook, Pierre Foisy, Harry Elias, Dion Arey, Cameron Eckert",575,1,"21-Jun-07_LATE-1_2",115,5
+"WWSC","White-winged Scoter",22,"waterbird","duck",2009,2009-06-29,"Pierre Foisy, Frank Doyle",132,23.15,"29-Jun-09_LATE_2",66,2
+"WWSC","White-winged Scoter",3,"waterbird","duck",2012,2012-06-09,"Edward McLeod, Samuel McLeod, Cameron Eckert",231,18.2,"9-Jun-12_EARLY_1",77,3
+"WWSC","White-winged Scoter",1,"waterbird","duck",2014,2014-06-09,"Edward McLeod, Andrew",238,17.85,"9-Jun-14_EARLY_1",119,2
+"WWSC","White-winged Scoter",1,"waterbird","duck",2016,2016-06-29,"Edward McLeod, Ricky Joe",192,20.15,"29-Jun-16_LATE_2",96,2
+"WWSC","White-winged Scoter",2,"waterbird","duck",2017,2017-06-10,"Samuel McLeod, Shane Goesen, Cameron Eckert",279,15.8,"10-Jun-17_EARLY_1",93,3
+"WWSC","White-winged Scoter",14,"waterbird","duck",2018,2018-06-29,"Samuel McLeod, Dannie Gordon",196,19.95,"29-Jun-18_LATE_2",98,2
+"WWSC","White-winged Scoter",6,"waterbird","duck",2021,2021-06-09,"Shaen Goesen, Dannie Gordon",420,8.75,"9-Jun-21_EARLY_1",210,2
+"WWSC","White-winged Scoter",12,"waterbird","duck",2022,2022-06-26,"Samuel McLeod, Desmond Rogers, Cameron Eckert",333,13.1,"26-Jun-22_LATE_2",111,3
+"WWSC","White-winged Scoter",3,"waterbird","duck",2023,2023-06-12,"Samuel McLead, Alan Kogiak, Cameron Eckert",117,23.9,"12-Jun-23_EARLY_1",39,3
