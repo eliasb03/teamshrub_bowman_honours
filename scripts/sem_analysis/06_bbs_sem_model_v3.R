@@ -20,9 +20,7 @@ sem_data <- read_csv("data/clean/sem/sem_data.csv") %>%
   filter(guild != "birdofprey") %>% # remove bird of prey guild
   filter(birdabundance > 0) 
 
-bird_1guild_mod <- bf(birdabundance ~ icemelt + breedingtemp + snowmelt + budburst
-               #+ (ice.melt + temp + snowmelt + budburst|species) # rndm. slope+intrcpt
-               + (1|species) + (1 | year), family = poisson()) # Random Intercept
+
 bird_3guild_mod <- bf(birdabundance ~ (icemelt + breedingtemp + snowmelt + budburst) * guild
                + (1|species) + (1 | year), family = poisson()) # Interaction model
 budburst_mod <- bf(budburst ~ snowmelt + breedingtemp + regiontemp)
@@ -83,7 +81,7 @@ guild_bsem <- brm(
   prior = guild_abundance_priors,
   cores = 4,
   chains = 3,
-  iter = 5000,
+  iter = 6000,
   warmup = 1000,
   thin = 2,
   control=list(adapt_delta=0.9999, max_treedepth=15)
@@ -95,11 +93,11 @@ get_prior(guild_bsem)
 summary(guild_bsem)
 
 # Posterior Predictive Checks
-pp_check(guild_bsem, resp = "birdabundance", ndraws = 1000)
-pp_check(guild_bsem, resp = "budburst", ndraws = 1000)
-pp_check(guild_bsem, resp = "snowmelt", ndraws = 1000)
-pp_check(guild_bsem, resp = "breedingtemp", ndraws = 1000)
-pp_check(guild_bsem, resp = "icemelt", ndraws = 1000)
+# pp_check(guild_bsem, resp = "birdabundance", ndraws = 1000)
+# pp_check(guild_bsem, resp = "budburst", ndraws = 1000)
+# pp_check(guild_bsem, resp = "snowmelt", ndraws = 1000)
+# pp_check(guild_bsem, resp = "breedingtemp", ndraws = 1000)
+# pp_check(guild_bsem, resp = "icemelt", ndraws = 1000)
 
 
 # Saving model outputs
@@ -317,6 +315,10 @@ sem_data <- read_csv("data/clean/sem/sem_data.csv") %>%
   filter(guild != "birdofprey") %>% # remove bird of prey guild
 
 # Filtering Data based on Guild ####
+bird_1guild_mod <- bf(birdabundance ~ icemelt + breedingtemp + snowmelt + budburst
+                      #+ (ice.melt + temp + snowmelt + budburst|species) # rndm. slope + intrcpt
+                      + (1|species) + (1 | year), family = poisson()) # Random Intercept
+
 passerine_data <- sem_data %>%
   filter(guild == "passerine") 
 
