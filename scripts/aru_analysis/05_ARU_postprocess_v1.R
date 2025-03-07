@@ -23,7 +23,7 @@ aru_all_output_folder <- "D:/ARU_QHI_2024/output_total"
 # Confidence threshold 
 confidence_threshold <- 0.5 # KEY THING I HAVENT CHOSEN YET
 
-# Columns to remove (replace with actual column names you want to exclude)
+# Columns to remove 
 columns_to_remove <- c(
   "lat",
   "lon",
@@ -78,7 +78,10 @@ process_aru_folder <- function(folder_path,
     dt <- dt[confidence > confidence_threshold]
     
     # Remove rows with file paths in the `toignore` dataset
-    dt <- dt[!file_path %in% toignore$File]
+    dt <- dt[!recordingID %in% toignore$File]
+    
+    # Filter out rows where recordingID doesn't start with "ARU" or doesn't end with "0000.wav" or "3000.wav"
+    dt <- dt[str_detect(recordingID, "^ARU") & str_detect(recordingID, "(0000|3000)\\.wav$")]
     
     # Extract locationID from recordingID
     dt <- extract_locationID(dt)
@@ -96,6 +99,10 @@ raw_aru_data <- process_aru_folder(aru_all_output_folder,
 # This line of code is only here to handle an issue with ARUQ14 where the datetime isnt formatting correctly, all others are
 # Note that ARUQ14 still isnt filling in seconds correctly, but i dont think that should matter
 raw_aru_data[[7]][, detectionTimeLocal := as.POSIXct(detectionTimeLocal, format = "%Y-%m-%d %H:%M")]
+
+aru_activity[[7]][, dateTimeLocal := as.POSIXct(str_extract(filepath, "\\d{8}_\\d{6}") %>%
+                                                  strptime(format = "%Y%m%d_%H%M%S"), 
+                                                tz = "America/Dawson")]
 raw_aru_data[[7]][, dateTimeLocal := ifelse(
   grepl("^\\d{4}-\\d{2}-\\d{2}$", dateTimeLocal),
   paste0(dateTimeLocal, " 00:00:00"),
