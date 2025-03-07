@@ -371,7 +371,7 @@ library(semPlot)
 
 effect_size_scaled
 
-guild_bsem_interacted_test <- guild_bsem_interacted %>%
+guild_bsem_interacted <- guild_bsem_interacted %>%
   left_join(effect_size_scaled %>% 
               select(predictor, group, slope), 
             by = c("predictor", "interaction" = "group")) %>%
@@ -422,9 +422,9 @@ create_sem_plot <- function(guild_bsem_interacted, file_modifier = "") {
     "Waterbird\nAbundance" = "waterbirdabundance",
     "Budburst" = "budburst",
     "Snowmelt" = "snowmelt",
-    "Breeding\nTemp" = "breedingtemp",
+    "Breeding\nTemperature" = "breedingtemp",
     "Ice Melt" = "icemelt",
-    "Region\nTemp" = "regiontemp"
+    "Regional\nTemperature" = "regiontemp"
   )
   
   # Extract path coefficients and assign edge colors
@@ -439,24 +439,87 @@ create_sem_plot <- function(guild_bsem_interacted, file_modifier = "") {
                             l95.ci[interaction == "passerine"][1], l95.ci)
     ) %>%
     ungroup() %>%
+    # mutate(
+    #   edge_color = case_when(
+    #     # Red: Both conditions met
+    #     refrence.l95 < 0 & refrence.u95 < 0 & l95.ci < 0 & u95.ci > 0 ~ "red",
+    #     
+    #     # Blue: Both conditions met
+    #     refrence.l95 > 0 & refrence.u95 > 0 & l95.ci < 0 & u95.ci > 0 ~ "blue",
+    #     
+    #     # Pale Red: Crossing zero with est < 0
+    #     refrence.l95 < 0 & refrence.u95 > 0 & est < 0 ~ scales::alpha("red", 0.25),
+    #     
+    #     # Pale Blue: Crossing zero with est > 0
+    #     refrence.l95 < 0 & refrence.u95 > 0 & est > 0 ~ scales::alpha("blue", 0.25),
+    #     
+    #     # Grey: Crossing zero
+    #     refrence.l95 < 0 & refrence.u95 > 0 ~ "grey",
+    #     
+    #     # Black: Default
+    #     TRUE ~ "black"
+    #     # refrence.l95 < 0 & refrence.u95 > 0 ~ "grey",
+    #     # refrence.l95 > 0 & refrence.u95 > 0 ~ "blue",
+    #     # refrence.l95 < 0 & refrence.u95 < 0 ~ "red",
+    #     # # l95.ci < 0 & u95.ci > 0 ~ "grey",
+    #     # # l95.ci > 0 & u95.ci > 0 ~ "blue",
+    #     # # l95.ci < 0 & u95.ci < 0 ~ "red",
+    #     # TRUE ~ "black"
+    #   )
     mutate(
       edge_color = case_when(
-        refrence.l95 < 0 & refrence.u95 > 0 ~ "grey",
-        refrence.l95 > 0 & refrence.u95 > 0 ~ "blue",
-        refrence.l95 < 0 & refrence.u95 < 0 ~ "red",
-        # l95.ci < 0 & u95.ci > 0 ~ "grey",
-        # l95.ci > 0 & u95.ci > 0 ~ "blue",
-        # l95.ci < 0 & u95.ci < 0 ~ "red",
-        TRUE ~ "black"
+        # Full conditions for birdabundance
+        (response == "birdabundance" & interaction != "passerine") ~ case_when(
+          # Red: Both conditions met
+          (refrence.l95 < 0 & refrence.u95 < 0) & (l95.ci < 0 & u95.ci > 0) ~ "red",
+          
+          # Blue: Both conditions met
+          (refrence.l95 > 0 & refrence.u95 > 0) & (l95.ci < 0 & u95.ci > 0) ~ "blue",
+          
+          # Pale Red: Crossing zero with est < 0
+          (refrence.l95 < 0 & refrence.u95 > 0) & est < 0 ~ scales::alpha("coral", 0.3),
+          
+          # Pale Blue: Crossing zero with est > 0
+          (refrence.l95 < 0 & refrence.u95 > 0) & est > 0 ~ scales::alpha("lightblue", 0.5),
+          # 
+          # # Grey: Crossing zero
+          # refrence.l95 < 0 & refrence.u95 > 0 ~ "grey",
+          # 
+          # # Black: Default for birdabundance
+          # TRUE ~ "black"
+        ),
+        
+        # Simplified conditions for all other responses
+        TRUE ~ case_when(
+          # Red: Confidence intervals below zero
+          l95.ci < 0 & u95.ci < 0 ~ "red",
+          
+          # Blue: Confidence intervals above zero
+          l95.ci > 0 & u95.ci > 0 ~ "blue",
+          
+          # Pale Red: Crossing zero with est < 0
+          l95.ci < 0 & u95.ci > 0 & est < 0 ~ scales::alpha("coral", 0.3),
+          
+          # Pale Blue: Crossing zero with est > 0
+          l95.ci < 0 & u95.ci > 0 & est > 0 ~ scales::alpha("lightblue", 0.5),
+          # 
+          # # Grey: Crossing zero
+          # l95.ci < 0 & u95.ci > 0 ~ "grey",
+          # 
+          # # Black: Default for others
+          # TRUE ~ "black"
+        )
       )
     )
+  
+  #View(non_covariate_params)
   
   edge_colors <- non_covariate_params$edge_color
   edge_labels <- sprintf(
     "%.3f \n[%.2f, %.2f]",
     non_covariate_params$est,
-    non_covariate_params$refrence.l95,
-    non_covariate_params$refrence.u95
+    non_covariate_params$l95.ci,
+    non_covariate_params$u95.ci
   )
   
   # Plot and save SEM path diagram
@@ -478,157 +541,16 @@ create_sem_plot <- function(guild_bsem_interacted, file_modifier = "") {
     rescale = TRUE,
     fixedStyle = 1,
     filetype = "pdf",
-    filename = paste0("outputs/sem/plot/birdabundance_semplot_05mar2025", file_modifier), 
+    filename = paste0("outputs/sem/plot/birdabundance_semplot_06mar2025", file_modifier), 
     width = 12, height = 15
   )
 }
 
 # Run the function
 create_sem_plot(guild_bsem_interacted)
-create_sem_plot(guild_bsem_interacted_test, "_version1")
 
 
 
-
-
-
-# 
-# # Group semPlot# Group by the response_single variable and paste the predictors together
-# model_lines <- guild_bsem_interacted %>% 
-#   filter(predictor != "Intercept") %>%
-#   group_by(response_single) %>%
-#   summarize(line = paste0(response_single, " ~ ", 
-#                           paste(paste0(new.estimate, "*", predictor), collapse = " + "))) %>%
-#   pull(line)
-# 
-# # Remove duplicate lines
-# model_lines <- unique(model_lines)
-# 
-# response_order <- c("passerineabundance", "shorebirdabundance", "waterbirdabundance", "budburst", "snowmelt", "breedingtemp", "icemelt")
-# #response_order <- c("passerineabundance", "shorebirdabundance", "waterbirdabundance", "icemelt", "breedingtemp", "snowmelt", "budburst", "regiontemp")
-# 
-# # Extract the response variable from each line (before the "~")
-# responses <- sapply(model_lines, function(x) strsplit(x, " ~ ")[[1]][1])
-# 
-# # Create a factor to reorder the responses based on the specified order
-# responses <- factor(responses, levels = response_order)
-# 
-# # Reorder the model lines according to the response order
-# model_lines <- model_lines[order(responses)]
-# 
-# # Combine all lines into a single model specification string
-# lavaan_model <- paste(model_lines, collapse = "\n")
-# 
-# # Print your model specification to check
-# cat(lavaan_model)
-# 
-# # Create a labeled covariance matrix for the variables
-# cov_matrix <- diag(8)
-# colnames(cov_matrix) <- rownames(cov_matrix) <- c("passerineabundance", "shorebirdabundance", "waterbirdabundance", "icemelt", "breedingtemp", "snowmelt", "budburst", "regiontemp")
-# 
-# # Create a fake model with specified path coefficients using lavaanify
-# fit <- lavaan(model = lavaan_model, sample.cov = cov_matrix, sample.nobs = 100, fixed.x = TRUE, do.fit = FALSE)
-# 
-# # Define a custom layout for the SEM plot
-# custom_layout <- matrix(c(
-#   4.5, -8,     # passerineabundance
-#   9, -10.5,   # shorebirdabundance
-#   0, -5.5,     # waterbirdabundance
-#   0, -2,     # budburst
-#   3, -2,     # snowmelt
-#   6, -2,     # breedingtemp
-#   9, -2,     # icemelt
-#   4.5, 2.5    # regiontemp 
-#   # 
-#   # # option 1
-#   # 6, 4.5,     # passerineabundance
-#   # 8, 9,   # shorebirdabundance
-#   # 4, 0,     # waterbirdabundance
-#   # # # option 2
-#   # # 5, 9,     # passerineabundance
-#   # # 6.5, 4.5,   # shorebirdabundance
-#   # # 5, 0,     # waterbirdabundance
-#   # # # option 3
-#   # # 5, 9,     # passerineabundance
-#   # # 6.5, 4.5,   # shorebirdabundance
-#   # # 4, 0,     # waterbirdabundance
-#   # # 
-#   # 2, 0,     # budburst
-#   # 2, 3,     # snowmelt
-#   # 2, 6,     # breedingtemp
-#   # 2, 9,     # icemelt
-#   # -1, 4.5    # regiontemp 
-# ), ncol = 2, byrow = TRUE)
-# 
-# # Define full names for each variable
-# full_names <- c(
-#   "Passerine\nAbundance" = "passerineabundance",
-#   "Shorebird\nAbundance" = "shorebirdabundance",
-#   "Waterbird\nAbundance" = "waterbirdabundance",
-#   #  "Bird\nAbundance" = "birdabundance",
-#   "Budburst" = "budburst",
-#   "Snowmelt" = "snowmelt",
-#   "Breeding\nTemp" = "breedingtemp",
-#   "Ice Melt" = "icemelt",
-#   "Region\nTemp" = "regiontemp"
-# )
-# 
-# # Scale the edge widths by the absolute value of the effect sizes (coefficients)
-# path_coefs <- parameterEstimates(fit)
-# 
-# non_covariate_params <- path_coefs[path_coefs$op != "~~", ] %>%
-#   left_join(guild_bsem_interacted, by = c("lhs" = "response_single", "rhs" = "predictor"))
-# 
-# non_covariate_params <- non_covariate_params %>%
-#   mutate(
-#     edge_color = case_when(
-#       new.l95.ci < 0 & new.u95.ci > 0 ~ "grey",  # CI spans zero, grey
-#       new.l95.ci > 0 & new.u95.ci > 0 ~ "blue",  # CI is entirely positive, blue
-#       new.l95.ci < 0 & new.u95.ci < 0 ~ "red",   # CI is entirely negative, red
-#       TRUE ~ "black"  # Default to black if it doesn't fit the above cases
-#     )) %>%
-#   mutate(
-#     edge_color_2 = case_when(
-#       est > 0 & new.l95.ci < 0 & new.u95.ci > 0 ~ "lightblue",  # Positive est, CI overlaps zero, pale blue
-#       est < 0 & new.l95.ci < 0 & new.u95.ci > 0 ~ "lightcoral",  # Negative est, CI overlaps zero, pale red
-#       est > 0 & new.l95.ci > 0 & new.u95.ci > 0 ~ "blue",        # Positive est, CI entirely positive, blue
-#       est < 0 & new.l95.ci < 0 & new.u95.ci < 0 ~ "red",          # Negative est, CI entirely negative, red
-#       TRUE ~ "black"  # Default to black if it doesn't fit the above cases
-#     ))
-# 
-# edge_colors <- non_covariate_params$edge_color
-# #edge_colors <- non_covariate_params$edge_color_2
-# 
-# edge_labels <- sprintf(
-#   "%.3f \n[%.2f, %.2f]",
-#   non_covariate_params$est,
-#   non_covariate_params$new.l95.ci,
-#   non_covariate_params$new.u95.ci
-# )
-# 
-# # Plot using the modified label column
-# sem_plot <- semPaths(
-#   fit,
-#   what = "par",
-#   edgeLabels = edge_labels,
-#   edge.label.margin = 0,
-#   #edge.label.bg = FALSE,
-#   edge.label.color = "black",
-#   layout = custom_layout,
-#   edge.label.cex = 0.5,
-#   nodeLabels = names(full_names),
-#   sizeMan = 6,
-#   #color = "white",
-#   edge.color = edge_colors,
-#   style = "lisrel",
-#   curve = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1.8, 0, 0, 0, 0, 0, 0),
-#   fade = FALSE,
-#   residuals = FALSE,
-#   rescale = TRUE,
-#   fixedStyle = 1,
-#   filetype = "pdf",
-#   filename = "outputs/sem/plot/birdabundance_semplot_05mar2025", width = 12, height = 15
-# )
 
 
 
@@ -791,6 +713,146 @@ output_table <- output_tbl %>%
 #---------------------------
 # Old SEM Attempt
 #---------------------------
+
+############
+# 
+# # Group semPlot# Group by the response_single variable and paste the predictors together
+# model_lines <- guild_bsem_interacted %>% 
+#   filter(predictor != "Intercept") %>%
+#   group_by(response_single) %>%
+#   summarize(line = paste0(response_single, " ~ ", 
+#                           paste(paste0(new.estimate, "*", predictor), collapse = " + "))) %>%
+#   pull(line)
+# 
+# # Remove duplicate lines
+# model_lines <- unique(model_lines)
+# 
+# response_order <- c("passerineabundance", "shorebirdabundance", "waterbirdabundance", "budburst", "snowmelt", "breedingtemp", "icemelt")
+# #response_order <- c("passerineabundance", "shorebirdabundance", "waterbirdabundance", "icemelt", "breedingtemp", "snowmelt", "budburst", "regiontemp")
+# 
+# # Extract the response variable from each line (before the "~")
+# responses <- sapply(model_lines, function(x) strsplit(x, " ~ ")[[1]][1])
+# 
+# # Create a factor to reorder the responses based on the specified order
+# responses <- factor(responses, levels = response_order)
+# 
+# # Reorder the model lines according to the response order
+# model_lines <- model_lines[order(responses)]
+# 
+# # Combine all lines into a single model specification string
+# lavaan_model <- paste(model_lines, collapse = "\n")
+# 
+# # Print your model specification to check
+# cat(lavaan_model)
+# 
+# # Create a labeled covariance matrix for the variables
+# cov_matrix <- diag(8)
+# colnames(cov_matrix) <- rownames(cov_matrix) <- c("passerineabundance", "shorebirdabundance", "waterbirdabundance", "icemelt", "breedingtemp", "snowmelt", "budburst", "regiontemp")
+# 
+# # Create a fake model with specified path coefficients using lavaanify
+# fit <- lavaan(model = lavaan_model, sample.cov = cov_matrix, sample.nobs = 100, fixed.x = TRUE, do.fit = FALSE)
+# 
+# # Define a custom layout for the SEM plot
+# custom_layout <- matrix(c(
+#   4.5, -8,     # passerineabundance
+#   9, -10.5,   # shorebirdabundance
+#   0, -5.5,     # waterbirdabundance
+#   0, -2,     # budburst
+#   3, -2,     # snowmelt
+#   6, -2,     # breedingtemp
+#   9, -2,     # icemelt
+#   4.5, 2.5    # regiontemp 
+#   # 
+#   # # option 1
+#   # 6, 4.5,     # passerineabundance
+#   # 8, 9,   # shorebirdabundance
+#   # 4, 0,     # waterbirdabundance
+#   # # # option 2
+#   # # 5, 9,     # passerineabundance
+#   # # 6.5, 4.5,   # shorebirdabundance
+#   # # 5, 0,     # waterbirdabundance
+#   # # # option 3
+#   # # 5, 9,     # passerineabundance
+#   # # 6.5, 4.5,   # shorebirdabundance
+#   # # 4, 0,     # waterbirdabundance
+#   # # 
+#   # 2, 0,     # budburst
+#   # 2, 3,     # snowmelt
+#   # 2, 6,     # breedingtemp
+#   # 2, 9,     # icemelt
+#   # -1, 4.5    # regiontemp 
+# ), ncol = 2, byrow = TRUE)
+# 
+# # Define full names for each variable
+# full_names <- c(
+#   "Passerine\nAbundance" = "passerineabundance",
+#   "Shorebird\nAbundance" = "shorebirdabundance",
+#   "Waterbird\nAbundance" = "waterbirdabundance",
+#   #  "Bird\nAbundance" = "birdabundance",
+#   "Budburst" = "budburst",
+#   "Snowmelt" = "snowmelt",
+#   "Breeding\nTemp" = "breedingtemp",
+#   "Ice Melt" = "icemelt",
+#   "Region\nTemp" = "regiontemp"
+# )
+# 
+# # Scale the edge widths by the absolute value of the effect sizes (coefficients)
+# path_coefs <- parameterEstimates(fit)
+# 
+# non_covariate_params <- path_coefs[path_coefs$op != "~~", ] %>%
+#   left_join(guild_bsem_interacted, by = c("lhs" = "response_single", "rhs" = "predictor"))
+# 
+# non_covariate_params <- non_covariate_params %>%
+#   mutate(
+#     edge_color = case_when(
+#       new.l95.ci < 0 & new.u95.ci > 0 ~ "grey",  # CI spans zero, grey
+#       new.l95.ci > 0 & new.u95.ci > 0 ~ "blue",  # CI is entirely positive, blue
+#       new.l95.ci < 0 & new.u95.ci < 0 ~ "red",   # CI is entirely negative, red
+#       TRUE ~ "black"  # Default to black if it doesn't fit the above cases
+#     )) %>%
+#   mutate(
+#     edge_color_2 = case_when(
+#       est > 0 & new.l95.ci < 0 & new.u95.ci > 0 ~ "lightblue",  # Positive est, CI overlaps zero, pale blue
+#       est < 0 & new.l95.ci < 0 & new.u95.ci > 0 ~ "lightcoral",  # Negative est, CI overlaps zero, pale red
+#       est > 0 & new.l95.ci > 0 & new.u95.ci > 0 ~ "blue",        # Positive est, CI entirely positive, blue
+#       est < 0 & new.l95.ci < 0 & new.u95.ci < 0 ~ "red",          # Negative est, CI entirely negative, red
+#       TRUE ~ "black"  # Default to black if it doesn't fit the above cases
+#     ))
+# 
+# edge_colors <- non_covariate_params$edge_color
+# #edge_colors <- non_covariate_params$edge_color_2
+# 
+# edge_labels <- sprintf(
+#   "%.3f \n[%.2f, %.2f]",
+#   non_covariate_params$est,
+#   non_covariate_params$new.l95.ci,
+#   non_covariate_params$new.u95.ci
+# )
+# 
+# # Plot using the modified label column
+# sem_plot <- semPaths(
+#   fit,
+#   what = "par",
+#   edgeLabels = edge_labels,
+#   edge.label.margin = 0,
+#   #edge.label.bg = FALSE,
+#   edge.label.color = "black",
+#   layout = custom_layout,
+#   edge.label.cex = 0.5,
+#   nodeLabels = names(full_names),
+#   sizeMan = 6,
+#   #color = "white",
+#   edge.color = edge_colors,
+#   style = "lisrel",
+#   curve = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1.8, 0, 0, 0, 0, 0, 0),
+#   fade = FALSE,
+#   residuals = FALSE,
+#   rescale = TRUE,
+#   fixedStyle = 1,
+#   filetype = "pdf",
+#   filename = "outputs/sem/plot/birdabundance_semplot_05mar2025", width = 12, height = 15
+# )
+
 
 
 model_summary <- summary(guild_bsem)
