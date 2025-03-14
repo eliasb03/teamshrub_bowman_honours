@@ -275,11 +275,40 @@ responses <- lapply(variables, function(var) predict_response(guild_bsem, terms 
 
 # Name the responses with the variable names directly
 names(responses) <- variables
+ 
+# # Process and combine data frames using imap_dfr
+# resp_data <- imap_dfr(responses, ~ as.data.frame(.x) %>%
+#                         filter(response.level == "birdabundance") %>%
+#                         mutate(predictor = .y))  # .y is the name of the list element
+# 
+# predicted_effect_sizes <- resp_data %>%
+#   group_by(predictor, group) %>%
+#   arrange(abs(x)) %>%
+#   slice(1:3) %>%
+#   ungroup() %>%
+#   group_by(predictor, group) %>%
+#   summarize(
+#     min_x = min(x),
+#     max_x = max(x),
+#     neg_y = predicted[which.min(x)],
+#     pos_y = predicted[which.max(x)],
+#     slope = (neg_y - pos_y) / (abs(max_x) + abs(min_x)),
+#     #mid_y = abs(abs(min_y)+abs(max_y))/2,
+#     #mid_x = (min_x + max_x)/2
+#   )
 
-# Process and combine data frames using imap_dfr
+# Recalibrating Data
+scaling_params <- read_csv("data/clean/sem/scaling_params.csv") %>%
+  rename("predictor" = "variable") #%>%
+
 resp_data <- imap_dfr(responses, ~ as.data.frame(.x) %>%
                         filter(response.level == "birdabundance") %>%
                         mutate(predictor = .y))  # .y is the name of the list element
+
+resp_data <- resp_data %>%
+  left_join(scaling_params, by = "predictor") %>%   # Join based on predictor
+  mutate(x_cal = (x * scaling_value) + mean)          # Revert centering and scaling 
+
 
 predicted_effect_sizes <- resp_data %>%
   group_by(predictor, group) %>%
@@ -288,15 +317,19 @@ predicted_effect_sizes <- resp_data %>%
   ungroup() %>%
   group_by(predictor, group) %>%
   summarize(
-    min_x = min(x),
-    max_x = max(x),
-    min_y = predicted[which.min(x)],
-    max_y = predicted[which.max(x)],
-    slope = (max_y - min_y) / (max_x - min_x),
-    mid_y = abs(abs(min_y)+abs(max_y))/2,
-    mid_x = (min_x + max_x)/2
+    min_x = min(x_cal),
+    max_x = max(x_cal),
+    left_y = predicted[which.min(x_cal)],
+    right_y = predicted[which.max(x_cal)],
+    slope = (left_y - right_y) / (abs(max_x - min_x))#,
+    #mid_y = abs(abs(min_y)+abs(max_y))/2,
+    #mid_x = (min_x + max_x)/2
   )
-  
+
+
+sem_data <- read_csv("data/clean/sem/sem_data.csv") %>%
+  filter(guild != "birdofprey") %>% # remove bird of prey guild
+  filter(birdabundance > 0) 
 
 # Plot icemelt_resp
 sem_data_plotting <- sem_data %>%
@@ -312,26 +345,51 @@ excluded_data <- sem_data %>%
   filter(birdabundance > ylim_threshold)
 cat("Number of data points excluded: ", nrow(excluded_data), "\n")
 
-# Recalibrating Data
-scaling_params <- read_csv("data/clean/sem/scaling_params.csv") %>%
-  rename("predictor" = "variable") #%>%
-
-resp_data <- resp_data %>%
-  left_join(scaling_params, by = "predictor")%>%   # Join based on predictor
-  mutate(x_cal = (x * scaling_value) + mean)          # Revert centering and scaling 
-
 sem_data_plotting <- sem_data_plotting %>%
   left_join(scaling_params, by = "predictor") %>%   # Join based on predictor
-  mutate(value_cal = (value*scaling_value) + mean)  # Add the calibration value to value
-
-effect_size_scaled <- predicted_effect_sizes %>%
-  left_join(scaling_params, by = "predictor") %>%   # Join based on predictor
-  mutate(slope_cal = (slope/scaling_value))# + mean)  # Add the calibration value to value
+  mutate(value_cal = (value * scaling_value) + mean)  # Add the calibration value to value
 
 # Plot the calibrated data
 ggplot(data = resp_data, aes(x = x_cal, y = predicted, colour = group)) +
   geom_line(linewidth = 1) + 
   geom_point(data = sem_data_plotting, aes(x = value_cal, y = birdabundance, colour = group), 
+             size = 1, alpha = 0.5, position = "jitter") +
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = group), 
+              alpha = 0.13, colour = NA) +  # Fill ribbons
+  scale_colour_viridis_d(name = "Guild",  
+                         labels = c("Waterbird", "Passerine", "Shorebird"), 
+                         guide = guide_legend(nrow = 1)) +  # Combined legend for colour
+  scale_fill_viridis_d(name = "Guild",  
+                       labels = c("Waterbird", "Passerine", "Shorebird"), 
+                       guide = guide_legend(nrow = 1)) +  # Combined legend for fill
+  labs(x = NULL,#"Predictor Variable", 
+       y = "Predicted Bird Abundance") +
+  theme_half_open(font_size = 12) +  
+  theme(
+    legend.position = c(0.5, -0.12),         # Bottom center position for legend
+    legend.justification = "center",         # Center the legend horizontally
+    legend.title.align = 0.5,                # Center the legend title
+    strip.background = element_blank(),
+    strip.placement = "outside",
+    strip.text = element_text(size = 10),
+    panel.spacing = unit(0.02, "npc"),
+    plot.margin = margin(t = 10, r = 10, b = 24, l = 10)
+  ) +
+  
+  facet_wrap(~predictor, nrow = 2, scale = "free_x",
+             strip.position = "bottom",     # Move facet labels to the bottom
+             labeller = as_labeller(c("icemelt" = "Ice Melt\n(Day of Year)", 
+                                      "budburst" = "Budburst\n(Day of Year)",
+                                      "breedingtemp" = "Spring Temperature\n(Degrees C)",
+                                      "snowmelt" = "Snowmelt\n(Day of Year)"))) +
+  coord_cartesian(ylim = c(0, ylim_threshold)) 
+
+
+
+# Plot the calibrated data
+ggplot(data = resp_data, aes(x = x, y = predicted, colour = group)) +
+  geom_line(linewidth = 1) + 
+  geom_point(data = resp_data, aes(x = x, y = predicted, colour = "black"), 
              size = 1, alpha = 0.5, position = "jitter") +
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = group), 
               alpha = 0.13, colour = NA) +  # Fill ribbons
@@ -513,14 +571,22 @@ create_sem_plot <- function(guild_bsem_interacted, file_modifier = "") {
     )
   
   #View(non_covariate_params)
-  
+  View(non_covariate_params)
   edge_colors <- non_covariate_params$edge_color
-  edge_labels <- sprintf(
-    "%.3f \n[%.2f, %.2f]",
-    non_covariate_params$est,
-    non_covariate_params$l95.ci,
-    non_covariate_params$u95.ci
-  )
+  edge_labels <- ifelse(
+  non_covariate_params$response == "birdabundance",
+  sprintf("%.3f", non_covariate_params$est),
+  sprintf("%.3f \n[%.2f, %.2f]",
+          non_covariate_params$est,
+          non_covariate_params$l95.ci,
+          non_covariate_params$u95.ci)
+)
+  # edge_labels <- sprintf(
+  #   "%.3f \n[%.2f, %.2f]",
+  #   non_covariate_params$est,
+  #   non_covariate_params$l95.ci,
+  #   non_covariate_params$u95.ci
+  # )
   
   # Plot and save SEM path diagram
   sem_plot <- semPaths(
@@ -541,13 +607,13 @@ create_sem_plot <- function(guild_bsem_interacted, file_modifier = "") {
     rescale = TRUE,
     fixedStyle = 1,
     filetype = "pdf",
-    filename = paste0("outputs/sem/plot/birdabundance_semplot_06mar2025", file_modifier), 
+    filename = paste0("outputs/sem/plot/birdabundance_semplot_14mar2025", file_modifier), 
     width = 12, height = 15
   )
 }
 
 # Run the function
-create_sem_plot(guild_bsem_interacted)
+create_sem_plot(guild_bsem_interacted, "test")
 
 
 

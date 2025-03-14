@@ -128,7 +128,7 @@ scaled_data <- final_data %>%
 # Specifying scaling parameters
 #abundance_scaling <- 1 # remain at intervals of 1 bird increments
 doy_scaling <- 7 # 1 week
-temp_scaling <- 5 # 5 degrees C
+temp_scaling <- 1 # 1 degrees C
 
 # Saving scaling and centering parameters (mean and scale value) to dataframe 
 scaling_params <- data.frame(
