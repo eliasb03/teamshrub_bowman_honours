@@ -362,7 +362,7 @@ ggplot(data = resp_data, aes(x = x_cal, y = predicted, colour = group)) +
                                       "breedingtemp" = "Spring Temperature\n(Degrees C)",
                                       "snowmelt" = "Snowmelt\n(Day of Year)"))) +
   coord_cartesian(ylim = c(0, ylim_threshold)) 
-  
+
 #---------------------------
 # SEM Figure
 #---------------------------
@@ -554,9 +554,180 @@ create_sem_plot(guild_bsem_interacted)
 
 
 
+create_sem_std_plot <- function(guild_bsem_interacted, file_modifier = "") {
+  
+  # Create model specification string
+  model_lines <- guild_bsem_interacted %>% 
+    filter(predictor != "Intercept") %>%
+    group_by(response_single) %>%
+    summarize(line = paste0(response_single, " ~ ", 
+                            paste(paste0(new.estimate, "*", predictor), collapse = " + "))) %>%
+    pull(line) %>%
+    unique()
+  
+  # Define response order and reorder model lines
+  response_order <- c("passerineabundance", "shorebirdabundance", "waterbirdabundance", 
+                      "budburst", "snowmelt", "breedingtemp", "icemelt")
+  responses <- factor(sapply(model_lines, function(x) strsplit(x, " ~ ")[[1]][1]), 
+                      levels = response_order)
+  model_lines <- model_lines[order(responses)]
+  
+  # Combine all lines into a single model specification string
+  lavaan_model <- paste(model_lines, collapse = "\n")
+  cat(lavaan_model)
+  
+  # Create labeled covariance matrix
+  cov_matrix <- diag(8)
+  colnames(cov_matrix) <- rownames(cov_matrix) <- c("passerineabundance", "shorebirdabundance", 
+                                                    "waterbirdabundance", "icemelt", "breedingtemp", 
+                                                    "snowmelt", "budburst", "regiontemp")
+  
+  # Create a fake model with specified path coefficients
+  fit <- lavaan(model = lavaan_model, sample.cov = cov_matrix, sample.nobs = 100, 
+                fixed.x = TRUE, do.fit = FALSE)
+  
+  # Define a custom layout for the SEM plot
+  custom_layout <- matrix(c(
+    4.5, -8, 9, -10.5, 0, -5.5, 0, -2, 3, -2, 6, -2, 9, -2, 4.5, 2.5
+  ), ncol = 2, byrow = TRUE)
+  
+  # Define full names for each variable
+  full_names <- c(
+    "Passerine\nAbundance" = "passerineabundance",
+    "Shorebird\nAbundance" = "shorebirdabundance",
+    "Waterbird\nAbundance" = "waterbirdabundance",
+    "Budburst" = "budburst",
+    "Snowmelt" = "snowmelt",
+    "Breeding\nTemperature" = "breedingtemp",
+    "Ice Melt" = "icemelt",
+    "Regional\nTemperature" = "regiontemp"
+  )
+  
+  # Extract path coefficients and assign edge colors
+  path_coefs <- standardizedSolution(fit)
+  non_covariate_params <- path_coefs[path_coefs$op != "~~", ] %>%
+    left_join(guild_bsem_interacted, by = c("lhs" = "response_single", "rhs" = "predictor")) %>%
+    group_by(rhs) %>%
+    mutate(
+      refrence.u95 = ifelse(!is.na(interaction) & interaction %in% c("passerine", "shorebird", "waterbird"), 
+                            u95.ci[interaction == "passerine"][1], u95.ci),
+      refrence.l95 = ifelse(!is.na(interaction) & interaction %in% c("passerine", "shorebird", "waterbird"), 
+                            l95.ci[interaction == "passerine"][1], l95.ci)
+    ) %>%
+    ungroup() %>%
+    # mutate(
+    #   edge_color = case_when(
+    #     # Red: Both conditions met
+    #     refrence.l95 < 0 & refrence.u95 < 0 & l95.ci < 0 & u95.ci > 0 ~ "red",
+    #     
+    #     # Blue: Both conditions met
+    #     refrence.l95 > 0 & refrence.u95 > 0 & l95.ci < 0 & u95.ci > 0 ~ "blue",
+    #     
+    #     # Pale Red: Crossing zero with est < 0
+    #     refrence.l95 < 0 & refrence.u95 > 0 & est < 0 ~ scales::alpha("red", 0.25),
+    #     
+    #     # Pale Blue: Crossing zero with est > 0
+    #     refrence.l95 < 0 & refrence.u95 > 0 & est > 0 ~ scales::alpha("blue", 0.25),
+    #     
+    #     # Grey: Crossing zero
+    #     refrence.l95 < 0 & refrence.u95 > 0 ~ "grey",
+    #     
+    #     # Black: Default
+    #     TRUE ~ "black"
+    #     # refrence.l95 < 0 & refrence.u95 > 0 ~ "grey",
+    #     # refrence.l95 > 0 & refrence.u95 > 0 ~ "blue",
+    #     # refrence.l95 < 0 & refrence.u95 < 0 ~ "red",
+    #     # # l95.ci < 0 & u95.ci > 0 ~ "grey",
+    #     # # l95.ci > 0 & u95.ci > 0 ~ "blue",
+    #     # # l95.ci < 0 & u95.ci < 0 ~ "red",
+    #     # TRUE ~ "black"
+    #   )
+    mutate(
+      edge_color = case_when(
+        # Full conditions for birdabundance
+        (response == "birdabundance" & interaction != "passerine") ~ case_when(
+          # Red: Both conditions met
+          (refrence.l95 < 0 & refrence.u95 < 0) & (l95.ci < 0 & u95.ci > 0) ~ "red",
+          
+          # Blue: Both conditions met
+          (refrence.l95 > 0 & refrence.u95 > 0) & (l95.ci < 0 & u95.ci > 0) ~ "blue",
+          
+          # Pale Red: Crossing zero with est < 0
+          (refrence.l95 < 0 & refrence.u95 > 0) & est.std < 0 ~ scales::alpha("coral", 0.3),
+          
+          # Pale Blue: Crossing zero with est > 0
+          (refrence.l95 < 0 & refrence.u95 > 0) & est.std > 0 ~ scales::alpha("lightblue", 0.5),
+          # 
+          # # Grey: Crossing zero
+          # refrence.l95 < 0 & refrence.u95 > 0 ~ "grey",
+          # 
+          # # Black: Default for birdabundance
+          # TRUE ~ "black"
+        ),
+        
+        # Simplified conditions for all other responses
+        TRUE ~ case_when(
+          # Red: Confidence intervals below zero
+          l95.ci < 0 & u95.ci < 0 ~ "red",
+          
+          # Blue: Confidence intervals above zero
+          l95.ci > 0 & u95.ci > 0 ~ "blue",
+          
+          # Pale Red: Crossing zero with est < 0
+          l95.ci < 0 & u95.ci > 0 & est.std < 0 ~ scales::alpha("coral", 0.3),
+          
+          # Pale Blue: Crossing zero with est > 0
+          l95.ci < 0 & u95.ci > 0 & est.std > 0 ~ scales::alpha("lightblue", 0.5),
+          # 
+          # # Grey: Crossing zero
+          # l95.ci < 0 & u95.ci > 0 ~ "grey",
+          # 
+          # # Black: Default for others
+          # TRUE ~ "black"
+        )
+      )
+    )
+  
+  #View(non_covariate_params)
+  
+  edge_colors <- non_covariate_params$edge_color
+  edge_labels <- round(non_covariate_params$est.std, 3)
+  #   sprintf(
+  #   "%.3f \n[%.2f, %.2f]",
+  #   non_covariate_params$est,
+  #   non_covariate_params$l95.ci,
+  #   non_covariate_params$u95.ci
+  # )
+  
+  # Plot and save SEM path diagram
+  sem_plot <- semPaths(
+    fit,
+    what = "par",
+    edgeLabels = edge_labels,
+    edge.label.margin = 0,
+    edge.label.color = "black",
+    layout = custom_layout,
+    edge.label.cex = 0.5,
+    nodeLabels = names(full_names),
+    sizeMan = 6,
+    edge.color = edge_colors,
+    style = "lisrel",
+    curve = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1.8, 0, 0, 0, 0, 0, 0),
+    fade = FALSE,
+    residuals = FALSE,
+    rescale = TRUE,
+    fixedStyle = 1,
+    filetype = "pdf",
+    filename = paste0("outputs/sem/plot/birdabundance_standardized_semplot_10mar2025", file_modifier), 
+    width = 12, height = 15
+  )
+}
+
+create_sem_std_plot(guild_bsem_interacted, "_test")
 
 
-
+parameterEstimates(fit)
+standardizedSolution(fit)
 
 ############################
 #---------------------------
