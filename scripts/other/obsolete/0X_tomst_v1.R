@@ -27,7 +27,7 @@ files_table <- data.table(path = list_path,
                           data_format = "TOMST")
 
 locality_metadata <-  data.table(locality_id = locality_name ,  
-                                 tz_offset  = -7)
+                                 tz_offset  = -9)
 ##################### Can add gps coordinates as metadata
 
 #### Reading TOMST data with MyClim ####
@@ -60,64 +60,9 @@ tms.calc <- mc_calc_fdd(tms.calc, sensor = "TMS_T3")
 ## virtual sensor to estimate snow presence from 2 cm air temperature 
 tms.calc <- mc_calc_snow(tms.calc, sensor = "TMS_T2")
 
-# import tomst mapping
-tomst.mapping <- read.csv("data/raw/aru_tomst_mapping.csv") 
-
-# make list of tomsts that pair to arus, and are thus of interest
-tomst.of.interest <- c(1,  2,  3,  4,  7,  9, 11, 13, 14, 15, 16, 17, 20, 27, 29, 33, 35, 39, 40)
-tomst.of.interest.names <- paste0("TOMST", tomst.of.interest, "_QHI") # create strings of the full tomst of interest names for comparison
-
-tsd_short <- data.table(mc_reshape_long(tms.calc)) # export time series data
-tsd_short[, serial_number:=NULL] # remove useless serial_number column
-tsd_short <- tsd_short[locality_id %in% tomst.of.interest.names] # filter for only tomsts of interest
-# filter for only May to August 2024
-start.date <- as.POSIXct("2024-05-01 00:00:00", tz = "UTC")
-end.date <- as.POSIXct("2024-08-31 23:59:59", tz = "UTC")
-tsd_short <- tsd_short[datetime >= start.date & datetime <= end.date] 
-# choosing only sensros I want
-tsd_short <- tsd_short[sensor_name %in% c("TMS_T3", "snow")]
-tsd_short[, tomst_num := str_extract(locality_id, "(?<=TOMST)\\d+")]
-tsd_short[, datetime := ymd_hms(datetime)] ## :=  creates or update a column in data.table, here we switch to a lubridate format with ymd
-######### ISSUE HERE WHERE TIMES WITH 00:00:00 as the hms don't parse as lubridate objects
-# Change the timezone of datetime from UTC to UTC-7 (e.g., Pacific Time)
-tsd_short[, datetime := with_tz(datetime, tzone = "Etc/GMT+7")]
-tsd_short[, time_to := with_tz(time_to, tzone = "Etc/GMT+7")]
-tsd_short[, month := month(datetime)] ## extracting the month
-tsd_short[, day := day(datetime)] ## extracting the day
-tsd_short[, week := week(datetime)] ## extracting the week
-tsd_short[, year := year(datetime)] ## extracting the year
-
-
-tomst.mapping <- tomst.mapping %>%
-  select(aru_name, tomst_num) %>%
-  mutate(tomst_num = as.character(tomst_num))
-
-# join aru id with tomst
-tomst_data <- merge(tsd_short, tomst.mapping, by = "tomst_num", all.y = TRUE, allow.cartesian=TRUE)
-
-rm(tms.f, tms.calc, files_table)
-
-# aru.tomst <- tomst.mapping %>%
-#   mutate(locality_id = paste0("TOMST", tomst_num, "_QHI")) %>%
-#   left_join(month.tomst.data, by = "locality_id") %>%
-#   filter(month == "7") %>%
-#   mutate(temp_hl = ifelse(mean_value > median(mean_value), "high", "low")) %>%
-#   mutate(temp_hml = case_when(
-#     mean_value <= quantile(mean_value, 1/3) ~ "low",
-#     mean_value <= quantile(mean_value, 2/3) ~ "med",
-#     TRUE ~ "high"
-#   ))   #mutate(temp_hl = ifelse(mean_value > 9.75, "cool", "warm"))
-# 
-# 
-
-
-
-##############################
-# Aggregate to daily/monthly averages
 ## aggregates all those sensors to monthly values # choose between minimu percentile
 monthly.tms <- mc_agg(tms.calc,fun=c("mean","min","max"),period = "day",min_coverage=1,use_utc = F)
 monthly.tms <- mc_agg(tms.calc,fun=c("mean","percentile"),percentiles = c(0.05,0.95),period = "day",min_coverage=1,use_utc = F)
-
 
 ## export the object out of the MC framework
 export_dt <- data.table(mc_reshape_long(monthly.tms))
@@ -127,16 +72,13 @@ export_dt[, month := month(datetime)] ## extracting the month
 export_dt[, day := day(datetime)] ## extracting the day
 export_dt[, week := week(datetime)] ## extracting the week
 export_dt[, year := year(datetime)] ## extracting the year
-export_dt[, tomst_num := str_extract(locality_id, "(?<=TOMST)\\d+")] # Adding a tomst_num column
 
-export_dt <- export_dt[year == 2024,]# filter for only 2024
+#### Summarizing to Relevant Data ####
+# filter for only 2024
+export_dt <- export_dt[year == 2024,]
 
-
-
-# Summarize by 10 minute stretches from 0:00-0:10 and from 0:30-0:40
-
-
-
+# Adding a tomst_num column
+export_dt[, tomst_num := str_extract(locality_id, "(?<=TOMST)\\d+")]
 
 # filter for monthly averages
 monthly_values <- export_dt[,.(mean_value = mean(value,na.rm=T)),
@@ -157,14 +99,8 @@ month.tomst.data <- monthly_values %>%
   filter(sensor_name == "TMS_T3_mean") %>%
   filter(month %in% c("6", "7"))
 
-daily.tomst.data <- daily_values %>%
-  filter(sensor_name == "TMS_T3_mean") %>%
-  filter(month %in% c("6", "7")) %>%
-  mutate(date = ymd(paste0("2024-", month, "-", day)))
-
-# Data manually built for matching ARU to TOMST
+# Data manulaly built for matching ARU to TOMST
 tomst.mapping <- read.csv("data/raw/aru_tomst_mapping.csv") 
-tomst.of.interest <- c(1,  2,  3,  4,  7,  9, 11, 13, 14, 15, 16, 17, 20, 27, 29, 33, 35, 39, 40)
 
 aru.tomst <- tomst.mapping %>%
   mutate(locality_id = paste0("TOMST", tomst_num, "_QHI")) %>%
@@ -179,11 +115,11 @@ aru.tomst <- tomst.mapping %>%
 
 
 # # plot tomst.mapping, tms_3_mean vs ARU
-ggplot(aru.tomst, aes(x = aru_name, y = mean_value, color = temp_hml)) +
-  geom_boxplot() +
-  #geom_point(size = 2) +
-  labs(x = "ARU",
-       y = "Average Air Temp") +
-  theme(text = element_text(size = 14),
-        axis.text.x = element_text(angle = 45, hjust = 1))
+# ggplot(aru.tomst, aes(x = aru_name, y = mean_value, color = temp_hml)) +
+#   geom_boxplot() +
+#   #geom_point(size = 2) +
+#   labs(x = "ARU",
+#        y = "Average Air Temp") +
+#   theme(text = element_text(size = 14),
+#         axis.text.x = element_text(angle = 45, hjust = 1))
 
