@@ -6,6 +6,7 @@
 
 
 library(brms)
+library(tidyverse)
 
 
 confidence_threshold <- 0.5 # Confidence threshold used by BirdNET in the output I want
@@ -26,25 +27,24 @@ species_list <- # Species to do comparison between
 
 
 
-# Filter ARU data to only include species in the species list
-aru_dataframe <- aru_dataframe %>%
-  filter(common_name %in% species_list) %>%
-  mutate(date = as.Date(time_interval))
-
 # Summarize ARU data to daily level
 aru_daily <- aru_dataframe %>%
+  mutate(date = as.Date(time_interval)) %>%
   group_by(locationID, date, common_name) %>%
   summarize(total_count = sum(species_count)) %>%
   ungroup() %>%
   left_join(ARU_average_temps, by = c("locationID" = "aru_name")) %>%
   mutate(temp_binary = as.factor(temp_binary))
 
+aru_daily_filtered <- aru_daily %>%
+  filter(common_name %in% species_list)
+
 period_length <- 20 # 20 days
 start <- as.Date("2024-06-25") # Early time period
 total_range <- c(start, start + period_length)
 
 # Continuous data
-aru_cont <- aru_daily %>%
+aru_cont <- aru_daily_filtered %>%
   filter(date >= total_range[1] & date <= total_range[2]) %>%
   mutate(
     day_from_start = as.numeric(date - total_range[1]), 
@@ -80,7 +80,7 @@ waterbird <- aru_summary %>%
 
 aru_priors <- c(
   set_prior("normal(0, 4.6)", class = "b", coef = "day_from_start"),  # Prior for day_from_start
-    # max is roughly 1000, over a 16 day inerval about (1000/16) = ~60, say 100 more or less calls a day, log(100) = 4.6
+  # max is roughly 1000, over a 16 day inerval about (1000/16) = ~60, say 100 more or less calls a day, log(100) = 4.6
   set_prior("normal(0, 4.6)", class = "b", coef = "temp_binarylow"),  # Prior for temp_binarylow
   set_prior("normal(0, 4.6)", class = "b", coef = "day_from_start:temp_binarylow")  # Prior for temp interaction term
   #set_prior("normal(0, 5)", class = "Intercept")  # Prior for the intercept
@@ -120,10 +120,22 @@ shorebird_model <- brm(
   iter = 4000,
   control = list(adapt_delta = 0.999, max_treedepth = 15)
 )
-  
+
 # pp_check(passerine_model, resp = "total_count", ndraws = 1000)
 # summary(passerine_model)
+passerine <- aru_summary %>%
+  filter(common_name == "Lapland Longspur")
 
+passerine_model <- brm(
+  total_count ~ day_from_start * temp_binary + (1|locationID) + (1|date),
+  data = passerine,
+  family = poisson(),
+  prior = aru_priors,
+  chains = 4,
+  cores = 4,
+  iter = 4000,
+  control = list(adapt_delta = 0.999, max_treedepth = 15)
+)
 
 model_output_path <- "outputs/aru/calling/"
 saveRDS(passerine_model, file = paste0(model_output_path, "passerine.rds"))
@@ -160,7 +172,7 @@ all_pred <- bind_rows(
   pass_pred,
   shor_pred,
   watr_pred
-  ) %>% mutate(Temperature = group) %>%
+) %>% mutate(Temperature = group) %>%
   mutate(Temperature = fct_recode(Temperature, 
                                   "Cool" = "low",
                                   "Warm" = "high"),
@@ -173,8 +185,8 @@ aru_plotting_data <- aru_summary %>%
                                   "Cool" = "low",
                                   "Warm" = "high"),
          Date = as.Date(date))
-  
-  
+
+
 calling_temp_resp <- ggplot(data = all_pred, aes(x = Date, y = predicted, colour = group)) +
   geom_line(linewidth = 1) + 
   #geom_point(data = aru_plotting_data, aes(x = Date, y = total_count, colour = Temperature), size = 1, alpha = 0.1, position = "jitter") +
@@ -379,7 +391,7 @@ early_daterange <- c(early_start, as.Date(early_start + period_length))
 late_daterange <- c(late_start, as.Date(late_start + period_length))
 
 # Count unique observation days for each species in the early and late periods
-observation_days_count <- aru_daily %>%
+observation_days_count <- aru_daily_filtered %>%
   filter((date >= early_daterange[1] & date <= early_daterange[2]) |
            (date >= late_daterange[1] & date <= late_daterange[2])
   ) %>%
@@ -395,7 +407,7 @@ observation_days_count <- aru_daily %>%
 
 # Join the observation days count back to the original dataset
 day_threshold <- 5 # observation day threshold
-aru_cat <- aru_daily %>% # categorical (early vs late)
+aru_cat <- aru_daily_filtered %>% # categorical (early vs late)
   mutate(period = as.factor(
     ifelse(
       date >= early_daterange[1] & date <= early_daterange[2],"early",
