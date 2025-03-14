@@ -166,6 +166,17 @@ shorebird <- aru_summary %>%
 waterbird <- aru_summary %>%
   filter(guild == "waterbird")
 
+# Wind
+wind <- read_csv("data/clean/aru/windspeed_filled.csv") %>%
+  filter(datetime_whitehorse >= total_range[1] & datetime_whitehorse <= total_range[2]) %>%
+  mutate(
+    date = as_date(datetime_whitehorse)
+    ) %>%
+  group_by(date) %>%
+  summarize(
+    avg_wind = mean(wind_speed_kmh, na.rm = TRUE)
+  )
+
 
 # Running models ####
 # Setting model priors
@@ -173,12 +184,24 @@ aru_priors <- c(
   set_prior("normal(0, 4.6)", class = "b", coef = "day_from_start"),  # Prior for day_from_start
   # max is roughly 1000, over a 16 day inerval about (1000/16) = ~60, say 100 more or less calls a day, log(100) = 4.6
   set_prior("normal(0, 4.6)", class = "b", coef = "temp_binarylow"),  # Prior for temp_binarylow
-  set_prior("normal(0, 4.6)", class = "b", coef = "day_from_start:temp_binarylow")  # Prior for temp interaction term
+  set_prior("normal(0, 4.6)", class = "b", coef = "day_from_start:temp_binarylow"),  # Prior for temp interaction term
   #set_prior("normal(0, 5)", class = "Intercept")  # Prior for the intercept
+  set_prior("normal(0, 6)", class = "b", coef = "avg_wind")
 )
 
+# passerine_model <- brm(
+#   total_count ~ day_from_start * temp_binary + (1|common_name) + (1|locationID) + (1|date),
+#   data = passerine,
+#   family = poisson(),
+#   prior = aru_priors,
+#   chains = 4,
+#   cores = 4,
+#   iter = 4000,
+#   control = list(adapt_delta = 0.999, max_treedepth = 15)
+# )
+
 passerine_model <- brm(
-  total_count ~ day_from_start * temp_binary + (1|common_name) + (1|locationID) + (1|date),
+  total_count ~ day_from_start * temp_binary + wind + (1|common_name) + (1|locationID),
   data = passerine,
   family = poisson(),
   prior = aru_priors,

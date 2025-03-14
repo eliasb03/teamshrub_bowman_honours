@@ -22,8 +22,8 @@ aru_dataframe <- # Read in ARU Data
 ARU_average_temps <- # Read in in ARU Average Temperatures
   read_csv("data/clean/aru/tomst_averages.csv")
 
-species_list <- # Species to do comparison between
-  c("Lapland Longspur", "Semipalmated Plover", "Common Eider")
+# species_list <- # Species to do comparison between
+#   c("Lapland Longspur", "Semipalmated Plover", "Common Eider")
 
 
 
@@ -34,17 +34,15 @@ aru_daily <- aru_dataframe %>%
   summarize(total_count = sum(species_count)) %>%
   ungroup() %>%
   left_join(ARU_average_temps, by = c("locationID" = "aru_name")) %>%
-  mutate(temp_binary = as.factor(temp_binary))
+  mutate(temp_binary = as.factor(temp_binary)) #%>% filter(common_name %in% species_list)
 
-aru_daily_filtered <- aru_daily %>%
-  filter(common_name %in% species_list)
 
-period_length <- 20 # 20 days
+period_length <- 30 # 20 days
 start <- as.Date("2024-06-25") # Early time period
 total_range <- c(start, start + period_length)
 
 # Continuous data
-aru_cont <- aru_daily_filtered %>%
+aru_cont <- aru_daily %>%
   filter(date >= total_range[1] & date <= total_range[2]) %>%
   mutate(
     day_from_start = as.numeric(date - total_range[1]), 
@@ -75,8 +73,8 @@ passerine <- aru_summary %>%
 shorebird <- aru_summary %>%
   filter(common_name == "Semipalmated Plover")
 waterbird <- aru_summary %>%
-  filter(common_name == "Common Eider")
-
+#  filter(common_name == "Common Eider")
+  filter(common_name == "Red-throated Loon")
 
 aru_priors <- c(
   set_prior("normal(0, 4.6)", class = "b", coef = "day_from_start"),  # Prior for day_from_start
@@ -123,23 +121,11 @@ shorebird_model <- brm(
 
 # pp_check(passerine_model, resp = "total_count", ndraws = 1000)
 # summary(passerine_model)
-passerine <- aru_summary %>%
-  filter(common_name == "Lapland Longspur")
 
-passerine_model <- brm(
-  total_count ~ day_from_start * temp_binary + (1|locationID) + (1|date),
-  data = passerine,
-  family = poisson(),
-  prior = aru_priors,
-  chains = 4,
-  cores = 4,
-  iter = 4000,
-  control = list(adapt_delta = 0.999, max_treedepth = 15)
-)
 
 model_output_path <- "outputs/aru/calling/"
 saveRDS(passerine_model, file = paste0(model_output_path, "passerine.rds"))
-saveRDS(waterbird_model, file = paste0(model_output_path, "waterbird.rds"))
+saveRDS(waterbird_model, file = paste0(model_output_path, "waterbird_redthroatedloon.rds"))
 saveRDS(shorebird_model, file = paste0(model_output_path, "shorebird.rds"))
 
 passerine_model <- readRDS(file = paste0(model_output_path, "passerine.rds"))
