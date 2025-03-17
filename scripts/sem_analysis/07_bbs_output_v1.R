@@ -317,13 +317,11 @@ predicted_effect_sizes <- resp_data %>%
   ungroup() %>%
   group_by(predictor, group) %>%
   summarize(
-    min_x = min(x_cal),
-    max_x = max(x_cal),
-    left_y = predicted[which.min(x_cal)],
-    right_y = predicted[which.max(x_cal)],
-    slope = (left_y - right_y) / (abs(max_x - min_x))#,
-    #mid_y = abs(abs(min_y)+abs(max_y))/2,
-    #mid_x = (min_x + max_x)/2
+    min_x = min(x),
+    max_x = max(x),
+    left_y = predicted[which.min(x)],
+    right_y = predicted[which.max(x)],
+    slope = (left_y - right_y) / (min_x - max_x)
   )
 
 
@@ -350,7 +348,7 @@ sem_data_plotting <- sem_data_plotting %>%
   mutate(value_cal = (value * scaling_value) + mean)  # Add the calibration value to value
 
 # Plot the calibrated data
-ggplot(data = resp_data, aes(x = x_cal, y = predicted, colour = group)) +
+bird_plot <- ggplot(data = resp_data, aes(x = x_cal, y = predicted, colour = group)) +
   geom_line(linewidth = 1) + 
   geom_point(data = sem_data_plotting, aes(x = value_cal, y = birdabundance, colour = group), 
              size = 1, alpha = 0.5, position = "jitter") +
@@ -366,7 +364,7 @@ ggplot(data = resp_data, aes(x = x_cal, y = predicted, colour = group)) +
        y = "Predicted Bird Abundance") +
   theme_half_open(font_size = 12) +  
   theme(
-    legend.position = c(0.5, -0.12),         # Bottom center position for legend
+    legend.position = c(0.5, -0.06),         # Bottom center position for legend
     legend.justification = "center",         # Center the legend horizontally
     legend.title.align = 0.5,                # Center the legend title
     strip.background = element_blank(),
@@ -384,53 +382,16 @@ ggplot(data = resp_data, aes(x = x_cal, y = predicted, colour = group)) +
                                       "snowmelt" = "Snowmelt\n(Day of Year)"))) +
   coord_cartesian(ylim = c(0, ylim_threshold)) 
 
-
-
-# Plot the calibrated data
-ggplot(data = resp_data, aes(x = x, y = predicted, colour = group)) +
-  geom_line(linewidth = 1) + 
-  geom_point(data = resp_data, aes(x = x, y = predicted, colour = "black"), 
-             size = 1, alpha = 0.5, position = "jitter") +
-  geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = group), 
-              alpha = 0.13, colour = NA) +  # Fill ribbons
-  scale_colour_viridis_d(name = "Guild",  
-                         labels = c("Waterbird", "Passerine", "Shorebird"), 
-                         guide = guide_legend(nrow = 1)) +  # Combined legend for colour
-  scale_fill_viridis_d(name = "Guild",  
-                       labels = c("Waterbird", "Passerine", "Shorebird"), 
-                       guide = guide_legend(nrow = 1)) +  # Combined legend for fill
-  labs(x = NULL,#"Predictor Variable", 
-       y = "Predicted Bird Abundance") +
-  theme_half_open(font_size = 12) +  
-  theme(
-    legend.position = c(0.5, -0.12),         # Bottom center position for legend
-    legend.justification = "center",         # Center the legend horizontally
-    legend.title.align = 0.5,                # Center the legend title
-    strip.background = element_blank(),
-    strip.placement = "outside",
-    strip.text = element_text(size = 10),
-    panel.spacing = unit(0.02, "npc"),
-    plot.margin = margin(t = 10, r = 10, b = 24, l = 10)
-  ) +
-  
-  facet_wrap(~predictor, nrow = 2, scale = "free_x",
-             strip.position = "bottom",     # Move facet labels to the bottom
-             labeller = as_labeller(c("icemelt" = "Ice Melt\n(Day of Year)", 
-                                      "budburst" = "Budburst\n(Day of Year)",
-                                      "breedingtemp" = "Spring Temperature\n(Degrees C)",
-                                      "snowmelt" = "Snowmelt\n(Day of Year)"))) +
-  coord_cartesian(ylim = c(0, ylim_threshold)) 
-
+ggsave("outputs/sem/plot/bird_abundance_4plot.png", bird_plot, width = 10, height = 10, dpi = 300)
 #---------------------------
 # SEM Figure
 #---------------------------
 library(lavaan)
 library(semPlot)
 
-effect_size_scaled
 
 guild_bsem_interacted <- guild_bsem_interacted %>%
-  left_join(effect_size_scaled %>% 
+  left_join(predicted_effect_sizes %>% 
               select(predictor, group, slope), 
             by = c("predictor", "interaction" = "group")) %>%
   mutate(new.estimate = if_else(!is.na(slope), slope, new.estimate)) %>%
@@ -613,7 +574,7 @@ create_sem_plot <- function(guild_bsem_interacted, file_modifier = "") {
 }
 
 # Run the function
-create_sem_plot(guild_bsem_interacted, "test")
+create_sem_plot(guild_bsem_interacted, "test4")
 
 
 
