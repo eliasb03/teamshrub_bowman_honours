@@ -137,14 +137,6 @@ tomst_avg <- tomst_temp %>%
     tomst_num = first(tomst_num)
   )
 
-library(ggplot2)
-ggplot(tomst_avg, aes(x = reorder(aru_name, avg_temp), y = avg_temp)) +
-  geom_point(size = 3, color = "red") +
-  theme_minimal() +
-  labs(title = "Average Temperature by ARU",
-       x = "ARU Name",
-       y = "Average Temperature (°C)") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 # based on this, temp threshold: 4.25
 tomst_avg <- tomst_avg %>%
   mutate(temp_binary = as.factor(ifelse(avg_temp >= 4.25, "high", "low")))
@@ -152,3 +144,24 @@ tomst_avg <- tomst_avg %>%
 # Write temp_avg to the data/clean directory
 write_csv(tomst_avg, "data/clean/aru/tomst_averages.csv")
 tomst_avg <- read_csv("data/clean/aru/tomst_averages.csv")
+
+
+library(ggplot2)
+library(cowplot)
+aru_temp_plot <- ggplot(tomst_avg, aes(x = reorder(aru_name, avg_temp), y = avg_temp, color = temp_binary)) +
+  geom_point(size = 3) +
+  scale_color_manual(values = c("low" = "#457B9D", "high" = "#E63946")) +
+  theme_minimal() +
+  labs(#title = "Average Temperature by ARU",
+       #x = "ARU",
+       x = NULL,
+       y = "Average Temperature (°C)") +
+  theme_minimal(base_family = "Helvetica") +
+  theme_half_open(font_size = 14) +
+  theme(axis.text.x = element_text(angle = 65, hjust = 1)
+        )
+
+output_path <- "outputs/aru/summary/"
+ggsave(file.path(output_path, "aru_temp_plot.png"), 
+       aru_temp_plot,
+       width = 7, height = 6)
