@@ -12,6 +12,31 @@ library(ggeffects)
 library(cowplot)
 library(dplyr)
 
+
+colour_palette <- c(
+  "shorebird" = "#E69F00",      # Shorebird
+  "waterbird" = "#0072B2",      # Waterbird
+  "passerine" = "#CC79A7",      # Passerine
+  "regional_temp" = "#999999",  # Regional Temperature
+  "breeding_temp" = "#ECDC06",  # Breeding Temperature
+  "icemelt" = "#56B4E9",        # Icemelt
+  "snowmelt" = "#D55E00",       # Snowmelt
+  "budburst" = "#009E73",       # Budburst
+  "other" = "#000000"
+)
+# colour_palette <- c(
+#   "shorebird" = "#DDCC77",      # Shorebird
+#   "waterbird" = "#332288",      # Waterbird
+#   "passerine" = "#44AA99",      # Passerine
+#   "regional_temp" = "#AA4499",  # Regional Temperature
+#   "breeding_temp" = "#CC6677",  # Breeding Temperature
+#   "icemelt" = "#88CCEE",        # Icemelt
+#   "snowmelt" = "#882255",       # Snowmelt
+#   "budburst" = "#117733",       # Budburst
+#   "other" = "#000000"
+# )
+
+
 # Read model outputs
 model_output_path <- "outputs/sem/abundance/"
 #passerine_bsem <- readRDS(file = paste0(model_output_path, "passerine.rds"))
@@ -152,6 +177,7 @@ library(gt)
 library(broom.mixed)
 library(knitr)
 library(webshot2)
+library(dplyr)
 
 recode_vars <- c(
   "intercept" = "Intercept",
@@ -205,11 +231,11 @@ output_tbl <- tidy_output %>%
     "Tail ESS" = tail.ess
   ) %>% 
   mutate(
-    Response = recode(Response, !!!recode_vars),
-    Parameter = recode(Parameter, !!!recode_vars)
+    Response = dplyr::recode(Response, !!!recode_vars),
+    Parameter = dplyr::recode(Parameter, !!!recode_vars)
   ) %>%
   mutate(Response = factor(Response, levels = c("Bird Abundance", "Ice Melt", "Breeding Temperature", "Snowmelt", "Budburst"))) %>%
-  mutate(Parameter = factor(Parameter, levels = c("(Intercept)", "Intercept", "Shorebird", "Waterbird", "Ice Melt", "Icemelt:Shorebird", "Icemelt:Waterbird", "Breeding Temperature","Breeding Temperature:Shorebird", "Breeding Temperature:Waterbird",  "Snowmelt","Snowmelt:Shorebird", "Snowmelt:Waterbird", "Budburst", "Budburst:Shorebird", "Budburst:Waterbird", "Regional Temperature"))) %>%
+  mutate(Parameter = factor(Parameter, levels = c("Intercept", "Shorebird", "Waterbird", "Ice Melt", "Icemelt:Shorebird", "Icemelt:Waterbird", "Breeding Temperature","Breeding Temperature:Shorebird", "Breeding Temperature:Waterbird",  "Snowmelt","Snowmelt:Shorebird", "Snowmelt:Waterbird", "Budburst", "Budburst:Shorebird", "Budburst:Waterbird", "Regional Temperature"))) %>%
   arrange(Response, Parameter)
 
 
@@ -347,48 +373,153 @@ sem_data_plotting <- sem_data_plotting %>%
   left_join(scaling_params, by = "predictor") %>%   # Join based on predictor
   mutate(value_cal = (value * scaling_value) + mean)  # Add the calibration value to value
 
-# Plot the calibrated data
-bird_plot <- ggplot(data = resp_data, aes(x = x_cal, y = predicted, colour = group)) +
-  geom_line(linewidth = 1) + 
+# 
+# colour_palette <- c(
+#   "shorebird" = "#E69F00",      # Shorebird
+#   "waterbird" = "#0072B2",      # Waterbird
+#   "passerine" = "#CC79A7",      # Passerine
+#   "regional_temp" = "#999999",  # Regional Temperature
+#   "breeding_temp" = "#F0E442",  # Breeding Temperature
+#   "icemelt" = "#56B4E9",        # Icemelt
+#   "snowmelt" = "#D55E00",       # Snowmelt
+#   "budburst" = "#009E73",       # Budburst
+#   "other" = "#000000"
+# )
+
+resp_data$predictor <- factor(resp_data$predictor, levels = c("budburst", "snowmelt", "breedingtemp", "icemelt"))
+sem_data_plotting$predictor <- factor(sem_data_plotting$predictor, levels = c("budburst", "snowmelt", "breedingtemp", "icemelt"))
+
+bird_plot <- 
+  ggplot(data = resp_data, aes(x = x_cal, y = predicted, colour = group)) +
+  geom_line(linewidth = 1.5) + 
   geom_point(data = sem_data_plotting, aes(x = value_cal, y = birdabundance, colour = group), 
              size = 1, alpha = 0.5, position = "jitter") +
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = group), 
-              alpha = 0.13, colour = NA) +  # Fill ribbons
-  scale_colour_viridis_d(name = "Guild",  
-                         labels = c("Waterbird", "Passerine", "Shorebird"), 
-                         guide = guide_legend(nrow = 1)) +  # Combined legend for colour
-  scale_fill_viridis_d(name = "Guild",  
-                       labels = c("Waterbird", "Passerine", "Shorebird"), 
-                       guide = guide_legend(nrow = 1)) +  # Combined legend for fill
-  labs(x = NULL,#"Predictor Variable", 
-       y = "Predicted Bird Abundance") +
+              alpha = 0.15, colour = NA) +  # Fill ribbons
+  scale_colour_manual(name = "Guild", values = colour_palette) +  # Use custom colours
+  scale_fill_manual(name = "Guild", values = colour_palette) +  # Use custom fill colours
+  labs(x = NULL, y = "Predicted Bird Abundance") +
   theme_half_open(font_size = 12) +  
   theme(
-    legend.position = c(0.5, -0.06),         # Bottom center position for legend
-    legend.justification = "center",         # Center the legend horizontally
-    legend.title.align = 0.5,                # Center the legend title
+    legend.position = c(0.5, 1),#-0.34),
+    legend.justification = "center",
+    legend.direction = "horizontal",
+    legend.box = "horizontal",
+    legend.title.align = 0.5,
     strip.background = element_blank(),
     strip.placement = "outside",
     strip.text = element_text(size = 10),
     panel.spacing = unit(0.02, "npc"),
-    plot.margin = margin(t = 10, r = 10, b = 24, l = 10)
+    plot.margin = margin(t = 5, r = 10, b = 5, #24, 
+                         l = 10)
   ) +
-  
   facet_wrap(~predictor, nrow = 2, scale = "free_x",
-             strip.position = "bottom",     # Move facet labels to the bottom
-             labeller = as_labeller(c("icemelt" = "Ice Melt\n(Day of Year)", 
-                                      "budburst" = "Budburst\n(Day of Year)",
-                                      "breedingtemp" = "Spring Temperature\n(Degrees C)",
-                                      "snowmelt" = "Snowmelt\n(Day of Year)"))) +
+             strip.position = "bottom",
+             labeller = as_labeller(c(
+               "icemelt" = "Ice Melt\n(Day of Year)", 
+               "budburst" = "Budburst\n(Day of Year)",
+               "breedingtemp" = "Spring Temperature\n(Degrees C)",
+               "snowmelt" = "Snowmelt\n(Day of Year)"))) +
   coord_cartesian(ylim = c(0, ylim_threshold)) 
 
-ggsave("outputs/sem/plot/bird_abundance_4plot.png", bird_plot, width = 10, height = 10, dpi = 300)
+ggsave("outputs/sem/plot/bird_abundance_preds_1x4.png", bird_plot, width = 15, height = 4, dpi = 300)
+  
+# Plot the calibrated data
+resp_data$predictor <- factor(resp_data$predictor, levels = c("breedingtemp", "icemelt", "budburst", "snowmelt"))
+sem_data_plotting$predictor <- factor(sem_data_plotting$predictor, levels = c("breedingtemp", "icemelt", "budburst", "snowmelt"))
+
+bird_plot <- 
+  ggplot(data = resp_data, aes(x = x_cal, y = predicted, colour = group)) +
+  geom_line(linewidth = 1.5) + 
+    geom_point(data = sem_data_plotting, aes(x = value_cal, y = birdabundance, colour = group), 
+               size = 1, alpha = 0.5, position = "jitter") +
+    geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = group), 
+                alpha = 0.15, colour = NA) +  # Fill ribbons
+    scale_colour_manual(name = "Guild", values = colour_palette) +  # Use custom colours
+    scale_fill_manual(name = "Guild", values = colour_palette) +  # Use custom fill colours
+    labs(x = NULL, y = "Predicted Bird Abundance") +
+    theme_half_open(font_size = 12) +  
+    theme(
+      legend.position = c(0.5, -0.13),
+      legend.justification = "center",
+      legend.direction = "horizontal",
+      legend.box = "horizontal",
+      legend.title.align = 0.5,
+      strip.background = element_blank(),
+      strip.placement = "outside",
+      strip.text = element_text(size = 10),
+      panel.spacing = unit(0.02, "npc"),
+      plot.margin = margin(t = 5, r = 10, b = 23, #24, 
+                           l = 10)
+    ) +
+    facet_wrap(~predictor, nrow = 2, scale = "free_x",
+               strip.position = "bottom",
+               labeller = as_labeller(c(
+                 "icemelt" = "Ice Melt (Day of Year)", 
+                 "budburst" = "Budburst (Day of Year)",
+                 "breedingtemp" = "Spring Temperature (Degrees C)",
+                 "snowmelt" = "Snowmelt (Day of Year)"))) +
+    coord_cartesian(ylim = c(0, ylim_threshold)) 
+
+facet_colors <- c(
+  "budburst" = "#009E73",   # Green (Budburst)
+  "snowmelt" = "#D55E00",   # Red (Snowmelt)
+  "breedingtemp" = "#F0E442", # Yellow (Breeding Temp)
+  "icemelt" = "#0072B2"     # Blue (Icemelt)
+)
+
+library(ggh4x)  # Enables custom strip backgrounds
+
+ggplot(data = resp_data, aes(x = x_cal, y = predicted, colour = group)) +
+  geom_line(linewidth = 1.5) + 
+  geom_point(data = sem_data_plotting, aes(x = value_cal, y = birdabundance, colour = group), 
+             size = 1, alpha = 0.5, position = "jitter") +
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = group), 
+              alpha = 0.15, colour = NA) +  
+  scale_colour_manual(name = "Guild", values = colour_palette) +  
+  scale_fill_manual(name = "Guild", values = colour_palette) +  
+  labs(x = NULL, y = "Predicted Bird Abundance") +
+  theme_half_open(font_size = 12) +  
+  theme(
+    legend.position = c(0.5, -0.06),
+    legend.justification = "center",
+    legend.title.align = 0.5,
+    strip.text = element_text(size = 10, face = "bold", color = "white"),  # Ensure text is readable
+    panel.spacing = unit(0.02, "npc"),
+    plot.margin = margin(t = 10, r = 10, b = 24, l = 10)
+  ) +
+  facet_wrap2(
+    ~predictor, 
+    nrow = 2, 
+    scales = "free_x", 
+    strip.position = "bottom",  
+    labeller = as_labeller(c(
+      "icemelt" = "Ice Melt\n(Day of Year)", 
+      "budburst" = "Budburst\n(Day of Year)",
+      "breedingtemp" = "Spring Temperature\n(Degrees C)",
+      "snowmelt" = "Snowmelt\n(Day of Year)")),
+    strip_background = list(fill = facet_colors)  # Apply custom background colors
+  ) +
+  coord_cartesian(ylim = c(0, ylim_threshold))
+
+ggsave("outputs/sem/plot/bird_abundance_preds_2x2.png", bird_plot, width = 6, height = 6, dpi = 300)
 #---------------------------
 # SEM Figure
 #---------------------------
 library(lavaan)
 library(semPlot)
-
+# 
+# colour_palette <- c(
+#   1 = "#E69F00", # Shorebird
+#   2 = "#56B4E9", # Waterbird
+#   3 = "#CC79A7", # Passerine
+#   4 = "#999999", # Regional Temperature
+#   5 = "#F0E442", # Breeding Temperature
+#   6 = "#0072B2", # Icemelt
+#   7 = "#D55E00", # Snowmelt
+#   8 = "#009E73", # Budburst
+#   9 = "#000000"  # 
+# )
 
 guild_bsem_interacted <- guild_bsem_interacted %>%
   left_join(predicted_effect_sizes %>% 
