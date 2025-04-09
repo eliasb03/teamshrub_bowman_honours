@@ -49,7 +49,7 @@ ice_cols <- c("spring_drop_doy")
 phenology_cols <- c("snowmelt_mean", "budburst_mean")
 climate_cols <- c("Tave_sp", "mean_temp_breeding_season")
 
-# Call the function with your datasets
+# Call the function with the datasets
 final_data <- join_by_year(
   bbs_data = bbs_data,
   ice_data = ice_data,
@@ -111,7 +111,7 @@ final_data <- final_data %>%
 #   return(df)
 # }
 # 
-# # Apply the function to your data
+# # Apply the function to the data
 # cols_to_fill <-c("budburst", "snowmelt", "icemelt", "regiontemp", "breedingtemp")
 # long_term_means <- final_data %>%
 #   summarise(across(all_of(cols_to_fill), ~mean(.x, na.rm = TRUE)))
@@ -124,7 +124,7 @@ scaled_data <- final_data %>%
   filter(!is.na(birdabundance)) %>% # remove any NA bird abundances
   .[!duplicated(.), ] # remove duplicated columns
 
-    
+
 # Specifying scaling parameters
 #abundance_scaling <- 1 # remain at intervals of 1 bird increments
 doy_scaling <- 7 # 1 week
@@ -133,7 +133,7 @@ temp_scaling <- 1 # 1 degrees C
 # Saving scaling and centering parameters (mean and scale value) to dataframe 
 scaling_params <- data.frame(
   variable = c(#"bird.abundance", 
-               "budburst", "snowmelt", "icemelt", "regiontemp", "breedingtemp"),
+    "budburst", "snowmelt", "icemelt", "regiontemp", "breedingtemp"),
   mean = c(
     #mean(final_data$bird.abundance, na.rm = TRUE),
     mean(final_data$budburst, na.rm = TRUE),

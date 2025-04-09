@@ -65,7 +65,7 @@ import_ice_data <- function(file_path) {
 }
 
 # Function: Calculate yearly ice statistics
-  # Should find the latest date before the summer minimum when the ice concentration went below the threshold
+# Should find the latest date before the summer minimum when the ice concentration went below the threshold
 calculate_yearly_stats <- function(data, threshold = ice_cover_threshold) {
   stats <- data %>%
     group_by(year) %>%
