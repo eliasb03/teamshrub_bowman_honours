@@ -1,10 +1,11 @@
-
-
-
-######### HAVENT DEALT WITH THE PROBLEM OF ARUS STOPS
-######### Haven't chosen early and late time periods yet
-
-
+#------------------------------
+# teamshrub_bowman_honours
+# 06_ARU_analysis_v1
+# By: Elias Bowman
+# Created: 
+#
+# Description: This script runs statistical analyses on the outputs from the BirdNET models
+#------------------------------
 
 library(brms)
 library(tidyverse)
