@@ -21,7 +21,7 @@ base_dir <- "D:/ARU_QHI_2024"
 aru_all_output_folder <- "D:/ARU_QHI_2024/output_total"
 
 # Confidence threshold 
-confidence_threshold <- 0.5 # KEY THING I HAVENT CHOSEN YET
+confidence_threshold <- 0.5 
 
 # Columns to remove 
 columns_to_remove <- c(
@@ -100,14 +100,15 @@ raw_aru_data <- process_aru_folder(aru_all_output_folder,
 # Note that ARUQ14 still isnt filling in seconds correctly, but i dont think that should matter
 raw_aru_data[[7]][, detectionTimeLocal := as.POSIXct(detectionTimeLocal, format = "%Y-%m-%d %H:%M")]
 
-aru_activity[[7]][, dateTimeLocal := as.POSIXct(str_extract(filepath, "\\d{8}_\\d{6}") %>%
-                                                  strptime(format = "%Y%m%d_%H%M%S"), 
-                                                tz = "America/Dawson")]
+# aru_activity[[7]][, dateTimeLocal := as.POSIXct(str_extract(filepath, "\\d{8}_\\d{6}") %>%
+#                                                   strptime(format = "%Y%m%d_%H%M%S"), 
+#                                                 tz = "America/Dawson")]
 raw_aru_data[[7]][, dateTimeLocal := ifelse(
   grepl("^\\d{4}-\\d{2}-\\d{2}$", dateTimeLocal),
   paste0(dateTimeLocal, " 00:00:00"),
   dateTimeLocal
 )]
+
 
 
 # Define the summarization function
@@ -185,3 +186,25 @@ write_csv(aru_analysis_dataframe, paste0("data/clean/aru/aru_analysis_data", "_c
 
 aru_analysis_dataframe <- read_csv(paste0("data/clean/aru/aru_analysis_data", "_conf", confidence_threshold,".csv"))
 
+# Saving and writing raw ARU data
+raw_aru_data
+
+# Define the filtering threshold and the three target species.
+# Adjust these values as needed.
+confidence_threshold <- 0.5
+target_species <- c("Lapland Longspur", "Red-throated Loon", "Semipalmated Plover")
+
+# Filter each data.table in the large list based on the threshold and species criteria.
+# We assume that "scientific_name" holds the species information.
+filtered_list <- lapply(raw_aru_data, function(dt) {
+  dt[confidence > confidence_threshold & common_name %in% target_species]
+})
+
+# Combine (stack) all filtered data.tables into one final data.table.
+final_dt <- rbindlist(filtered_list)
+
+# Replace all "\" with "/" in the filepath column of aru_data
+final_dt[, filepath := gsub("\\\\", "/", filepath)]
+
+# Save the final data to a CSV file.
+fwrite(final_dt, "data/clean/aru/filtered_aru_data.csv")
