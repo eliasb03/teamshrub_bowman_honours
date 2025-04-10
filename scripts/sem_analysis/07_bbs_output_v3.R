@@ -668,5 +668,4 @@ create_sem_plot <- function(bsem_plotting = bsem_plotting, file_modifier = "") {
   )
 }
 
-
 create_sem_plot(bsem_plotting, file_modifier = "")
