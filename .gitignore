@@ -94,6 +94,9 @@ packrat/lib*/
 # Ignore the Large ARU output data
 **/all_ARU_export/
 
+# Ignore large ARU outputs
+**/filtered_aru_data.csv
+
 # Ignore the scrap outputs
 **/scrap/
 
