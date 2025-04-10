@@ -9,6 +9,259 @@ library(gtools)
 library(ggridges)
 library(zoo)
 
+##############
+
+passerine_model <- readRDS(file = paste0(model_output_path, "passerine.rds"))
+waterbird_model <- readRDS(file = paste0(model_output_path, "waterbird_redthroatedloon.rds"))
+shorebird_model <- readRDS(file = paste0(model_output_path, "shorebird.rds"))
+
+
+# Generate predicted values for day_from_start by temp_binary
+pass_pred <- ggpredict(passerine_model, terms = c("day_from_start[0:30]", "temp_binary")) %>%
+  as.data.frame() %>%
+  mutate(species = "Lapland Longspur")
+
+shor_pred <- ggpredict(shorebird_model, terms = c("day_from_start[0:30]", "temp_binary")) %>%
+  as.data.frame() %>%
+  mutate(species = "Semipalmated Plover")
+
+watr_pred <- ggpredict(waterbird_model, terms = c("day_from_start[0:30]", "temp_binary")) %>%
+  as.data.frame() %>%
+  mutate(species = "Red-throated Loon")
+#mutate(species = "Common Eider")
+
+all_pred <- bind_rows(
+  pass_pred,
+  shor_pred,
+  watr_pred
+) %>% mutate(Temperature = group) %>%
+  mutate(Temperature = fct_recode(Temperature, 
+                                  "Cool" = "low",
+                                  "Warm" = "high"),
+         Date = as.Date(x + start))
+
+aru_plotting_data <- aru_summary %>%
+  filter(common_name %in% c("Lapland Longspur", "Semipalmated Plover", "Red-throated Loon")) %>%
+  mutate(Temperature = temp_binary) %>%
+  filter(complete.cases(.)) %>%
+  mutate(Temperature = fct_recode(Temperature, 
+                                  "Cool" = "low",
+                                  "Warm" = "high"),
+         Date = as.Date(date))
+
+
+calling_temp_resp <- 
+  ggplot(data = all_pred, aes(x = Date, y = predicted, colour = group)) +
+  geom_line(linewidth = 1) + 
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = group), 
+              alpha = 0.13, colour = NA) +  # Fill ribbons
+  scale_colour_manual(name = "Temperature",
+                      values = temp_palette,
+                      labels = c("Warm", "Cold"),
+                      guide = guide_legend(nrow = 1)) +  # Consistent legend
+  scale_fill_manual(name = "Temperature",
+                    values = temp_palette,
+                    labels = c("Warm", "Cold"),
+                    guide = guide_legend(nrow = 1)) +  # Matching fill colors
+  labs(x = NULL, 
+       y = "Predicted Bird Call Detections") +
+  theme_minimal(base_family = "Helvetica") +
+  theme_half_open(font_size = 12) +
+  theme(
+    strip.background = element_blank(),
+    strip.placement = "outside",
+    strip.text = element_text(size = 10, face = "bold"),
+    panel.spacing = unit(0.02, "npc"),
+    plot.margin = margin(t = 10, r = 10, b = 10, l = 10),
+    legend.position = "bottom"
+  ) +
+  facet_wrap(~species, nrow = 1, scale = "free",
+             strip.position = "top") +
+  scale_y_continuous(limits = c(0, NA))
+
+calling_temp_resp
+
+ggsave("outputs/aru/model_figs/calling_temp_model_17mar2025.pdf", plot = calling_temp_resp, width = 10, height = 4, units = "in")
+
+ggsave("outputs/aru/model_figs/calling_temp_model_17mar2025.png", plot = calling_temp_resp, width = 12, height = 4, units = "in")
+
+
+
+##############
+
+
+#-----------------------------
+# Create Calling Ridgeline
+#-----------------------------
+create_faceted_ridgeline_plot <- function(species_list, scaling = 0.4, log = TRUE, temp_palette = c("high" = "#E63946", "low" = "#457B9D")) {
+  
+  # Helper function to prepare ridgeline data for a given species
+  create_ridgeline_data <- function(species_of_interest) {
+    
+    # Filter data for the selected species and exclude ARUQ18 and ARUQ17
+    filtered_species <- aru_daily %>%
+      filter(common_name == species_of_interest) #& !locationID %in% c("ARUQ18", "ARUQ17"))
+    
+    # Apply 3-day rolling mean to smooth detections
+    if (log) {
+      filtered_species <- filtered_species %>%
+        mutate(smoothed_total_count = zoo::rollmean(log(total_count + 1), k = 3, fill = NA))
+    } else {
+      filtered_species <- filtered_species %>%
+        mutate(smoothed_total_count = zoo::rollmean(total_count, k = 3, fill = NA))
+    }
+    
+    # Assign numeric ARU values and order locations by temperature
+    aru_daily <- aru_daily %>%
+      mutate(aru_num = as.numeric(gsub("ARUQ", "", locationID)))
+    
+    ordered_locations <- aru_daily %>%
+      arrange(desc(temp_binary), desc(aru_num)) %>%
+      pull(locationID) %>%
+      unique()
+    
+    # Return processed data with species column
+    filtered_species %>%
+      mutate(species = species_of_interest,
+             locationID = factor(locationID, levels = ordered_locations))
+  }
+  
+  # Process data for all species in the list
+  all_ridgeline_data <- bind_rows(lapply(species_list, create_ridgeline_data))
+  
+  # Generate the faceted ridgeline plot
+  ggplot(all_ridgeline_data, aes(x = date, y = locationID, height = smoothed_total_count, fill = temp_binary)) +
+    geom_ridgeline(stat = "identity", scale = scaling, alpha = 0.7) +
+    geom_vline(xintercept = as.numeric(total_range), linetype = "dashed", color = "black", size = 1) + # Add vertical lines
+    scale_fill_manual(values = temp_palette) +
+    labs(#title = "Ridgeline Plots of Bird Call Detections",
+      x = "Date",
+      y = "Smoothed and Log-Transformed Detections",
+      fill = "Temperature") +
+    theme_minimal(base_family = "Helvetica") +
+    theme_half_open(font_size = 12) + 
+    theme(legend.position = "bottom",
+          strip.background = element_blank(),
+          strip.placement = "outside",
+          axis.text.x = element_text(),#angle = 45, hjust = 1, face = "bold"),
+          axis.text.y = element_text(),#face = "bold"),
+          plot.title = element_text(),#face = "bold"),
+          panel.grid.major.y = element_line(colour = "grey80"),
+          panel.grid.minor.y = element_blank(),
+          panel.grid.major.x = element_blank(),
+          panel.grid.minor.x = element_blank()) +
+    scale_x_date(date_labels = "%b %d", date_breaks = "10 days") +
+    coord_cartesian(xlim = c(as.Date("2024-06-20"), as.Date("2024-08-20"))) +
+    facet_wrap(~species, nrow = 1, strip.position = "top")  # Facet by species
+}
+
+# Example Usage:
+species_list <- c("Semipalmated Plover", "Lapland Longspur", "Red-throated Loon")
+faceted_plot <- create_faceted_ridgeline_plot(species_list)
+faceted_plot
+
+output_folder <- "outputs/aru/model_figs"
+ggsave(file.path(output_folder, "Species_Ridgeline.png"), 
+       faceted_plot,
+       width = 14, height = 6)
+
+#------------------------
+# Output Table
+#------------------------
+
+aru_model_summary_table <- function(model, title = "Model Summary", plot_name = "model_table") {
+  # Recode variables for cleaner labels
+  recode_vars <- c(
+    "intercept" = "Intercept",
+    "Intercept" = "Intercept",
+    "(Intercept)" = "Intercept",
+    "(intercept)" = "Intercept",
+    "day_from_start" = "Date",
+    "temp_binarylow" = "Low Temperature",
+    "day_from_start:temp_binarylow" = "Date:Low Temperature"
+  )
+  
+  # Extract and format model summary
+  model_output <- summary(model)$fixed %>%
+    tibble::rownames_to_column(var = "Parameter") %>%
+    mutate(across(c(Estimate, Est.Error, `l-95% CI`, `u-95% CI`), round, 3)) %>%
+    mutate(across(c(Bulk_ESS, Tail_ESS), round, 0)) %>%
+    mutate(across(c(Rhat), round, 3)) %>%
+    rename(
+      "Estimate" = Estimate,
+      "Est.Error" = Est.Error,
+      "Lower 95% CI" = `l-95% CI`,
+      "Upper 95% CI" = `u-95% CI`,
+      "R-hat" = Rhat,
+      "Bulk ESS" = Bulk_ESS,
+      "Tail ESS" = Tail_ESS
+    ) %>%
+    mutate(
+      Parameter = recode(Parameter, !!!recode_vars)
+    ) %>%
+    mutate(Parameter = factor(Parameter, levels = c("Intercept", "Date", "Low Temperature", "Date:Low Temperature"))) %>%
+    arrange(Parameter)
+  
+  # Create the GT table
+  model_table <- model_output %>%
+    gt() %>%
+    tab_header(
+      title = title
+    ) %>%
+    tab_style(
+      style = cell_text(weight = "bold"),
+      locations = cells_column_labels(everything())
+    ) %>%
+    tab_style(
+      style = list(
+        cell_fill(color = "gainsboro"),
+        cell_text(style = "italic")
+      ),
+      locations = cells_body(rows = `Lower 95% CI` > 0 & `Upper 95% CI` > 0)
+    ) %>%
+    tab_style(
+      style = list(
+        cell_text(style = "italic"),
+        cell_fill(color = "gainsboro")
+      ),
+      locations = cells_body(rows = `Lower 95% CI` < 0 & `Upper 95% CI` < 0)
+    ) %>%
+    tab_style(
+      style = cell_borders(sides = "top", color = "black", weight = px(2)),
+      locations = cells_body(rows = Parameter == "Intercept")
+    ) %>%
+    tab_style(
+      style = cell_borders(sides = "top", color = "grey", weight = px(1)),
+      locations = cells_body(rows = Parameter == "Date")
+    )
+  
+  output_html <- paste0("outputs/aru/model_figs/", plot_name, ".html")
+  output_img = paste0("outputs/aru/model_figs/", plot_name, ".png")
+  # Save as HTML
+  gtsave(model_table, output_html)
+  
+  # Save as PNG
+  webshot(output_html, file = output_img, vwidth = 200, vheight = 160, zoom = 2)
+  
+  cat("Table saved to:", output_html, "\nImage saved to:", output_img, "\n")
+}
+
+
+aru_model_summary_table(model = passerine_model,
+                        title = "Passerine Calling Response",
+                        plot_name = "passerine_table_06feb2025")
+aru_model_summary_table(model = shorebird_model,
+                        title = "Shorebird Calling Response",
+                        plot_name = "shorebird_table_06feb2025")
+aru_model_summary_table(model = waterbird_model,
+                        title = "Waterfowl Calling Response",
+                        plot_name = "waterbird_table_06feb2025")
+
+#--------------------------
+#
+#--------------------------
+
+
 # Plotting ARU Active Dates ####
 base_dir <- "D:/ARU_QHI_2024"
 aru_all_output_folder <- "D:/ARU_QHI_2024/output_total"
@@ -23,7 +276,6 @@ columns_to_remove <- c(
   "dateTimeRecorder",
   "min_conf"
 )
-
 
 
 # Define a function to extract locationID from recordingID

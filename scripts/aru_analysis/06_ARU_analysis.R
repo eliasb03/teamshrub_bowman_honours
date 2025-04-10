@@ -157,58 +157,89 @@ waterbird_model <- readRDS(file = paste0(model_output_path, "waterbird_redthroat
 #waterbird_model <- readRDS(file = paste0(model_output_path, "waterbird.rds"))
 shorebird_model <- readRDS(file = paste0(model_output_path, "shorebird.rds"))
 
-
-
-# Generate predicted values for day_from_start by temp_binary
-pass_pred <- ggpredict(passerine_model, terms = c("day_from_start[0:30]", "temp_binary")) %>%
-  as.data.frame() %>%
-  mutate(species = "Lapland Longspur")
-
-shor_pred <- ggpredict(shorebird_model, terms = c("day_from_start[0:30]", "temp_binary")) %>%
-  as.data.frame() %>%
-  mutate(species = "Semipalmated Plover")
-
-watr_pred <- ggpredict(waterbird_model, terms = c("day_from_start[0:30]", "temp_binary")) %>%
-  as.data.frame() %>%
-  mutate(species = "Red-throated Loon")
-  #mutate(species = "Common Eider")
-
-all_pred <- bind_rows(
-  pass_pred,
-  shor_pred,
-  watr_pred
-) %>% mutate(Temperature = group) %>%
-  mutate(Temperature = fct_recode(Temperature, 
-                                  "Cool" = "low",
-                                  "Warm" = "high"),
-         Date = as.Date(x + start))
-
-aru_plotting_data <- aru_summary %>%
-  filter(common_name %in% c("Lapland Longspur", "Semipalmated Plover", "Red-throated Loon")) %>%
-  mutate(Temperature = temp_binary) %>%
-  filter(complete.cases(.)) %>%
-  mutate(Temperature = fct_recode(Temperature, 
-                                  "Cool" = "low",
-                                  "Warm" = "high"),
-         Date = as.Date(date))
-
+# 
+# 
+# # Generate predicted values for day_from_start by temp_binary
+# pass_pred <- ggpredict(passerine_model, terms = c("day_from_start[0:30]", "temp_binary")) %>%
+#   as.data.frame() %>%
+#   mutate(species = "Lapland Longspur")
+# 
+# shor_pred <- ggpredict(shorebird_model, terms = c("day_from_start[0:30]", "temp_binary")) %>%
+#   as.data.frame() %>%
+#   mutate(species = "Semipalmated Plover")
+# 
+# watr_pred <- ggpredict(waterbird_model, terms = c("day_from_start[0:30]", "temp_binary")) %>%
+#   as.data.frame() %>%
+#   mutate(species = "Red-throated Loon")
+#   #mutate(species = "Common Eider")
+# 
+# all_pred <- bind_rows(
+#   pass_pred,
+#   shor_pred,
+#   watr_pred
+# ) %>% mutate(Temperature = group) %>%
+#   mutate(Temperature = fct_recode(Temperature, 
+#                                   "Cool" = "low",
+#                                   "Warm" = "high"),
+#          Date = as.Date(x + start))
+# 
+# aru_plotting_data <- aru_summary %>%
+#   filter(common_name %in% c("Lapland Longspur", "Semipalmated Plover", "Red-throated Loon")) %>%
+#   mutate(Temperature = temp_binary) %>%
+#   filter(complete.cases(.)) %>%
+#   mutate(Temperature = fct_recode(Temperature, 
+#                                   "Cool" = "low",
+#                                   "Warm" = "high"),
+#          Date = as.Date(date))
+# 
+# 
+# # calling_temp_resp <- 
+# #   ggplot(data = all_pred, aes(x = Date, y = predicted, colour = group)) +
+# #   geom_line(linewidth = 1) + 
+# #   #geom_point(data = aru_plotting_data, aes(x = Date, y = total_count, colour = Temperature), size = 1, alpha = 0.1, position = "jitter") +
+# #   geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = group), 
+# #               alpha = 0.13, colour = NA) +  # Fill ribbons
+# #   scale_colour_viridis_d(name = "Temperature",
+# #                          #option = "viridis",  # Change palette here
+# #                          labels = c("Warm", "Cold"),
+# #                          guide = guide_legend(nrow = 1)) +  # Combined legend for colour
+# #   scale_fill_viridis_d(name = "Temperature",
+# #                        #option = "viridis",  # Change palette here
+# #                        labels = c("Warm", "Cold"),
+# #                        guide = guide_legend(nrow = 1)) +  # Combined legend for fill
+# #   labs(x = NULL,#"Predictor Variable", 
+# #        y = "Predicted Bird Call Detections") +
+# #   theme_half_open(font_size = 12) +
+# #   theme(
+# #     strip.background = element_blank(),
+# #     strip.placement = "outside",
+# #     strip.text = element_text(size = 10, face = "bold"),
+# #     panel.spacing = unit(0.02, "npc"),
+# #     plot.margin = margin(t = 10, r = 10, b = 10, l = 10),
+# #     legend.position = "bottom"
+# #   ) +
+# #   facet_wrap(~species, nrow = 1, scale = "free",
+# #              strip.position = "top") +
+# #   scale_y_continuous(limits = c(0, NA))
+# # Define the warm (reddish) and cold (bluish) colors
+# #temp_palette <- c("high" = "#D73027", "low" = "#4575B4")
 # 
 # calling_temp_resp <- 
 #   ggplot(data = all_pred, aes(x = Date, y = predicted, colour = group)) +
 #   geom_line(linewidth = 1) + 
-#   #geom_point(data = aru_plotting_data, aes(x = Date, y = total_count, colour = Temperature), size = 1, alpha = 0.1, position = "jitter") +
 #   geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = group), 
 #               alpha = 0.13, colour = NA) +  # Fill ribbons
-#   scale_colour_viridis_d(name = "Temperature",
-#                          #option = "viridis",  # Change palette here
-#                          labels = c("Warm", "Cold"),
-#                          guide = guide_legend(nrow = 1)) +  # Combined legend for colour
-#   scale_fill_viridis_d(name = "Temperature",
-#                        #option = "viridis",  # Change palette here
-#                        labels = c("Warm", "Cold"),
-#                        guide = guide_legend(nrow = 1)) +  # Combined legend for fill
-#   labs(x = NULL,#"Predictor Variable", 
+#   scale_colour_manual(name = "Temperature",
+#                       values = temp_palette,
+#                       labels = c("Warm", "Cold"),
+#                       guide = guide_legend(nrow = 1)) +  # Consistent legend
+#   scale_fill_manual(name = "Temperature",
+#                     values = temp_palette,
+#                     labels = c("Warm", "Cold"),
+#                     guide = guide_legend(nrow = 1)) +  # Matching fill colors
+#   labs(x = NULL, 
 #        y = "Predicted Bird Call Detections") +
+#   theme_minimal(base_family = "Helvetica") +
 #   theme_half_open(font_size = 12) +
 #   theme(
 #     strip.background = element_blank(),
@@ -221,43 +252,12 @@ aru_plotting_data <- aru_summary %>%
 #   facet_wrap(~species, nrow = 1, scale = "free",
 #              strip.position = "top") +
 #   scale_y_continuous(limits = c(0, NA))
-# Define the warm (reddish) and cold (bluish) colors
-#temp_palette <- c("high" = "#D73027", "low" = "#4575B4")
-
-calling_temp_resp <- 
-  ggplot(data = all_pred, aes(x = Date, y = predicted, colour = group)) +
-  geom_line(linewidth = 1) + 
-  geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = group), 
-              alpha = 0.13, colour = NA) +  # Fill ribbons
-  scale_colour_manual(name = "Temperature",
-                      values = temp_palette,
-                      labels = c("Warm", "Cold"),
-                      guide = guide_legend(nrow = 1)) +  # Consistent legend
-  scale_fill_manual(name = "Temperature",
-                    values = temp_palette,
-                    labels = c("Warm", "Cold"),
-                    guide = guide_legend(nrow = 1)) +  # Matching fill colors
-  labs(x = NULL, 
-       y = "Predicted Bird Call Detections") +
-  theme_minimal(base_family = "Helvetica") +
-  theme_half_open(font_size = 12) +
-  theme(
-    strip.background = element_blank(),
-    strip.placement = "outside",
-    strip.text = element_text(size = 10, face = "bold"),
-    panel.spacing = unit(0.02, "npc"),
-    plot.margin = margin(t = 10, r = 10, b = 10, l = 10),
-    legend.position = "bottom"
-  ) +
-  facet_wrap(~species, nrow = 1, scale = "free",
-             strip.position = "top") +
-  scale_y_continuous(limits = c(0, NA))
-
-calling_temp_resp
-
-ggsave("outputs/aru/model_figs/calling_temp_model_17mar2025.pdf", plot = calling_temp_resp, width = 10, height = 4, units = "in")
-
-ggsave("outputs/aru/model_figs/calling_temp_model_17mar2025.png", plot = calling_temp_resp, width = 12, height = 4, units = "in")
+# 
+# calling_temp_resp
+# 
+# ggsave("outputs/aru/model_figs/calling_temp_model_17mar2025.pdf", plot = calling_temp_resp, width = 10, height = 4, units = "in")
+# 
+# ggsave("outputs/aru/model_figs/calling_temp_model_17mar2025.png", plot = calling_temp_resp, width = 12, height = 4, units = "in")
 
 #-----------------------------
 # Create Calling Ridgeline
