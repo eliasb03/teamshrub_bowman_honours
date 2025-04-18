@@ -17,6 +17,7 @@ library(sp)
 library(sf)
 library(dplyr)
 library(viridis)
+library(readr)
 
 #------------------------------
 # Set Script Variables
@@ -42,8 +43,8 @@ qhi_terrain <- st_read(terrain_classification) %>%
   st_make_valid()
 
 # Import ARU point locations
-aru_locations <- st_read(aru_points) %>%
-  st_transform(crs = coordinate_system)  # Set project coordinate system
+# aru_locations <- st_read(aru_points) %>%
+#   st_transform(crs = coordinate_system)  # Set project coordinate system
 
 #------------------------------
 # Create QHI polygon
@@ -113,7 +114,7 @@ ggplot() +
 # Display aru location map
 ggplot() +
   geom_sf(data = qhi_terrain, aes(fill = unit_name), color = "black") +
-  geom_sf(data = aru_locations, color = "purple", size = 3) +
+  #geom_sf(data = aru_locations, color = "purple", size = 3) +
   scale_fill_viridis_d() +
   labs(fill = "Unit Name") +
   coord_sf(xlim = c(aru_loc_bbox["xmin"], aru_loc_bbox["xmax"]), 
@@ -134,9 +135,56 @@ ggplot() +
 #            ylim = c(aru_loc_bbox["ymin"], aru_loc_bbox["ymax"]))
 
 # Create a table showing the count of observations in each unit_name
-terrain_class_counts <- aru_locations %>%
-  group_by(unit_name) %>%
-  summarise(observations = n(), .groups = 'drop') 
+# terrain_class_counts <- aru_locations %>%
+#   group_by(unit_name) %>%
+#   summarise(observations = n(), .groups = 'drop') 
+
+#------------------------------
+# Create Ice Region Boundary
+#------------------------------
+# https://ice-glaces.ec.gc.ca/IA_DOC/cisads_no_003_e.pdf
+# Page 88, Number Page 76
+coords <- tibble::tribble(
+  ~POINT_ID, ~LATITUDE, ~LONGITUDE, ~RG_NAME, ~PNT_NAME, ~KNOWN_DMS,
+  6260, 72.0000, -141.0000, "cwa01_02", "US Canada border", "72 00 00 N,141 00 00 W",
+  6270, 72.0000, -140.0000, "cwa01_02", NA, NA,
+  6280, 72.0000, -139.0000, "cwa01_02", NA, NA,
+  6290, 72.0000, -138.0000, "cwa01_02", NA, NA,
+  6300, 72.0000, -137.0000, "cwa01_02", NA, NA,
+  6310, 72.0000, -136.0000, "cwa01_02", NA, NA,
+  6320, 72.0000, -135.0000, "cwa01_02", "Estimated", "72 00 00 N,135 00 00 W",
+  6330, 72.0000, -134.0000, "cwa01_02", NA, NA,
+  6340, 72.0000, -133.0000, "cwa01_02", NA, NA,
+  6350, 72.0000, -132.0000, "cwa01_02", NA, NA,
+  6360, 72.0000, -131.0000, "cwa01_02", "Estimated", "72 00 00 N,131 00 00 W",
+  6370, 70.5761, -128.0385, "cwa01_02", NA, NA,
+  6380, 70.5669, -128.0000, "cwa01_02", "Cape Bathurst", "70 34 00 N,128 00 00 W",
+  6390, 70.5656, -127.9987, "cwa01_02", NA, NA,
+  6400, 70.2045, -127.2075, "cwa01_02", NA, NA,
+  6410, 69.1997, -126.5959, "cwa01_02", NA, NA,
+  6420, 68.5500, -132.0000, "cwa01_02", NA, NA,
+  6430, 68.5000, -137.0000, "cwa01_02", NA, NA,
+  6440, 69.3211, -140.7362, "cwa01_02", NA, NA,
+  6450, 69.6474, -141.0000, "cwa01_02", "Coast and border", "69 37 00 N,141 00 00 W",
+  6460, 72.0000, -141.0000, "cwa01_02", "US Canada border", "72 00 00 N,141 00 00 W"
+)
+
+coords_sf <- st_as_sf(coords, coords = c("LONGITUDE", "LATITUDE"), crs = 4326)
+
+# Ensure the polygon is closed
+coords_closed <- coords_sf %>%
+  bind_rows(slice(., 1))
+
+mackenzie_ice_poly <- coords_closed %>%
+  summarise(geometry = st_combine(geometry)) %>%
+  st_cast("POLYGON")
+
+library(ggplot2)
+ggplot() +
+  geom_sf(data = mackenzie_ice_poly, fill = "lightblue", color = "black") +
+  geom_sf(data = north_coast, color = "black", fill = "black") +
+  geom_sf(data = coords_sf, color = "red", size = 2) +
+  theme_minimal()
 
 #------------------------------
 # Save Shapefiles
@@ -164,9 +212,11 @@ st_write(convert_geometry(qhi_coast), file.path(output_dir, "qhi_coast.shp"), ap
 st_write(convert_geometry(north_coast), file.path(output_dir, "north_coast.shp"), append = FALSE)
 st_write(convert_geometry(qhi_terrain), file.path(output_dir, "qhi_terrain.shp"), append = FALSE)
 st_write(convert_geometry(aru_locations), file.path(output_dir, "aru_locations.shp"), append = FALSE)
+st_write(mackenzie_ice_poly, file.path(output_dir, "cwa01_02_polygon.shp"), delete_layer = TRUE)
 
 # Closing unnecessary objects
-rm(yukon_shape_file, terrain_classification, aru_points, buffer_size, yukon, qhi_buffer, qhi_coords, qhi_bounds, terrain_class_counts, convert_geometry, output_dir, aru_loc_columns)
+rm(yukon_shape_file, terrain_classification, buffer_size, yukon, qhi_buffer, qhi_coords, qhi_bounds, terrain_class_counts, convert_geometry, output_dir, aru_loc_columns)
+rm(aru_points)
 
 #------------------------------
 # Outputs:
