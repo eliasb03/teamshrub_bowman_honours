@@ -27,7 +27,8 @@ guild.mapping.path <- "data/raw/bird_guild_mapping.csv"
 
 
 # importing species list, as dataframe
-species.list <- read.csv("data/clean/bbs/species_list.csv")
+#species.list <- read.csv("data/clean/bbs/species_list.csv")
+# species.list <- read.csv("data/clean/bbs/species_list.csv")
 
 # Expanded species list
 species.list.exp <- data.frame(
@@ -391,7 +392,7 @@ join_redpolls <- function(data) {
 
 # 5. Function to calculate sampling effort metric ####
 
-  # Creating Yearly Relative Abundance Metric, scaled totals, etc.
+# Creating Yearly Relative Abundance Metric, scaled totals, etc.
 # Function to calculate sampling time, effort, and effort multiplier
 calculate_sampling_metrics <- function(data) {
   data <- data %>%
@@ -430,7 +431,7 @@ convert_to_long <- function(data) {
 # 7. Function to summarize to year level ####
 # Helper function: join by year, period, and species
 summarize_by_year_period_spec <- function(data) {
-    summarized_data <- data %>%
+  summarized_data <- data %>%
     group_by(spec.code, year, period) %>%
     summarise(
       total.count = n(),  # Count the total number of observations
@@ -480,7 +481,7 @@ summarize_to_year <- function(data) {
 }
 
 # 8. Function to fill in missing years with 0s #### 
-  expand_and_fill <- function(df) {
+expand_and_fill <- function(df) {
   # List of metadata columns
   metadata_cols <- names(df)[!(names(df) %in% c("year", "spec.code", "total.count"))]
   
@@ -504,7 +505,7 @@ create_abundances <- function(data, threshold) {
   
   return(data)
 }
-  
+
 create_scaled_total <- function(data) {
   data <- data %>%
     mutate(total.scaled = ifelse(!is.na(effort.multiplier), total.count * effort.multiplier, 0))
@@ -525,9 +526,9 @@ create_relative_and_logistic_abundance <- function(data, threshold) {
       logistic.id.total = factor(
         if_else(rel.abundance.total > threshold, "high", "low"),
         levels = c("low", "high")),
-        logistic.id.scaled = factor(
-          if_else(rel.abundance.scaled > threshold, "high", "low"),
-          levels = c("low", "high"))
+      logistic.id.scaled = factor(
+        if_else(rel.abundance.scaled > threshold, "high", "low"),
+        levels = c("low", "high"))
     ) %>%
     ungroup()
   
