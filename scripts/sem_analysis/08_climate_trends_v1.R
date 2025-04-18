@@ -98,9 +98,9 @@ generate_model_plot <- function(model, variable, color = "blue", data = env_data
   
   # Create the plot
   plot <- ggplot(data, aes(x = year, y = !!y_variable)) +
+    geom_ribbon(data = model_preds, aes(y = Estimate, ymin = Q5, ymax = Q95), alpha = 0.2) +
     geom_line(size = 1) +
     geom_line(data = model_preds, aes(y = Estimate), color = color, size = 2) +
-    geom_ribbon(data = model_preds, aes(y = Estimate, ymin = Q5, ymax = Q95), alpha = 0.2) +
     scale_x_continuous(breaks = seq(1968, 2025, 7), limits = c(x_min, NA)) +
     labs(x = "Year", y = y_label) +
     theme_half_open(font_size = 14)
@@ -238,16 +238,16 @@ budburst_model <- brm(
 
 # Plotting Outputs
 
-icemelt_plot <- generate_model_plot(icemelt_model, spring_drop_doy, color = "blue")
+icemelt_plot <- generate_model_plot(icemelt_model, spring_drop_doy, color = "#56B4E9")
 icemelt_table <- generate_model_table(icemelt_model, table.title = "Day of Sea Ice Cover Drop Model Summary")
 
-breeding_temp_plot <- generate_model_plot(breeding_temp_model, mean_temp_breeding_season, color = "blue")
+breeding_temp_plot <- generate_model_plot(breeding_temp_model, mean_temp_breeding_season, color = "#F0E442")
 breeding_temp_table <- generate_model_table(breeding_temp_model, table.title = "Breeding Temperature Model Summary")
 
-snowmelt_plot <- generate_model_plot(snowmelt_model, snowmelt_mean, color = "blue")
+snowmelt_plot <- generate_model_plot(snowmelt_model, snowmelt_mean, color = "#D55E00")
 snowmelt_table <- generate_model_table(snowmelt_model, table.title = "Day of Snowmelt Model Summary")
 
-budburst_plot <- generate_model_plot(budburst_model, budburst_mean, color = "blue")
+budburst_plot <- generate_model_plot(budburst_model, budburst_mean, color = "#009E73")
 budburst_table <- generate_model_table(budburst_model, table.title = "Day of Budburst Model Summary")
 
 
@@ -267,6 +267,44 @@ budburst_table
 budburst_plot
 summary(env_data$budburst_mean, na.rm = TRUE)
 
+ggsave(
+  paste0("outputs/sem/plot/variables/", "icemelt" , ".png"),
+  icemelt_plot,
+  width = 5,
+  height = 4,
+  bg = "transparent"
+)
+gtsave(icemelt_table,
+       paste0("outputs/sem/plot/variables/", "icemelt" , ".html"))
+ggsave(
+  paste0("outputs/sem/plot/variables/", "breedingtemp" , ".png"),
+  breeding_temp_plot,
+  width = 5,
+  height = 4,
+  bg = "transparent"
+)
+gtsave(
+  breeding_temp_table,
+  paste0("outputs/sem/plot/variables/", "breedingtemp" , ".html")
+)
+ggsave(
+  paste0("outputs/sem/plot/variables/", "snowmelt" , ".png"),
+  snowmelt_plot,
+  width = 5,
+  height = 4,
+  bg = "transparent"
+)
+gtsave(snowmelt_table,
+       paste0("outputs/sem/plot/variables/", "snowmelt" , ".html"))
+ggsave(
+  paste0("outputs/sem/plot/variables/", "budburst" , ".png"),
+  budburst_plot,
+  width = 5,
+  height = 4,
+  bg = "transparent"
+)
+gtsave(budburst_table,
+       paste0("outputs/sem/plot/variables/", "budburst" , ".html"))
 
 
 ####
@@ -317,6 +355,8 @@ qhi_bbox_coords <- matrix(
     -138.953499, 69.579752),
   ncol = 2, byrow = TRUE
 )
+
+plot(qhi_bbox_coords)
 
 # Run clipped length calculations
 qhi_length <- clip_polygon_boundary(qhi_coast, qhi_bbox_coords)
