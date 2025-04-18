@@ -45,25 +45,25 @@ guild_abundance_priors <- c(  # priors tighter when using poisson dist, because 
   set_prior("normal(0, 4)", coef = "budburst:guildshorebird", resp = "birdabundance"),
   set_prior("normal(0, 4)", coef = "budburst:guildwaterbird", resp = "birdabundance"),
   
-  set_prior("normal(0, 5)", coef = "breedingtemp", resp = "birdabundance"), # 5 degree increase in breeding season temp leads to at max a 100 increase in bird abundance (log(100) = 4.6)
+  set_prior("normal(0, 5)", coef = "breedingtemp", resp = "birdabundance"), # 1 degree increase in breeding season temp leads to at max a 100 increase in bird abundance (log(100) = 4.6)
   set_prior("normal(0, 5)", coef = "breedingtemp:guildshorebird", resp = "birdabundance"),
   set_prior("normal(0, 5)", coef = "breedingtemp:guildwaterbird", resp = "birdabundance"),
   
   # Budburst model priors
   set_prior("normal(0, 2)", coef = "snowmelt", resp = "budburst"), # 1 week increase in snowmelt leads to a max 5 (log(5) = 1.6) week increase in budburst
-  set_prior("normal(0, 2.5)", coef = "breedingtemp", resp = "budburst"), # 5 degree increase in breeding season temp leads to at max a 10 week increase (log(10)=2.3 week) change in budburst
-  set_prior("normal(0, 2.5)", coef = "regiontemp", resp = "budburst"), # 5 degree increase in regional temp leads to at max a 10 week increase (log(10)=2.3 week) change in budburst
+  set_prior("normal(0, 2.5)", coef = "breedingtemp", resp = "budburst"), # 1 degree increase in breeding season temp leads to at max a 10 week increase (log(10)=2.3 week) change in budburst
+  set_prior("normal(0, 2.5)", coef = "regiontemp", resp = "budburst"), # 1 degree increase in regional temp leads to at max a 10 week increase (log(10)=2.3 week) change in budburst
   
   # Snowmelt model priors
-  set_prior("normal(0, 2.5)", coef = "breedingtemp", resp = "snowmelt"), # 5 degree increase in breeding season temp leads to at max a 10 week increase (log(10)=2.3 week) change in snowmelt
+  set_prior("normal(0, 2.5)", coef = "breedingtemp", resp = "snowmelt"), # 1 degree increase in breeding season temp leads to at max a 10 week increase (log(10)=2.3 week) change in snowmelt
   set_prior("normal(0, 2.5)", coef = "regiontemp", resp = "snowmelt"),
   
   # Breeding temp model priors
   set_prior("normal(0, 3)", coef = "icemelt", resp = "breedingtemp"), # 1 week increase in icemelt leads to at max a 20 degree increase (log(20)=3) in breeding temp
-  set_prior("normal(0, 3)", coef = "regiontemp", resp = "breedingtemp"), # 5 degree increase in region temp leads to at max a 20 degree increase in breeding temp
+  set_prior("normal(0, 3)", coef = "regiontemp", resp = "breedingtemp"), # 1 degree increase in region temp leads to at max a 20 degree increase in breeding temp
   
   # Ice melt model priors
-  set_prior("normal(0, 2.5)", coef = "regiontemp", resp = "icemelt") # 5 degree increase in region temp leads to at max a 10 week increase in ice melt
+  set_prior("normal(0, 2.5)", coef = "regiontemp", resp = "icemelt") # 1 degree increase in region temp leads to at max a 10 week increase in ice melt
 )
 
 
