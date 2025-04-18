@@ -151,17 +151,22 @@ library(cowplot)
 aru_temp_plot <- ggplot(tomst_avg, aes(x = reorder(aru_name, avg_temp), y = avg_temp, color = temp_binary)) +
   geom_point(size = 3) +
   scale_color_manual(values = c("low" = "#457B9D", "high" = "#E63946")) +
+  scale_x_discrete(labels = function(x) gsub("ARUQ", "", x)) +  # Strip "ARUQ" prefix
   theme_minimal() +
-  labs(#title = "Average Temperature by ARU",
-       #x = "ARU",
-       x = NULL,
-       y = "Average Temperature (°C)") +
-  theme_minimal(base_family = "Helvetica") +
+  labs(
+    x = "ARU #",
+    y = "Average Temperature (°C)\n(May 15 - June 30)"
+  ) +
+  theme_minimal(base_family = "Arial") +
   theme_half_open(font_size = 14) +
-  theme(axis.text.x = element_text(angle = 65, hjust = 1)
-        )
+  theme(
+    #axis.text.x = element_text(angle = 0, hjust = 1),
+    legend.position = "none"
+  )
+
+aru_temp_plot
 
 output_path <- "outputs/aru/summary/"
 ggsave(file.path(output_path, "aru_temp_plot.png"), 
        aru_temp_plot,
-       width = 7, height = 6)
+       width = 5.5, height = 3.5)
