@@ -208,3 +208,6 @@ final_dt[, filepath := gsub("\\\\", "/", filepath)]
 
 # Save the final data to a CSV file.
 fwrite(final_dt, "data/clean/aru/filtered_aru_data.csv")
+
+final_dt <- fread("data/clean/aru/filtered_aru_data.csv")
+
