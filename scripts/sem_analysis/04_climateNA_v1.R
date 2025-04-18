@@ -217,5 +217,7 @@ climate_data <- climateNA_data %>%
 output_path <- "data/clean/sem/" # Output path
 write_csv(climate_data, paste0(output_path, "climate_data.csv"))
 
+climate_data <- read_csv(paste0(output_path, "climate_data.csv"))
+komakuk_data <- read_csv("data/raw/komakuk_climate_data")
 
 
